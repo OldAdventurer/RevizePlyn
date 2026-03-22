@@ -138,10 +138,13 @@ export default function ZakazniciList() {
   }
 
   return (
-    <div className="p-4 md:p-6 flex flex-col gap-5 max-w-6xl mx-auto">
+    <div className="p-4 md:p-6 flex flex-col gap-5 max-w-6xl mx-auto page-enter">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <h1 className="text-2xl font-bold text-[var(--color-text)]">Zákazníci</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-[var(--color-text)]">Zákazníci</h1>
+          <p className="text-[var(--color-text-secondary)] mt-1">Evidence zákazníků a firem</p>
+        </div>
         <Button icon={<Plus size={20} />} onClick={() => setModalOpen(true)}>
           Nový zákazník
         </Button>
@@ -168,9 +171,9 @@ export default function ZakazniciList() {
 
       {/* Table or empty state */}
       {filtered.length === 0 ? (
-        <div className="text-center py-16">
+        <div className="text-center py-12">
           <User className="mx-auto text-gray-300 mb-3" size={48} />
-          <p className="text-lg text-gray-500">
+          <p className="text-lg text-[var(--color-text-secondary)]">
             {search || typeFilter
               ? 'Žádní zákazníci neodpovídají hledání'
               : 'Zatím nemáte žádné zákazníky'}

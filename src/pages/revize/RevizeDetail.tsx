@@ -157,35 +157,19 @@ export default function RevizeDetail() {
     },
   ]
 
-  const conclusionBg =
-    report.conclusion === 'schopne'
-      ? 'bg-green-50 border-green-200'
-      : report.conclusion === 's-vyhradami'
-        ? 'bg-yellow-50 border-yellow-200'
-        : 'bg-red-50 border-red-200'
-  const conclusionTextColor =
-    report.conclusion === 'schopne'
-      ? 'text-green-800'
-      : report.conclusion === 's-vyhradami'
-        ? 'text-yellow-800'
-        : 'text-red-800'
-
   return (
-    <div className="p-4 md:p-6 flex flex-col gap-5 max-w-4xl mx-auto">
+    <div className="page-enter p-4 md:p-6 flex flex-col gap-5 max-w-4xl mx-auto">
       {/* Back */}
-      <Link
-        to="/revizni-zpravy"
-        className="inline-flex items-center gap-2 text-base text-[var(--color-primary)] font-medium hover:underline w-fit"
-      >
-        <ArrowLeft size={18} />
-        Zpět na revizní zprávy
-      </Link>
+      <button onClick={() => navigate('/revizni-zpravy')} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium mb-4 transition-colors cursor-pointer">
+        <ArrowLeft size={20} />
+        <span>Zpět na revizní zprávy</span>
+      </button>
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-        <div className="flex-1">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div>
           <h1 className="text-2xl font-bold text-[var(--color-text)]">{report.reportNumber}</h1>
-          <p className="text-base text-gray-500 mt-1">{formatDate(report.date)}</p>
+          <p className="text-[var(--color-text-secondary)] mt-1">{formatDate(report.date)}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Badge variant={typeVariant(report.type)}>{getRevisionTypeLabel(report.type)}</Badge>
@@ -196,10 +180,10 @@ export default function RevizeDetail() {
       </div>
 
       {/* Info */}
-      <Card title="Informace">
+      <Card title="Informace" accent="blue">
         <div className="flex flex-col gap-3">
           <div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
-            <span className="font-medium text-gray-500 w-48 shrink-0">Zákazník:</span>
+            <span className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] w-48 shrink-0">Zákazník:</span>
             <span>
               <Link
                 to={`/zakaznici/${customer.id}`}
@@ -213,7 +197,7 @@ export default function RevizeDetail() {
 
           {order && (
             <div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
-              <span className="font-medium text-gray-500 w-48 shrink-0">Zakázka:</span>
+              <span className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] w-48 shrink-0">Zakázka:</span>
               <Link
                 to={`/zakazky/${order.id}`}
                 className="text-[var(--color-primary)] hover:underline font-medium"
@@ -224,7 +208,7 @@ export default function RevizeDetail() {
           )}
 
           <div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
-            <span className="font-medium text-gray-500 w-48 shrink-0">Revidovaná zařízení:</span>
+            <span className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] w-48 shrink-0">Revidovaná zařízení:</span>
             <div className="flex flex-col gap-1">
               {devices.length > 0 ? (
                 devices.map((d) => (
@@ -243,7 +227,7 @@ export default function RevizeDetail() {
           </div>
 
           <div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
-            <span className="font-medium text-gray-500 w-48 shrink-0">Revizní technik:</span>
+            <span className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] w-48 shrink-0">Revizní technik:</span>
             <span>
               {report.technicianName}, oprávnění č. {report.technicianLicense}
             </span>
@@ -252,7 +236,7 @@ export default function RevizeDetail() {
       </Card>
 
       {/* Tests */}
-      <Card title="Provedené zkoušky">
+      <Card title="Provedené zkoušky" accent="green">
         <div className="flex flex-col">
           {testRow('Zkouška těsnosti', report.leakTestResult, report.leakTestInstrument)}
           {testRow('Zkouška funkčnosti', report.functionalityTest)}
@@ -275,7 +259,7 @@ export default function RevizeDetail() {
       </Card>
 
       {/* Defects */}
-      <Card title="Zjištěné závady">
+      <Card title="Zjištěné závady" accent="red">
         {defects.length > 0 ? (
           <Table<Defect>
             columns={defectColumns}
@@ -291,21 +275,45 @@ export default function RevizeDetail() {
       </Card>
 
       {/* Conclusion */}
-      <div className={`rounded-xl border-2 p-6 ${conclusionBg}`}>
-        <div className="flex items-center gap-3 mb-2">
-          {report.conclusion === 'schopne' && <CheckCircle size={32} className="text-green-600" />}
-          {report.conclusion === 's-vyhradami' && (
-            <AlertTriangle size={32} className="text-yellow-600" />
-          )}
-          {report.conclusion === 'neschopne' && <XCircle size={32} className="text-red-600" />}
-          <h2 className={`text-xl font-bold ${conclusionTextColor}`}>
-            {getConclusionLabel(report.conclusion)}
-          </h2>
+      {report.conclusion === 'schopne' && (
+        <div className="rounded-2xl bg-gradient-to-r from-emerald-50 to-emerald-100 border border-emerald-200 p-6">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center">
+              <CheckCircle className="text-white" size={24} />
+            </div>
+            <div>
+              <p className="text-lg font-bold text-emerald-800">{getConclusionLabel(report.conclusion)}</p>
+              {report.conclusionNote && <p className="text-emerald-600">{report.conclusionNote}</p>}
+            </div>
+          </div>
         </div>
-        {report.conclusionNote && (
-          <p className={`text-base mt-2 ${conclusionTextColor}`}>{report.conclusionNote}</p>
-        )}
-      </div>
+      )}
+      {report.conclusion === 's-vyhradami' && (
+        <div className="rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-200 p-6">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center">
+              <AlertTriangle className="text-white" size={24} />
+            </div>
+            <div>
+              <p className="text-lg font-bold text-amber-800">{getConclusionLabel(report.conclusion)}</p>
+              {report.conclusionNote && <p className="text-amber-600">{report.conclusionNote}</p>}
+            </div>
+          </div>
+        </div>
+      )}
+      {report.conclusion === 'neschopne' && (
+        <div className="rounded-2xl bg-gradient-to-r from-red-50 to-red-100 border border-red-200 p-6">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center">
+              <XCircle className="text-white" size={24} />
+            </div>
+            <div>
+              <p className="text-lg font-bold text-red-800">{getConclusionLabel(report.conclusion)}</p>
+              {report.conclusionNote && <p className="text-red-600">{report.conclusionNote}</p>}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Actions */}
       <div className="flex flex-wrap gap-3 pt-2 pb-4">

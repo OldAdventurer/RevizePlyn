@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { useNavigate, useParams, Link } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { db } from '../../db/schema'
 import type { OrderType, Priority } from '../../types'
 import Button from '../../components/ui/Button'
@@ -107,20 +107,19 @@ export default function ZakazkaForm() {
   }
 
   return (
-    <div className="p-4 md:p-6 space-y-5 max-w-2xl">
-      <Link
-        to={isEdit ? `/zakazky/${id}` : '/zakazky'}
-        className="inline-flex items-center gap-1 text-[var(--color-primary)] hover:underline font-medium"
-      >
-        <ArrowLeft size={18} /> {isEdit ? 'Zpět na detail' : 'Zpět na zakázky'}
-      </Link>
+    <div className="page-enter p-4 md:p-6 space-y-5 max-w-2xl">
+      <button onClick={() => navigate(isEdit ? `/zakazky/${id}` : '/zakazky')} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium mb-4 transition-colors cursor-pointer">
+        <ArrowLeft size={20} />
+        <span>{isEdit ? 'Zpět na detail' : 'Zpět na zakázky'}</span>
+      </button>
 
-      <h1 className="text-2xl font-bold text-[var(--color-text)]">
-        {isEdit ? 'Upravit zakázku' : 'Nová zakázka'}
-      </h1>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-[var(--color-text)]">{isEdit ? 'Upravit zakázku' : 'Nová zakázka'}</h1>
+        <p className="text-[var(--color-text-secondary)] mt-1">{isEdit ? 'Úprava existující zakázky' : 'Vyplňte údaje o nové zakázce'}</p>
+      </div>
 
       <Card>
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           <Select
             label="Zákazník"
             options={customerOptions}
@@ -159,26 +158,26 @@ export default function ZakazkaForm() {
           />
 
           <div className="w-full">
-            <label className="block text-base font-medium text-[var(--color-text)] mb-1">
+            <label className="block text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-2">
               Popis
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="w-full min-h-[44px] text-base p-3 border border-[var(--color-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]"
+              className="w-full min-h-[44px] text-base p-3 border border-[var(--color-border)] rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]"
             />
           </div>
 
           <div className="w-full">
-            <label className="block text-base font-medium text-[var(--color-text)] mb-1">
+            <label className="block text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-2">
               Poznámka
             </label>
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
               rows={3}
-              className="w-full min-h-[44px] text-base p-3 border border-[var(--color-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]"
+              className="w-full min-h-[44px] text-base p-3 border border-[var(--color-border)] rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]"
             />
           </div>
 

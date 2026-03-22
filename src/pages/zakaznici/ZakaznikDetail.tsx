@@ -138,18 +138,15 @@ export default function ZakaznikDetail() {
   )
 
   return (
-    <div className="p-4 md:p-6 flex flex-col gap-5 max-w-4xl mx-auto">
+    <div className="p-4 md:p-6 flex flex-col gap-5 max-w-4xl mx-auto page-enter">
       {/* Back */}
-      <Link
-        to="/zakaznici"
-        className="inline-flex items-center gap-1 text-[var(--color-primary)] font-medium hover:underline self-start"
-      >
-        <ArrowLeft size={18} />
-        Zpět na zákazníky
-      </Link>
+      <button onClick={() => navigate('/zakaznici')} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium mb-4 transition-colors cursor-pointer">
+        <ArrowLeft size={20} />
+        <span>Zpět na zákazníky</span>
+      </button>
 
       {/* Customer info */}
-      <Card>
+      <Card accent="blue">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-3 mb-3">
@@ -211,9 +208,9 @@ export default function ZakaznikDetail() {
       </Card>
 
       {/* Objects */}
-      <Card title="Objekty zákazníka">
+      <Card title="Objekty zákazníka" accent="green">
         {!objects || objects.length === 0 ? (
-          <p className="text-gray-400 text-center py-4">Žádné objekty</p>
+          <div className="text-center py-8"><p className="text-[var(--color-text-secondary)]">Žádné objekty</p></div>
         ) : (
           <div className="flex flex-col divide-y divide-gray-100 -my-1">
             {objects.map((obj) => (
@@ -231,15 +228,15 @@ export default function ZakaznikDetail() {
       </Card>
 
       {/* Devices */}
-      <Card title="Zařízení zákazníka">
+      <Card title="Zařízení zákazníka" accent="blue">
         {!devices || devices.length === 0 ? (
-          <p className="text-gray-400 text-center py-4">Žádná zařízení</p>
+          <div className="text-center py-8"><p className="text-[var(--color-text-secondary)]">Žádná zařízení</p></div>
         ) : (
           <div className="flex flex-col divide-y divide-gray-100 -my-1">
             {devices.map((dev) => (
               <div
                 key={dev.id}
-                className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 py-3 cursor-pointer hover:bg-gray-50 -mx-5 px-5 transition-colors"
+                className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 py-3 cursor-pointer hover:bg-blue-50/50 -mx-5 px-5 transition-colors"
                 onClick={() => navigate(`/zarizeni/${dev.id}`)}
               >
                 <span className="font-semibold text-[var(--color-text)]">{dev.name}</span>
@@ -254,7 +251,7 @@ export default function ZakaznikDetail() {
       </Card>
 
       {/* Orders */}
-      <Card title="Zakázky zákazníka">
+      <Card title="Zakázky zákazníka" accent="yellow">
         <div className="mb-3">
           <Button
             size="sm"
@@ -265,13 +262,13 @@ export default function ZakaznikDetail() {
           </Button>
         </div>
         {sortedOrders.length === 0 ? (
-          <p className="text-gray-400 text-center py-4">Žádné zakázky</p>
+          <div className="text-center py-8"><p className="text-[var(--color-text-secondary)]">Žádné zakázky</p></div>
         ) : (
           <div className="flex flex-col divide-y divide-gray-100 -my-1">
             {sortedOrders.map((order) => (
               <div
                 key={order.id}
-                className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 py-3 cursor-pointer hover:bg-gray-50 -mx-5 px-5 transition-colors"
+                className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 py-3 cursor-pointer hover:bg-blue-50/50 -mx-5 px-5 transition-colors"
                 onClick={() => navigate(`/zakazky/${order.id}`)}
               >
                 <span className="font-semibold text-[var(--color-text)] shrink-0">

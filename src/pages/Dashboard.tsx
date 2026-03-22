@@ -18,6 +18,7 @@ import {
   CheckCircle,
   ClipboardList,
   ChevronRight,
+  FileText,
 } from 'lucide-react'
 import type { Order, Customer } from '../types'
 
@@ -109,7 +110,7 @@ export default function Dashboard() {
 
   if (!orders || !customers || !reports || !stats || !recentReports) {
     return (
-      <div className="p-6 flex items-center justify-center min-h-[50vh]">
+      <div className="flex items-center justify-center min-h-[50vh]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[var(--color-primary)] mx-auto mb-3" />
           <p className="text-lg text-gray-500">Načítám data…</p>
@@ -119,18 +120,38 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="p-4 md:p-6 flex flex-col gap-5 max-w-6xl mx-auto">
-      <h1 className="text-2xl font-bold text-[var(--color-text)]">Nástěnka</h1>
+    <div className="page-enter flex flex-col gap-6">
+      {/* ── Page header ── */}
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-[var(--color-text)]">Nástěnka</h1>
+          <p className="text-[var(--color-text-secondary)] mt-1">
+            Přehled vašich zakázek a revizí
+          </p>
+        </div>
+        <div className="hidden md:block shrink-0">
+          <Button
+            icon={<Plus size={20} />}
+            onClick={() => navigate('/zakazky/nova')}
+          >
+            Nová zakázka
+          </Button>
+        </div>
+      </div>
 
       {/* ── Alert banners ── */}
       {stats.overdue.length > 0 && (
         <div
-          className="flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl p-4 cursor-pointer hover:bg-red-100 transition-colors"
+          className="flex items-center gap-4 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-2xl p-5 cursor-pointer shadow-lg shadow-red-500/20 hover:scale-[1.01] transition-transform duration-200"
           onClick={() => navigate('/zakazky')}
         >
-          <AlertTriangle className="shrink-0 text-red-600" size={24} />
-          <div className="flex-1">
-            <p className="font-semibold text-red-800">
+          <div className="relative shrink-0">
+            <span className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-white animate-ping opacity-75" />
+            <span className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-white" />
+            <AlertTriangle size={24} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-bold text-lg leading-tight">
               {stats.overdue.length}{' '}
               {stats.overdue.length === 1
                 ? 'zakázka je po termínu'
@@ -138,20 +159,24 @@ export default function Dashboard() {
                   ? 'zakázky jsou po termínu'
                   : 'zakázek je po termínu'}
             </p>
-            <p className="text-sm text-red-600">Klikněte pro zobrazení seznamu</p>
+            <p className="text-sm text-white/80">Klikněte pro zobrazení seznamu</p>
           </div>
-          <ChevronRight className="shrink-0 text-red-400" size={20} />
+          <ChevronRight className="shrink-0 text-white/60" size={22} />
         </div>
       )}
 
       {stats.upcoming.length > 0 && (
         <div
-          className="flex items-center gap-3 bg-yellow-50 border border-yellow-200 rounded-xl p-4 cursor-pointer hover:bg-yellow-100 transition-colors"
+          className="flex items-center gap-4 bg-gradient-to-r from-amber-400 to-amber-500 text-amber-950 rounded-2xl p-5 cursor-pointer shadow-lg shadow-amber-500/20 hover:scale-[1.01] transition-transform duration-200"
           onClick={() => navigate('/zakazky')}
         >
-          <Clock className="shrink-0 text-yellow-600" size={24} />
-          <div className="flex-1">
-            <p className="font-semibold text-yellow-800">
+          <div className="relative shrink-0">
+            <span className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-amber-900 animate-ping opacity-75" />
+            <span className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-amber-900" />
+            <Clock size={24} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-bold text-lg leading-tight">
               {stats.upcoming.length}{' '}
               {stats.upcoming.length === 1
                 ? 'zakázka v příštích 30 dnech'
@@ -159,57 +184,67 @@ export default function Dashboard() {
                   ? 'zakázky v příštích 30 dnech'
                   : 'zakázek v příštích 30 dnech'}
             </p>
-            <p className="text-sm text-yellow-600">Klikněte pro zobrazení seznamu</p>
+            <p className="text-sm text-amber-800">Klikněte pro zobrazení seznamu</p>
           </div>
-          <ChevronRight className="shrink-0 text-yellow-400" size={20} />
+          <ChevronRight className="shrink-0 text-amber-700/60" size={22} />
         </div>
       )}
 
       {/* ── Stats cards ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <button
-          className="bg-white rounded-xl shadow-sm border border-[var(--color-border)] p-5 text-left hover:shadow-md transition-shadow cursor-pointer"
+          className="group bg-blue-50/30 rounded-2xl shadow-[var(--shadow-sm)] border border-blue-100/60 p-5 text-left hover:shadow-[var(--shadow-md)] hover:bg-blue-50/50 transition-all duration-200 cursor-pointer"
           onClick={() => navigate('/zakazky')}
         >
-          <ClipboardList className="text-blue-500 mb-2" size={28} />
-          <p className="text-3xl font-bold text-blue-600">{stats.total}</p>
-          <p className="text-base text-gray-500 mt-1">Celkem zakázek</p>
+          <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center mb-3 shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
+            <ClipboardList className="text-white" size={22} />
+          </div>
+          <p className="text-4xl font-black text-blue-600">{stats.total}</p>
+          <p className="text-sm text-[var(--color-text-secondary)] mt-1">Celkem zakázek</p>
         </button>
 
         <button
-          className="bg-white rounded-xl shadow-sm border border-[var(--color-border)] p-5 text-left hover:shadow-md transition-shadow cursor-pointer"
+          className="group bg-amber-50/30 rounded-2xl shadow-[var(--shadow-sm)] border border-amber-100/60 p-5 text-left hover:shadow-[var(--shadow-md)] hover:bg-amber-50/50 transition-all duration-200 cursor-pointer"
           onClick={() => navigate('/zakazky')}
         >
-          <Clock className="text-yellow-500 mb-2" size={28} />
-          <p className="text-3xl font-bold text-yellow-600">{stats.inProgress}</p>
-          <p className="text-base text-gray-500 mt-1">Rozpracované</p>
+          <div className="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center mb-3 shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform">
+            <Clock className="text-white" size={22} />
+          </div>
+          <p className="text-4xl font-black text-amber-600">{stats.inProgress}</p>
+          <p className="text-sm text-[var(--color-text-secondary)] mt-1">Rozpracované</p>
         </button>
 
         <button
-          className="bg-white rounded-xl shadow-sm border border-[var(--color-border)] p-5 text-left hover:shadow-md transition-shadow cursor-pointer"
+          className="group bg-emerald-50/30 rounded-2xl shadow-[var(--shadow-sm)] border border-emerald-100/60 p-5 text-left hover:shadow-[var(--shadow-md)] hover:bg-emerald-50/50 transition-all duration-200 cursor-pointer"
           onClick={() => navigate('/zakazky')}
         >
-          <CheckCircle className="text-green-500 mb-2" size={28} />
-          <p className="text-3xl font-bold text-green-600">{stats.done}</p>
-          <p className="text-base text-gray-500 mt-1">Dokončené</p>
+          <div className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center mb-3 shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+            <CheckCircle className="text-white" size={22} />
+          </div>
+          <p className="text-4xl font-black text-emerald-600">{stats.done}</p>
+          <p className="text-sm text-[var(--color-text-secondary)] mt-1">Dokončené</p>
         </button>
 
         <button
-          className="bg-white rounded-xl shadow-sm border border-[var(--color-border)] p-5 text-left hover:shadow-md transition-shadow cursor-pointer"
+          className="group bg-red-50/30 rounded-2xl shadow-[var(--shadow-sm)] border border-red-100/60 p-5 text-left hover:shadow-[var(--shadow-md)] hover:bg-red-50/50 transition-all duration-200 cursor-pointer"
           onClick={() => navigate('/zakazky')}
         >
-          <AlertTriangle className="text-red-500 mb-2" size={28} />
-          <p className="text-3xl font-bold text-red-600">{stats.overdue.length}</p>
-          <p className="text-base text-gray-500 mt-1">Po termínu</p>
+          <div className="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center mb-3 shadow-md shadow-red-500/20 group-hover:scale-105 transition-transform">
+            <AlertTriangle className="text-white" size={22} />
+          </div>
+          <p className="text-4xl font-black text-red-600">{stats.overdue.length}</p>
+          <p className="text-sm text-[var(--color-text-secondary)] mt-1">Po termínu</p>
         </button>
       </div>
 
       {/* ── Upcoming revisions ── */}
       <Card
+        accent="blue"
         title="Nadcházející revize"
+        subtitle="Plánované zakázky v nejbližších dnech"
         footer={
           <button
-            className="text-[var(--color-primary)] font-medium hover:underline cursor-pointer flex items-center gap-1"
+            className="text-[var(--color-primary)] font-semibold hover:underline cursor-pointer flex items-center gap-1"
             onClick={() => navigate('/zakazky')}
           >
             Zobrazit vše <ChevronRight size={18} />
@@ -217,37 +252,44 @@ export default function Dashboard() {
         }
       >
         {stats.planned.length === 0 ? (
-          <p className="text-gray-400 py-4 text-center">Žádné naplánované zakázky</p>
+          <p className="text-gray-400 py-6 text-center">Žádné naplánované zakázky</p>
         ) : (
-          <div className="flex flex-col divide-y divide-gray-100 -my-1">
-            {stats.planned.map((order) => {
+          <div className="flex flex-col -my-1">
+            {stats.planned.map((order, idx) => {
               const customer = customerMap.get(order.customerId)
+              const customerName = customer?.name ?? 'Neznámý zákazník'
+              const initial = customerName.charAt(0).toUpperCase()
               return (
-                <div
-                  key={order.id}
-                  className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-50 -mx-5 px-5 transition-colors"
-                  onClick={() => navigate(`/zakazky/${order.id}`)}
-                >
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-[var(--color-text)] truncate">
-                      {customer?.name ?? 'Neznámý zákazník'}
-                    </p>
-                    <p className="text-sm text-gray-500 truncate">{order.address}</p>
-                    <div className="flex flex-wrap gap-2 mt-1">
-                      <Badge variant={getOrderStatusColor(order.status) as any}>
-                        {getOrderStatusLabel(order.status)}
+                <div key={order.id}>
+                  {idx > 0 && <div className="border-t border-gray-100 mx-0" />}
+                  <div
+                    className="group flex items-center gap-4 py-4 cursor-pointer hover:bg-blue-50/40 -mx-6 px-6 transition-colors duration-150"
+                    onClick={() => navigate(`/zakazky/${order.id}`)}
+                  >
+                    <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0">
+                      <span className="text-sm font-bold text-[var(--color-primary)]">{initial}</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-[var(--color-text)] truncate">
+                        {customerName}
+                      </p>
+                      <p className="text-sm text-[var(--color-text-secondary)] truncate">{order.address}</p>
+                      <div className="flex flex-wrap items-center gap-2 mt-1.5">
+                        <Badge variant={getOrderStatusColor(order.status) as any} size="sm">
+                          {getOrderStatusLabel(order.status)}
+                        </Badge>
+                        <span className="text-xs text-[var(--color-text-secondary)]">
+                          {getOrderTypeLabel(order.type)}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="shrink-0 flex items-center gap-2">
+                      <Badge variant="blue" size="md">
+                        {order.plannedDate ? formatDate(order.plannedDate) : '—'}
                       </Badge>
-                      <span className="text-sm text-gray-400">
-                        {getOrderTypeLabel(order.type)}
-                      </span>
+                      <ChevronRight className="shrink-0 text-gray-300 group-hover:translate-x-0.5 transition-transform duration-150" size={20} />
                     </div>
                   </div>
-                  <div className="text-right shrink-0">
-                    <p className="font-semibold text-[var(--color-text)]">
-                      {order.plannedDate ? formatDate(order.plannedDate) : '—'}
-                    </p>
-                  </div>
-                  <ChevronRight className="shrink-0 text-gray-300" size={20} />
                 </div>
               )
             })}
@@ -257,10 +299,12 @@ export default function Dashboard() {
 
       {/* ── Recent revision reports ── */}
       <Card
+        accent="green"
         title="Poslední revizní zprávy"
+        subtitle="Nejnovější dokončené revize"
         footer={
           <button
-            className="text-[var(--color-primary)] font-medium hover:underline cursor-pointer flex items-center gap-1"
+            className="text-[var(--color-success)] font-semibold hover:underline cursor-pointer flex items-center gap-1"
             onClick={() => navigate('/revizni-zpravy')}
           >
             Zobrazit vše <ChevronRight size={18} />
@@ -268,34 +312,41 @@ export default function Dashboard() {
         }
       >
         {recentReports.length === 0 ? (
-          <p className="text-gray-400 py-4 text-center">Zatím žádné revizní zprávy</p>
+          <p className="text-gray-400 py-6 text-center">Zatím žádné revizní zprávy</p>
         ) : (
-          <div className="flex flex-col divide-y divide-gray-100 -my-1">
-            {recentReports.map((report) => {
+          <div className="flex flex-col -my-1">
+            {recentReports.map((report, idx) => {
               const customer = customerMap.get(report.customerId)
+              const customerName = customer?.name ?? 'Neznámý zákazník'
+              const initial = customerName.charAt(0).toUpperCase()
               return (
-                <div
-                  key={report.id}
-                  className="flex items-center gap-3 py-3 cursor-pointer hover:bg-gray-50 -mx-5 px-5 transition-colors"
-                  onClick={() => navigate(`/revizni-zpravy/${report.id}`)}
-                >
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-[var(--color-text)] truncate">
-                      {report.reportNumber}
-                    </p>
-                    <p className="text-sm text-gray-500 truncate">
-                      {customer?.name ?? 'Neznámý zákazník'}
-                    </p>
+                <div key={report.id}>
+                  {idx > 0 && <div className="border-t border-gray-100 mx-0" />}
+                  <div
+                    className="group flex items-center gap-4 py-4 cursor-pointer hover:bg-emerald-50/40 -mx-6 px-6 transition-colors duration-150"
+                    onClick={() => navigate(`/revizni-zpravy/${report.id}`)}
+                  >
+                    <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
+                      <span className="text-sm font-bold text-emerald-600">{initial}</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-[var(--color-text)] truncate">
+                        {report.reportNumber}
+                      </p>
+                      <p className="text-sm text-[var(--color-text-secondary)] truncate">
+                        {customerName}
+                      </p>
+                    </div>
+                    <div className="shrink-0 flex items-center gap-2">
+                      <Badge variant={conclusionVariant(report.conclusion)} size="md">
+                        {conclusionLabel(report.conclusion)}
+                      </Badge>
+                      <span className="text-xs text-[var(--color-text-secondary)] hidden sm:inline">
+                        {formatDate(report.date)}
+                      </span>
+                      <ChevronRight className="shrink-0 text-gray-300 group-hover:translate-x-0.5 transition-transform duration-150" size={20} />
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <Badge variant={conclusionVariant(report.conclusion)}>
-                      {conclusionLabel(report.conclusion)}
-                    </Badge>
-                    <span className="text-sm text-gray-400 hidden sm:inline">
-                      {formatDate(report.date)}
-                    </span>
-                  </div>
-                  <ChevronRight className="shrink-0 text-gray-300" size={20} />
                 </div>
               )
             })}
@@ -303,15 +354,24 @@ export default function Dashboard() {
         )}
       </Card>
 
-      {/* ── Quick actions ── */}
-      <div className="flex flex-col sm:flex-row gap-3 pt-2 pb-4">
+      {/* ── Quick actions (mobile) ── */}
+      <div className="flex flex-col sm:flex-row gap-3 md:hidden">
         <Button
           size="lg"
           icon={<Plus size={22} />}
-          className="w-full sm:w-auto"
+          className="w-full"
           onClick={() => navigate('/zakazky/nova')}
         >
           Nová zakázka
+        </Button>
+        <Button
+          variant="ghost"
+          size="lg"
+          icon={<FileText size={20} />}
+          className="w-full"
+          onClick={() => navigate('/zakazky')}
+        >
+          Zobrazit zakázky
         </Button>
       </div>
     </div>

@@ -128,13 +128,16 @@ export default function RevizeList() {
   ]
 
   return (
-    <div className="p-4 md:p-6 flex flex-col gap-5 max-w-6xl mx-auto">
+    <div className="page-enter p-4 md:p-6 flex flex-col gap-5 max-w-6xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between gap-4 flex-wrap">
-        <h1 className="text-2xl font-bold text-[var(--color-text)]">Revizní zprávy</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-[var(--color-text)]">Revizní zprávy</h1>
+          <p className="text-[var(--color-text-secondary)] mt-1">Přehled revizních zpráv a protokolů</p>
+        </div>
         <Link
           to="/zakazky"
-          className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2 text-base rounded-lg font-medium bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-light)] transition-colors"
+          className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2 text-base rounded-xl font-medium bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-light)] text-white hover:shadow-lg transition-all"
         >
           <Plus size={20} />
           Nová revize
@@ -159,7 +162,7 @@ export default function RevizeList() {
       </div>
 
       {showFilters && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white rounded-2xl border border-[var(--color-border)]/60 p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Select
             label="Typ revize"
             placeholder="Všechny"
@@ -183,25 +186,25 @@ export default function RevizeList() {
             ]}
           />
           <div className="w-full">
-            <label className="block text-base font-medium text-[var(--color-text)] mb-1">
+            <label className="block text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-2">
               Datum od
             </label>
             <input
               type="date"
               value={dateFrom}
               onChange={(e) => setDateFrom(e.target.value)}
-              className="w-full min-h-[44px] text-base p-3 border border-[var(--color-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+              className="w-full min-h-[44px] text-base p-3 border border-[var(--color-border)] rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
             />
           </div>
           <div className="w-full">
-            <label className="block text-base font-medium text-[var(--color-text)] mb-1">
+            <label className="block text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-2">
               Datum do
             </label>
             <input
               type="date"
               value={dateTo}
               onChange={(e) => setDateTo(e.target.value)}
-              className="w-full min-h-[44px] text-base p-3 border border-[var(--color-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+              className="w-full min-h-[44px] text-base p-3 border border-[var(--color-border)] rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
             />
           </div>
         </div>
@@ -213,7 +216,7 @@ export default function RevizeList() {
           {filtered.length}{' '}
           {filtered.length === 1 ? 'zpráva' : filtered.length < 5 ? 'zprávy' : 'zpráv'}
         </p>
-        <div className="flex gap-1 border border-[var(--color-border)] rounded-lg overflow-hidden">
+        <div className="flex gap-1 border border-[var(--color-border)] rounded-xl overflow-hidden">
           <button
             onClick={() => setViewMode('table')}
             className={`p-2 cursor-pointer transition-colors ${
@@ -242,9 +245,9 @@ export default function RevizeList() {
 
       {/* Content */}
       {filtered.length === 0 ? (
-        <div className="text-center py-12 text-gray-400">
-          <FileText size={48} className="mx-auto mb-3 opacity-50" />
-          <p className="text-lg">Žádné revizní zprávy</p>
+        <div className="text-center py-12">
+          <FileText size={48} className="mx-auto text-gray-300 mb-3" />
+          <p className="text-lg text-[var(--color-text-secondary)]">Žádné revizní zprávy</p>
         </div>
       ) : viewMode === 'table' ? (
         <Table<RevisionReport>

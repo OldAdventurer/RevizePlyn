@@ -71,24 +71,21 @@ export default function ZakazkaDetail() {
   const canCreateReport = order.status === 'probiha' || order.status === 'dokoncena'
 
   return (
-    <div className="p-4 md:p-6 space-y-5">
+    <div className="page-enter p-4 md:p-6 space-y-5">
       {/* Back */}
-      <Link
-        to="/zakazky"
-        className="inline-flex items-center gap-1 text-[var(--color-primary)] hover:underline font-medium"
-      >
-        <ArrowLeft size={18} /> Zpět na zakázky
-      </Link>
+      <button onClick={() => navigate('/zakazky')} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium mb-4 transition-colors cursor-pointer">
+        <ArrowLeft size={20} />
+        <span>Zpět na zakázky</span>
+      </button>
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-        <h1 className="text-2xl font-bold text-[var(--color-text)]">
-          {getOrderTypeLabel(order.type)}
-        </h1>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-[var(--color-text)]">{getOrderTypeLabel(order.type)}</h1>
+          <p className="text-[var(--color-text-secondary)] mt-1">{order.address}</p>
+        </div>
         <div className="flex flex-wrap gap-2">
-          <Badge
-            variant={getOrderStatusColor(order.status) as 'blue' | 'green' | 'yellow' | 'red' | 'gray' | 'indigo' | 'emerald' | 'orange'}
-          >
+          <Badge variant={getOrderStatusColor(order.status) as 'blue' | 'green' | 'yellow' | 'red' | 'gray' | 'indigo' | 'emerald' | 'orange'}>
             {getOrderStatusLabel(order.status)}
           </Badge>
           {order.priority === 'specha' && <Badge variant="red">Spěchá</Badge>}
@@ -96,11 +93,11 @@ export default function ZakazkaDetail() {
       </div>
 
       {/* Info card */}
-      <Card title="Informace o zakázce">
-        <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-base">
+      <Card title="Informace o zakázce" accent="blue">
+        <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
           <div>
-            <dt className="font-medium text-gray-500">Zákazník</dt>
-            <dd className="mt-0.5">
+            <dt className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-1">Zákazník</dt>
+            <dd className="mt-0.5 font-medium">
               {customer ? (
                 <Link
                   to={`/zakaznici/${customer.id}`}
@@ -114,31 +111,31 @@ export default function ZakazkaDetail() {
             </dd>
           </div>
           <div>
-            <dt className="font-medium text-gray-500">Adresa</dt>
-            <dd className="mt-0.5">{order.address}</dd>
+            <dt className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-1">Adresa</dt>
+            <dd className="mt-0.5 font-medium">{order.address}</dd>
           </div>
           <div>
-            <dt className="font-medium text-gray-500">Plánované datum</dt>
-            <dd className="mt-0.5">
+            <dt className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-1">Plánované datum</dt>
+            <dd className="mt-0.5 font-medium">
               {order.plannedDate ? formatDate(order.plannedDate) : '—'}
             </dd>
           </div>
           <div>
-            <dt className="font-medium text-gray-500">Datum dokončení</dt>
-            <dd className="mt-0.5">
+            <dt className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-1">Datum dokončení</dt>
+            <dd className="mt-0.5 font-medium">
               {order.completedDate ? formatDate(order.completedDate) : '—'}
             </dd>
           </div>
           {order.description && (
             <div className="sm:col-span-2">
-              <dt className="font-medium text-gray-500">Popis</dt>
-              <dd className="mt-0.5 whitespace-pre-wrap">{order.description}</dd>
+              <dt className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-1">Popis</dt>
+              <dd className="mt-0.5 font-medium whitespace-pre-wrap">{order.description}</dd>
             </div>
           )}
           {order.note && (
             <div className="sm:col-span-2">
-              <dt className="font-medium text-gray-500">Poznámka</dt>
-              <dd className="mt-0.5 whitespace-pre-wrap">{order.note}</dd>
+              <dt className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-1">Poznámka</dt>
+              <dd className="mt-0.5 font-medium whitespace-pre-wrap">{order.note}</dd>
             </div>
           )}
         </dl>
@@ -146,7 +143,7 @@ export default function ZakazkaDetail() {
 
       {/* Status workflow */}
       {transitions.length > 0 && (
-        <Card title="Změna stavu">
+        <Card title="Změna stavu" accent="yellow">
           <div className="flex flex-wrap gap-3">
             {transitions.map((t) => (
               <Button
@@ -163,13 +160,13 @@ export default function ZakazkaDetail() {
 
       {/* Linked revision reports */}
       {reports && reports.length > 0 && (
-        <Card title="Revizní zprávy">
+        <Card title="Revizní zprávy" accent="green">
           <div className="flex flex-col gap-2">
             {reports.map((r) => (
               <Link
                 key={r.id}
                 to={`/revizni-zpravy/${r.id}`}
-                className="flex items-center justify-between p-3 rounded-lg border border-[var(--color-border)] hover:bg-gray-50 transition-colors"
+                className="flex items-center justify-between p-3 rounded-xl border border-[var(--color-border)] hover:bg-blue-50/50 hover:border-blue-200 transition-all"
               >
                 <div className="flex items-center gap-3">
                   <FileText size={20} className="text-gray-400 shrink-0" />
