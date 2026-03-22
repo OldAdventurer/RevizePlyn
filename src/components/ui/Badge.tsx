@@ -2,24 +2,27 @@ import type { ReactNode } from 'react'
 
 interface BadgeProps {
   variant?: 'blue' | 'green' | 'yellow' | 'red' | 'gray' | 'indigo' | 'emerald' | 'orange'
+  size?: 'sm' | 'md'
   children: ReactNode
   className?: string
 }
 
 const variantClasses: Record<string, string> = {
-  blue: 'bg-blue-100 text-blue-800',
-  green: 'bg-green-100 text-green-800',
-  yellow: 'bg-yellow-100 text-yellow-800',
-  red: 'bg-red-100 text-red-800',
-  gray: 'bg-gray-100 text-gray-600',
-  indigo: 'bg-indigo-100 text-indigo-800',
-  emerald: 'bg-emerald-100 text-emerald-800',
-  orange: 'bg-orange-100 text-orange-800',
+  blue: 'bg-blue-50 text-blue-700 ring-1 ring-blue-600/20',
+  green: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20',
+  yellow: 'bg-amber-50 text-amber-700 ring-1 ring-amber-600/20',
+  red: 'bg-red-50 text-red-700 ring-1 ring-red-600/20',
+  gray: 'bg-gray-100 text-gray-600 ring-1 ring-gray-500/20',
+  indigo: 'bg-indigo-50 text-indigo-700 ring-1 ring-indigo-600/20',
+  emerald: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20',
+  orange: 'bg-orange-50 text-orange-700 ring-1 ring-orange-600/20',
 }
 
-export default function Badge({ variant = 'blue', children, className = '' }: BadgeProps) {
+export default function Badge({ variant = 'blue', size = 'sm', children, className = '' }: BadgeProps) {
   return (
-    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${variantClasses[variant]} ${className}`}>
+    <span className={`inline-flex items-center rounded-full font-semibold ${
+      size === 'sm' ? 'px-2.5 py-0.5 text-xs' : 'px-3 py-1 text-sm'
+    } ${variantClasses[variant]} ${className}`}>
       {children}
     </span>
   )

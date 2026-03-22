@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Search } from 'lucide-react'
+import { Search, X } from 'lucide-react'
 
 interface SearchBarProps {
   placeholder?: string
@@ -25,14 +25,22 @@ export default function SearchBar({
 
   return (
     <div className={`relative w-full ${className}`}>
-      <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+      <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
       <input
         type="search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={placeholder}
-        className="w-full min-h-[44px] text-base p-3 pl-10 border border-[var(--color-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]"
+        className="w-full min-h-[48px] text-base py-3 pl-12 pr-10 border border-[var(--color-border)] rounded-2xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30 focus:border-[var(--color-primary)] transition-all duration-200 placeholder:text-gray-400"
       />
+      {query && (
+        <button
+          onClick={() => setQuery('')}
+          className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+        >
+          <X size={16} />
+        </button>
+      )}
     </div>
   )
 }

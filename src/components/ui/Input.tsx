@@ -11,19 +11,19 @@ export default function Input({ label, error, id, className = '', ...props }: In
   return (
     <div className="w-full">
       {label && (
-        <label htmlFor={inputId} className="block text-base font-medium text-[var(--color-text)] mb-1">
+        <label htmlFor={inputId} className="block text-sm font-semibold text-[var(--color-text)] mb-1.5 uppercase tracking-wide">
           {label}
         </label>
       )}
       <input
         id={inputId}
-        className={`w-full min-h-[44px] text-base p-3 border rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] ${
-          error ? 'border-[var(--color-error)]' : 'border-[var(--color-border)]'
+        className={`w-full min-h-[48px] text-base p-3.5 border rounded-xl bg-white shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30 focus:border-[var(--color-primary)] placeholder:text-gray-400 ${
+          error ? 'border-[var(--color-error)] ring-2 ring-red-100' : 'border-[var(--color-border)]'
         } ${className}`}
         {...props}
       />
       {error && (
-        <p className="text-[var(--color-error)] text-sm mt-1">{error}</p>
+        <p className="text-[var(--color-error)] text-sm mt-1.5 font-medium">{error}</p>
       )}
     </div>
   )

@@ -2,22 +2,33 @@ import type { ReactNode } from 'react'
 
 interface CardProps {
   title?: string
+  subtitle?: string
   children: ReactNode
   footer?: ReactNode
   className?: string
+  accent?: 'blue' | 'green' | 'yellow' | 'red' | 'none'
 }
 
-export default function Card({ title, children, footer, className = '' }: CardProps) {
+const accentClasses: Record<string, string> = {
+  blue: 'border-l-4 border-l-[var(--color-primary)]',
+  green: 'border-l-4 border-l-[var(--color-success)]',
+  yellow: 'border-l-4 border-l-[var(--color-warning)]',
+  red: 'border-l-4 border-l-[var(--color-error)]',
+  none: '',
+}
+
+export default function Card({ title, subtitle, children, footer, className = '', accent = 'none' }: CardProps) {
   return (
-    <div className={`bg-white rounded-xl shadow-sm border border-[var(--color-border)] ${className}`}>
-      {title && (
-        <div className="px-5 pt-5">
-          <h2 className="text-xl font-bold text-[var(--color-text)]">{title}</h2>
+    <div className={`bg-white rounded-2xl shadow-[var(--shadow-md)] border border-[var(--color-border)]/60 hover:shadow-[var(--shadow-lg)] transition-all duration-200 ${accentClasses[accent]} ${className}`}>
+      {(title || subtitle) && (
+        <div className="px-6 pt-6 pb-0">
+          {title && <h2 className="text-xl font-bold text-[var(--color-text)]">{title}</h2>}
+          {subtitle && <p className="text-sm text-[var(--color-text-secondary)] mt-0.5">{subtitle}</p>}
         </div>
       )}
-      <div className="p-5">{children}</div>
+      <div className="p-6">{children}</div>
       {footer && (
-        <div className="px-5 py-4 border-t border-[var(--color-border)]">
+        <div className="px-6 py-4 border-t border-[var(--color-border)]/60 bg-gray-50/50 rounded-b-2xl">
           {footer}
         </div>
       )}

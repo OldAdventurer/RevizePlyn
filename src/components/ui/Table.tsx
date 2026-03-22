@@ -43,51 +43,59 @@ export default function Table<T>({
       })
     : data
 
-  const rowClasses = onRowClick ? 'cursor-pointer hover:bg-gray-50' : ''
+  const rowClasses = onRowClick ? 'cursor-pointer hover:bg-blue-50/50' : ''
 
   return (
     <div>
       {/* Desktop table */}
-      <div className="hidden md:block overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b-2 border-[var(--color-border)]">
-              {columns.map((col) => (
-                <th
-                  key={col.key}
-                  className={`text-left py-3 px-4 text-base font-semibold text-[var(--color-text)] ${
-                    col.sortable ? 'cursor-pointer hover:bg-gray-50 select-none' : ''
-                  }`}
-                  onClick={col.sortable ? () => handleSort(col.key) : undefined}
-                >
-                  <span className="inline-flex items-center gap-1">
-                    {col.header}
-                    {col.sortable && sortKey === col.key && (
-                      sortDir === 'asc' ? <ChevronUp size={16} /> : <ChevronDown size={16} />
-                    )}
-                  </span>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {sortedData.map((row) => (
-              <tr
-                key={keyExtractor(row)}
-                className={`border-b border-gray-100 ${rowClasses}`}
-                onClick={onRowClick ? () => onRowClick(row) : undefined}
-              >
-                {columns.map((col) => (
-                  <td key={col.key} className="py-3 px-4 text-base">
-                    {col.render
-                      ? col.render(row)
-                      : String((row as Record<string, unknown>)[col.key] ?? '')}
-                  </td>
+      <div className="hidden md:block">
+        <div className="bg-white rounded-2xl shadow-[var(--shadow-md)] border border-[var(--color-border)]/60 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-gray-50/80 border-b border-[var(--color-border)]/60">
+                  {columns.map((col) => (
+                    <th
+                      key={col.key}
+                      className={`text-left py-3.5 px-5 text-sm font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide ${
+                        col.sortable ? 'cursor-pointer hover:bg-gray-100/80 select-none transition-colors' : ''
+                      }`}
+                      onClick={col.sortable ? () => handleSort(col.key) : undefined}
+                    >
+                      <span className="inline-flex items-center gap-1.5">
+                        {col.header}
+                        {col.sortable && sortKey === col.key && (
+                          <span className="text-[var(--color-primary)]">
+                            {sortDir === 'asc' ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                          </span>
+                        )}
+                      </span>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {sortedData.map((row, idx) => (
+                  <tr
+                    key={keyExtractor(row)}
+                    className={`border-b border-[var(--color-border)]/40 transition-colors ${
+                      idx % 2 === 1 ? 'bg-gray-50/50' : ''
+                    } ${rowClasses}`}
+                    onClick={onRowClick ? () => onRowClick(row) : undefined}
+                  >
+                    {columns.map((col) => (
+                      <td key={col.key} className="py-3.5 px-5 text-base">
+                        {col.render
+                          ? col.render(row)
+                          : String((row as Record<string, unknown>)[col.key] ?? '')}
+                      </td>
+                    ))}
+                  </tr>
                 ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
 
       {/* Mobile card layout */}
@@ -95,14 +103,14 @@ export default function Table<T>({
         {sortedData.map((row) => (
           <div
             key={keyExtractor(row)}
-            className={`bg-white rounded-lg border border-[var(--color-border)] p-4 ${
+            className={`bg-white rounded-2xl border border-[var(--color-border)]/60 p-4 shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] transition-all duration-200 ${
               onRowClick ? 'cursor-pointer active:bg-gray-50' : ''
             }`}
             onClick={onRowClick ? () => onRowClick(row) : undefined}
           >
             {columns.map((col) => (
               <div key={col.key} className="flex justify-between items-baseline py-1.5">
-                <span className="font-medium text-gray-500 text-sm">{col.header}</span>
+                <span className="font-medium text-[var(--color-text-secondary)] text-sm">{col.header}</span>
                 <span className="text-base text-[var(--color-text)] text-right ml-2">
                   {col.render
                     ? col.render(row)
