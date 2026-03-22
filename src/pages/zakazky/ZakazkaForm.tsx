@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useNavigate, useParams } from 'react-router-dom'
+import { usePageTitle } from '../../hooks/usePageTitle'
 import { db } from '../../db/schema'
 import type { OrderType, Priority } from '../../types'
 import Button from '../../components/ui/Button'
@@ -8,6 +9,7 @@ import Input from '../../components/ui/Input'
 import Select from '../../components/ui/Select'
 import Card from '../../components/ui/Card'
 import { ArrowLeft } from 'lucide-react'
+import { toast } from '../../stores/toastStore'
 
 const orderTypeOptions = [
   { value: 'nova-stavba', label: 'Nová stavba' },
@@ -25,8 +27,9 @@ const priorityOptions = [
 
 export default function ZakazkaForm() {
   const { id } = useParams()
-  const navigate = useNavigate()
   const isEdit = Boolean(id)
+  usePageTitle(isEdit ? 'Upravit zakázku' : 'Nová zakázka')
+  const navigate = useNavigate()
 
   const existingOrder = useLiveQuery(
     () => (id ? db.orders.get(id) : undefined),
@@ -86,6 +89,7 @@ export default function ZakazkaForm() {
         note: note || undefined,
         updatedAt: now,
       })
+      toast.success('Zakázka byla uložena')
       navigate(`/zakazky/${id}`)
     } else {
       const newId = `ord-${Date.now()}`
@@ -102,6 +106,7 @@ export default function ZakazkaForm() {
         createdAt: now,
         updatedAt: now,
       })
+      toast.success('Zakázka byla uložena')
       navigate(`/zakazky/${newId}`)
     }
   }

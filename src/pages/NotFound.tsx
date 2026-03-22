@@ -1,0 +1,27 @@
+import { useNavigate } from 'react-router-dom'
+import Logo from '../components/ui/Logo'
+import Button from '../components/ui/Button'
+import { usePageTitle } from '../hooks/usePageTitle'
+
+export default function NotFound() {
+  usePageTitle('Stránka nenalezena')
+  const navigate = useNavigate()
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[var(--color-surface)]">
+      <div className="text-center">
+        <div className="mb-6 flex justify-center">
+          <Logo size={48} />
+        </div>
+        <p className="text-[120px] font-bold leading-none text-gray-200 select-none">404</p>
+        <h1 className="mt-4 text-2xl font-semibold text-gray-800">Stránka nenalezena</h1>
+        <p className="mt-2 text-gray-500">
+          Omlouváme se, ale stránka, kterou hledáte, neexistuje.
+        </p>
+        <div className="mt-8">
+          <Button onClick={() => navigate('/')}>Zpět na nástěnku</Button>
+        </div>
+      </div>
+    </div>
+  )
+}

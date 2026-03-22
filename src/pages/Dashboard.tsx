@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { usePageTitle } from '../hooks/usePageTitle'
 import { db } from '../db/schema'
 import { useLiveQuery } from 'dexie-react-hooks'
 import {
@@ -8,8 +9,10 @@ import {
   getOrderTypeLabel,
 } from '../utils/format'
 import Card from '../components/ui/Card'
+import { DashboardSkeleton } from '../components/ui/Skeleton'
 import Badge from '../components/ui/Badge'
 import Button from '../components/ui/Button'
+import EmptyState from '../components/ui/EmptyState'
 import { useNavigate } from 'react-router-dom'
 import {
   Plus,
@@ -39,6 +42,7 @@ function conclusionLabel(c: string): string {
 }
 
 export default function Dashboard() {
+  usePageTitle('Nástěnka')
   const navigate = useNavigate()
   const orders = useLiveQuery(() => db.orders.toArray())
   const customers = useLiveQuery(() => db.customers.toArray())
@@ -109,12 +113,25 @@ export default function Dashboard() {
   }, [reports])
 
   if (!orders || !customers || !reports || !stats || !recentReports) {
+    return <DashboardSkeleton />
+  }
+
+  if (orders.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-[50vh]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[var(--color-primary)] mx-auto mb-3" />
-          <p className="text-lg text-gray-500">Načítám data…</p>
+      <div className="page-enter flex flex-col gap-6">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-[var(--color-text)]">Nástěnka</h1>
+          <p className="text-[var(--color-text-secondary)] mt-1">
+            Přehled vašich zakázek a revizí
+          </p>
         </div>
+        <EmptyState
+          icon={<ClipboardList size={32} />}
+          title="Zatím žádné zakázky"
+          description="Vytvořte svou první zakázku nebo obnovte demo data pro vyzkoušení aplikace."
+          actionLabel="+ Nová zakázka"
+          actionHref="/zakazky/nova"
+        />
       </div>
     )
   }

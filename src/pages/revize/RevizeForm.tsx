@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react'
 import { db } from '../../db/schema'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useNavigate, useParams } from 'react-router-dom'
+import { usePageTitle } from '../../hooks/usePageTitle'
+import { DetailSkeleton } from '../../components/ui/Skeleton'
 import Card from '../../components/ui/Card'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
 import Select from '../../components/ui/Select'
 import { ArrowLeft, Plus, XCircle } from 'lucide-react'
+import { toast } from '../../stores/toastStore'
 import type {
   RevisionType,
   RevisionConclusion,
@@ -31,6 +34,7 @@ function orderTypeToRevisionType(ot: OrderType): RevisionType {
 }
 
 export default function RevizeForm() {
+  usePageTitle('Nová revizní zpráva')
   const { id: orderId } = useParams()
   const navigate = useNavigate()
 
@@ -188,6 +192,7 @@ export default function RevizeForm() {
         await db.orders.update(order.id, { status: 'dokoncena', updatedAt: new Date().toISOString() })
       }
 
+      toast.success('Revizní zpráva byla vytvořena')
       navigate(`/revizni-zpravy/${reportId}`)
     } finally {
       setSaving(false)
@@ -195,14 +200,7 @@ export default function RevizeForm() {
   }
 
   if (!order || !customer || !allDevices) {
-    return (
-      <div className="p-6 flex items-center justify-center min-h-[50vh]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[var(--color-primary)] mx-auto mb-3" />
-          <p className="text-lg text-gray-500">Načítám data…</p>
-        </div>
-      </div>
-    )
+    return <DetailSkeleton />
   }
 
   const testOptions = [

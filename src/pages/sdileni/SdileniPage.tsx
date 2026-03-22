@@ -2,15 +2,18 @@ import { useEffect } from 'react'
 import { db } from '../../db/schema'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
+import { usePageTitle } from '../../hooks/usePageTitle'
 import { formatDate, getRevisionTypeLabel, getConclusionLabel, getSeverityLabel } from '../../utils/format'
 import { generateRevisionPDF } from '../../utils/pdf'
 import Card from '../../components/ui/Card'
 import Badge from '../../components/ui/Badge'
 import Button from '../../components/ui/Button'
-import { Download, CheckCircle, XCircle, Shield, Loader2 } from 'lucide-react'
+import { Download, CheckCircle, XCircle, Shield } from 'lucide-react'
+import { Skeleton } from '../../components/ui/Skeleton'
 import type { Technician } from '../../types'
 
 export default function SdileniPage() {
+  usePageTitle('Sdílená revizní zpráva')
   const { token } = useParams()
 
   const shareLink = useLiveQuery(
@@ -53,7 +56,7 @@ export default function SdileniPage() {
   if (shareLink === undefined) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <Loader2 size={32} className="animate-spin text-gray-400" />
+        <Skeleton className="h-10 w-10 rounded-full" />
       </div>
     )
   }
@@ -77,7 +80,7 @@ export default function SdileniPage() {
   if (!report) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <Loader2 size={32} className="animate-spin text-gray-400" />
+        <Skeleton className="h-10 w-10 rounded-full" />
       </div>
     )
   }

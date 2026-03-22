@@ -2,6 +2,8 @@ import { useState, useMemo } from 'react'
 import { db } from '../../db/schema'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useNavigate, useParams, Link } from 'react-router-dom'
+import { DetailSkeleton } from '../../components/ui/Skeleton'
+import { usePageTitle } from '../../hooks/usePageTitle'
 import { formatDate, getDeviceCategoryLabel, getConclusionLabel, getRevisionTypeLabel } from '../../utils/format'
 import Card from '../../components/ui/Card'
 import Badge from '../../components/ui/Badge'
@@ -12,6 +14,7 @@ import Modal from '../../components/ui/Modal'
 import { QRCodeSVG } from 'qrcode.react'
 import { ArrowLeft, QrCode, Edit, Trash2 } from 'lucide-react'
 import type { DeviceCategory, RevisionConclusion } from '../../types'
+import { toast } from '../../stores/toastStore'
 
 const conclusionBadge: Record<RevisionConclusion, 'green' | 'yellow' | 'red'> = {
   schopne: 'green',
@@ -32,6 +35,7 @@ export default function ZarizeniDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
   const device = useLiveQuery(() => db.devices.get(id!), [id])
+  usePageTitle(device?.name ?? 'Detail zařízení')
   const customer = useLiveQuery(() => (device ? db.customers.get(device.customerId) : undefined), [device])
   const object = useLiveQuery(() => (device ? db.objects.get(device.objectId) : undefined), [device])
   const allReports = useLiveQuery(() => db.revisionReports.toArray(), [])
@@ -94,17 +98,19 @@ export default function ZarizeniDetail() {
       objectId: form.objectId,
       note: form.note || undefined,
     })
+    toast.success('Zařízení bylo upraveno')
     setEditOpen(false)
   }
 
   const handleDelete = async () => {
     if (!device) return
     await db.devices.delete(device.id)
+    toast.success('Zařízení bylo smazáno')
     navigate('/zarizeni')
   }
 
   if (device === undefined) {
-    return <div className="p-6 text-center text-gray-500">Načítám…</div>
+    return <DetailSkeleton />
   }
   if (device === null) {
     return <div className="p-6 text-center text-gray-500">Zařízení nenalezeno</div>

@@ -1,6 +1,16 @@
 import jsPDF from 'jspdf'
 import type { RevisionReport, Defect, Customer, Device } from '../types'
 import { formatDate, getRevisionTypeLabel } from './format'
+import { robotoBase64 } from './roboto-font'
+
+const FONT_NAME = 'Roboto'
+
+function registerFont(doc: jsPDF) {
+  doc.addFileToVFS('Roboto-Regular.ttf', robotoBase64)
+  doc.addFont('Roboto-Regular.ttf', FONT_NAME, 'normal')
+  doc.addFont('Roboto-Regular.ttf', FONT_NAME, 'bold')
+  doc.setFont(FONT_NAME, 'normal')
+}
 
 interface PDFData {
   report: RevisionReport
@@ -12,6 +22,7 @@ interface PDFData {
 
 export function generateRevisionPDF(data: PDFData): void {
   const doc = new jsPDF()
+  registerFont(doc)
   const { report, customer, devices, defects, technician } = data
 
   // Title
@@ -30,9 +41,9 @@ export function generateRevisionPDF(data: PDFData): void {
   doc.setFontSize(11)
 
   // Technician info
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FONT_NAME, 'bold')
   doc.text('Revizni technik:', 20, y)
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FONT_NAME, 'normal')
   y += 7
   doc.text(`${technician.name}, opravneni c. ${report.technicianLicense}`, 20, y)
   if (technician.address || technician.ico) {
@@ -45,9 +56,9 @@ export function generateRevisionPDF(data: PDFData): void {
   y += 12
 
   // Customer info
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FONT_NAME, 'bold')
   doc.text('Provozovatel:', 20, y)
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FONT_NAME, 'normal')
   y += 7
   doc.text(customer.name, 20, y)
   y += 6
@@ -59,16 +70,16 @@ export function generateRevisionPDF(data: PDFData): void {
   y += 12
 
   // Revision date
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FONT_NAME, 'bold')
   doc.text('Datum revize:', 20, y)
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FONT_NAME, 'normal')
   doc.text(formatDate(report.date), 80, y)
   y += 12
 
   // Devices
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FONT_NAME, 'bold')
   doc.text('Revidovana zarizeni:', 20, y)
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FONT_NAME, 'normal')
   y += 7
   devices.forEach((d) => {
     const line = `- ${d.name} - ${d.manufacturer} ${d.model}${d.serialNumber ? `, v.c. ${d.serialNumber}` : ''}`
@@ -87,9 +98,9 @@ export function generateRevisionPDF(data: PDFData): void {
 
   // Tests
   checkPage()
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FONT_NAME, 'bold')
   doc.text('Provedene zkousky:', 20, y)
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FONT_NAME, 'normal')
   y += 7
   if (report.leakTestResult) {
     doc.text(`Zkouska tesnosti: ${report.leakTestResult}${report.leakTestInstrument ? ` (${report.leakTestInstrument})` : ''}`, 25, y)
@@ -116,9 +127,9 @@ export function generateRevisionPDF(data: PDFData): void {
   // Defects
   if (defects.length > 0) {
     checkPage()
-    doc.setFont('helvetica', 'bold')
+    doc.setFont(FONT_NAME, 'bold')
     doc.text('Zjistene zavady:', 20, y)
-    doc.setFont('helvetica', 'normal')
+    doc.setFont(FONT_NAME, 'normal')
     y += 7
     defects.forEach((d, i) => {
       checkPage()
@@ -134,7 +145,7 @@ export function generateRevisionPDF(data: PDFData): void {
 
   // Conclusion
   checkPage()
-  doc.setFont('helvetica', 'bold')
+  doc.setFont(FONT_NAME, 'bold')
   doc.setFontSize(13)
   doc.text('ZAVER:', 20, y)
   y += 8
@@ -150,7 +161,7 @@ export function generateRevisionPDF(data: PDFData): void {
   if (report.conclusionNote) {
     y += 7
     doc.setFontSize(11)
-    doc.setFont('helvetica', 'normal')
+    doc.setFont(FONT_NAME, 'normal')
     const noteLines = doc.splitTextToSize(report.conclusionNote, 160)
     doc.text(noteLines, 20, y)
     y += noteLines.length * 6
@@ -160,7 +171,7 @@ export function generateRevisionPDF(data: PDFData): void {
   // Signature
   checkPage()
   doc.setFontSize(11)
-  doc.setFont('helvetica', 'normal')
+  doc.setFont(FONT_NAME, 'normal')
   doc.text(`Dne ${formatDate(report.date)}`, 20, y)
   y += 20
   doc.line(120, y, 190, y)

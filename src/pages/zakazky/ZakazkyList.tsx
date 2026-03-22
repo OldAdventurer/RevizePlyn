@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useNavigate, Link } from 'react-router-dom'
+import { usePageTitle } from '../../hooks/usePageTitle'
 import { db } from '../../db/schema'
 import { formatDate, getOrderStatusLabel, getOrderStatusColor, getOrderTypeLabel } from '../../utils/format'
 import type { Order } from '../../types'
@@ -10,7 +11,8 @@ import Button from '../../components/ui/Button'
 import Select from '../../components/ui/Select'
 import SearchBar from '../../components/ui/SearchBar'
 import Table, { type Column } from '../../components/ui/Table'
-import { Plus, Filter, FileText } from 'lucide-react'
+import { Plus, Filter, FileText, ClipboardList } from 'lucide-react'
+import EmptyState from '../../components/ui/EmptyState'
 
 type OrderWithCustomer = Order & { customerName: string }
 
@@ -42,6 +44,7 @@ const priorityOptions = [
 ]
 
 export default function ZakazkyList() {
+  usePageTitle('Zakázky')
   const navigate = useNavigate()
   const orders = useLiveQuery(() => db.orders.orderBy('createdAt').reverse().toArray())
   const customers = useLiveQuery(() => db.customers.toArray())
@@ -182,21 +185,31 @@ export default function ZakazkyList() {
       </div>
 
       {/* Table / empty state */}
-      <Card>
-        {filteredOrders.length === 0 ? (
-          <div className="text-center py-12">
-            <FileText className="mx-auto text-gray-300 mb-3" size={48} />
-            <p className="text-lg text-[var(--color-text-secondary)]">Žádné zakázky nenalezeny</p>
-          </div>
-        ) : (
-          <Table<OrderWithCustomer>
-            columns={columns}
-            data={filteredOrders}
-            keyExtractor={(o) => o.id}
-            onRowClick={(o) => navigate(`/zakazky/${o.id}`)}
-          />
-        )}
-      </Card>
+      {orders && orders.length === 0 ? (
+        <EmptyState
+          icon={<ClipboardList size={32} />}
+          title="Žádné zakázky"
+          description="Začněte vytvořením první zakázky. Můžete také obnovit demo data v nastavení."
+          actionLabel="+ Nová zakázka"
+          actionHref="/zakazky/nova"
+        />
+      ) : (
+        <Card>
+          {filteredOrders.length === 0 ? (
+            <div className="text-center py-12">
+              <FileText className="mx-auto text-gray-300 mb-3" size={48} />
+              <p className="text-lg text-[var(--color-text-secondary)]">Žádné zakázky odpovídající vašim filtrům</p>
+            </div>
+          ) : (
+            <Table<OrderWithCustomer>
+              columns={columns}
+              data={filteredOrders}
+              keyExtractor={(o) => o.id}
+              onRowClick={(o) => navigate(`/zakazky/${o.id}`)}
+            />
+          )}
+        </Card>
+      )}
     </div>
   )
 }
