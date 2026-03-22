@@ -52,8 +52,8 @@ export default function FakturaDetail() {
     }
     toast.success(
       newStatus === 'odeslana'
-        ? 'Faktura označena jako odeslaná'
-        : 'Faktura označena jako zaplacená',
+        ? 'Faktura byla označena jako odeslaná (demo — email se neodesílá)'
+        : 'Faktura byla označena jako zaplacená',
     )
   }
 
@@ -111,7 +111,7 @@ export default function FakturaDetail() {
               icon={<Send className="w-4 h-4" />}
               onClick={() => updateStatus('odeslana')}
             >
-              Odeslat
+              Označit jako odeslanou
             </Button>
           )}
           {(invoice.status === 'odeslana' || invoice.status === 'po-splatnosti') && (
