@@ -84,6 +84,13 @@ export interface Order {
   updatedAt: string
 }
 
+export interface RevisionPhoto {
+  id: string
+  url: string
+  caption: string
+  takenAt?: string
+}
+
 export interface RevisionReport {
   id: string
   reportNumber: string
@@ -104,6 +111,7 @@ export interface RevisionReport {
   ventilationCheck?: string
   conclusion: RevisionConclusion
   conclusionNote?: string
+  photos?: RevisionPhoto[]
   createdAt: string
 }
 

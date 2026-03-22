@@ -134,8 +134,8 @@ export default function NastaveniPage() {
 
   // ── Render ──
   return (
-    <div className="page-enter p-4 md:p-6 max-w-3xl mx-auto space-y-6">
-      <div className="mb-6">
+    <div className="page-enter p-4 md:p-6 max-w-3xl mx-auto space-y-4">
+      <div className="mb-4">
         <h1 className="text-2xl font-bold text-[var(--color-text)]">Nastavení</h1>
         <p className="text-[var(--color-text-secondary)] mt-1">Konfigurace aplikace a údajů technika</p>
       </div>
@@ -285,7 +285,7 @@ export default function NastaveniPage() {
 
       {/* ── Section 3: Data management ────────────────────────── */}
       <Card title="Správa dat" accent="yellow">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
           {[
             { label: 'Zákazníků', value: customerCount },
             { label: 'Zařízení', value: deviceCount },

@@ -3,7 +3,7 @@ import { db } from '../../db/schema'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useNavigate } from 'react-router-dom'
 import { usePageTitle } from '../../hooks/usePageTitle'
-import { getDeviceCategoryLabel } from '../../utils/format'
+import { getDeviceCategoryLabel, getDeviceCategoryIcon } from '../../utils/format'
 import Card from '../../components/ui/Card'
 import Badge from '../../components/ui/Badge'
 import Button from '../../components/ui/Button'
@@ -119,7 +119,7 @@ export default function ZarizeniList() {
         />
       ),
     },
-    { key: 'name', header: 'Název', sortable: true },
+    { key: 'name', header: 'Název', sortable: true, render: (d) => <span>{getDeviceCategoryIcon(d.category)} {d.name}</span> },
     { key: 'manufacturer', header: 'Výrobce', sortable: true },
     { key: 'model', header: 'Model', sortable: true },
     {
@@ -166,9 +166,9 @@ export default function ZarizeniList() {
   }
 
   return (
-    <div className="page-enter p-6 space-y-5">
+    <div className="page-enter p-4 md:p-4 space-y-3">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
         <div>
           <h1 className="text-2xl font-bold text-[var(--color-text)]">Zařízení</h1>
           <p className="text-[var(--color-text-secondary)] mt-1">Evidence plynových zařízení</p>

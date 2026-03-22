@@ -39,9 +39,9 @@ export default function ZarizeniQR() {
   }
 
   return (
-    <div className="page-enter p-6">
+    <div className="page-enter p-4">
       {/* Action buttons — hidden in print */}
-      <div className="no-print flex flex-wrap gap-3 mb-6">
+      <div className="no-print flex flex-wrap gap-3 mb-4">
         <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium transition-colors cursor-pointer">
           <ArrowLeft size={20} />
           <span>Zpět</span>
@@ -52,13 +52,13 @@ export default function ZarizeniQR() {
       </div>
 
       {/* QR grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 print:grid-cols-2 print:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 print:grid-cols-2 print:gap-4">
         {devices.map((device) => {
           const qrUrl = `${window.location.origin}/zarizeni/${device.id}`
           return (
             <div
               key={device.id}
-              className="flex flex-col items-center border border-[var(--color-border)] shadow-[var(--shadow-sm)] rounded-2xl p-6 print:border-gray-400 print:rounded-none print:p-4 break-inside-avoid"
+              className="flex flex-col items-center border border-[var(--color-border)] shadow-[var(--shadow-sm)] rounded-xl p-4 print:border-gray-400 print:rounded-none print:p-3 break-inside-avoid"
             >
               <QRCodeSVG value={qrUrl} size={200} />
               <h2 className="text-lg font-bold mt-4 text-center">{device.name}</h2>

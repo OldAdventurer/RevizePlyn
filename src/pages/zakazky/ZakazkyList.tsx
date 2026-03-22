@@ -135,7 +135,7 @@ export default function ZakazkyList() {
   return (
     <div className="page-enter p-4 md:p-6 space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
         <div>
           <h1 className="text-2xl font-bold text-[var(--color-text)]">Zakázky</h1>
           <p className="text-[var(--color-text-secondary)] mt-1">Přehled všech zakázek</p>
@@ -163,7 +163,7 @@ export default function ZakazkyList() {
       </div>
 
       {/* Filters */}
-      <div className={`bg-white rounded-2xl border border-[var(--color-border)]/60 p-4 grid grid-cols-1 sm:grid-cols-3 gap-3 ${showFilters ? '' : 'hidden sm:grid'}`}>
+      <div className={`bg-white rounded-xl border border-[var(--color-border)]/60 p-4 grid grid-cols-1 sm:grid-cols-3 gap-3 ${showFilters ? '' : 'hidden sm:grid'}`}>
         <Select
           options={statusOptions}
           value={statusFilter}

@@ -236,7 +236,7 @@ export default function FakturaForm() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Back link */}
       <Link
         to={isEdit ? `/finance/faktury/${id}` : '/finance/faktury'}
@@ -249,7 +249,7 @@ export default function FakturaForm() {
         {isEdit ? 'Upravit fakturu' : 'Nová faktura'}
       </h1>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {/* Basic Info */}
         <Card title="Základní údaje">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

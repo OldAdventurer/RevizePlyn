@@ -52,7 +52,7 @@ body {
 
 /* Large touch targets for older users */
 button, a, input, select, textarea {
-  min-height: 2.75rem;
+  min-height: 2.25rem;
 }
 
 input, select, textarea {

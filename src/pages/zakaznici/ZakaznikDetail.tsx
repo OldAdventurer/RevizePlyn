@@ -137,7 +137,7 @@ export default function ZakaznikDetail() {
   )
 
   return (
-    <div className="p-4 md:p-6 flex flex-col gap-5 max-w-4xl mx-auto page-enter">
+    <div className="p-4 md:p-6 flex flex-col gap-3 max-w-4xl mx-auto page-enter">
       {/* Back */}
       <button onClick={() => navigate('/zakaznici')} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium mb-4 transition-colors cursor-pointer">
         <ArrowLeft size={20} />
@@ -235,7 +235,7 @@ export default function ZakaznikDetail() {
             {devices.map((dev) => (
               <div
                 key={dev.id}
-                className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 py-3 cursor-pointer hover:bg-blue-50/50 -mx-5 px-5 transition-colors"
+                className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 py-3 cursor-pointer hover:bg-blue-50/50 -mx-4 px-4 transition-colors"
                 onClick={() => navigate(`/zarizeni/${dev.id}`)}
               >
                 <span className="font-semibold text-[var(--color-text)]">{dev.name}</span>
@@ -267,7 +267,7 @@ export default function ZakaznikDetail() {
             {sortedOrders.map((order) => (
               <div
                 key={order.id}
-                className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 py-3 cursor-pointer hover:bg-blue-50/50 -mx-5 px-5 transition-colors"
+                className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 py-3 cursor-pointer hover:bg-blue-50/50 -mx-4 px-4 transition-colors"
                 onClick={() => navigate(`/zakazky/${order.id}`)}
               >
                 <span className="font-semibold text-[var(--color-text)] shrink-0">

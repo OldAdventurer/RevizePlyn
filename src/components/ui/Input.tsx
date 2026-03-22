@@ -17,7 +17,7 @@ export default function Input({ label, error, id, className = '', ...props }: In
       )}
       <input
         id={inputId}
-        className={`w-full min-h-[48px] text-base p-3.5 border rounded-xl bg-white shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30 focus:border-[var(--color-primary)] placeholder:text-gray-400 ${
+        className={`w-full min-h-[38px] text-base px-3 py-2 border rounded-xl bg-white shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30 focus:border-[var(--color-primary)] placeholder:text-gray-400 ${
           error ? 'border-[var(--color-error)] ring-2 ring-red-100' : 'border-[var(--color-border)]'
         } ${className}`}
         {...props}

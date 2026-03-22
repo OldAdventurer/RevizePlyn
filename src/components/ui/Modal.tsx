@@ -33,17 +33,17 @@ export default function Modal({ isOpen, onClose, title, children, footer }: Moda
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="relative bg-white w-full md:max-w-lg rounded-t-2xl md:rounded-2xl shadow-2xl flex flex-col z-10 max-h-[90vh] md:max-h-[80vh] focus:outline-none animate-[fadeIn_0.2s_ease-out]"
+        className="relative bg-white w-full md:max-w-lg rounded-t-xl md:rounded-xl shadow-2xl flex flex-col z-10 max-h-[90vh] md:max-h-[80vh] focus:outline-none animate-[fadeIn_0.2s_ease-out]"
       >
-        <div className="flex items-center justify-between px-6 py-5 border-b border-[var(--color-border)]/60 shrink-0">
-          <h2 className="text-xl font-bold text-[var(--color-text)]">{title}</h2>
+        <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-border)]/60 shrink-0">
+          <h2 className="text-lg font-bold text-[var(--color-text)]">{title}</h2>
           <button onClick={onClose} className="p-2 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer" aria-label="Zavřít">
             <X size={22} />
           </button>
         </div>
-        <div className="p-6 overflow-y-auto flex-1">{children}</div>
+        <div className="p-4 overflow-y-auto flex-1">{children}</div>
         {footer && (
-          <div className="px-6 py-4 border-t border-[var(--color-border)]/60 flex justify-end gap-3 shrink-0 bg-gray-50/50 rounded-b-2xl">
+          <div className="px-4 py-3 border-t border-[var(--color-border)]/60 flex justify-end gap-3 shrink-0 bg-gray-50/50 rounded-b-xl">
             {footer}
           </div>
         )}

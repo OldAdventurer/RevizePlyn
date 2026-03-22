@@ -137,9 +137,9 @@ export default function ZakazniciList() {
   }
 
   return (
-    <div className="p-4 md:p-6 flex flex-col gap-5 max-w-6xl mx-auto page-enter">
+    <div className="p-4 md:p-6 flex flex-col gap-3 max-w-6xl mx-auto page-enter">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
         <div>
           <h1 className="text-2xl font-bold text-[var(--color-text)]">Zákazníci</h1>
           <p className="text-[var(--color-text-secondary)] mt-1">Evidence zákazníků a firem</p>

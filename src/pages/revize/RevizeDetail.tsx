@@ -10,12 +10,14 @@ import {
   getConclusionLabel,
   getSeverityLabel,
   getDefectStatusLabel,
+  getDeviceCategoryIcon,
 } from '../../utils/format'
 import Card from '../../components/ui/Card'
 import Badge from '../../components/ui/Badge'
 import Button from '../../components/ui/Button'
 import Modal from '../../components/ui/Modal'
 import Table, { type Column } from '../../components/ui/Table'
+import RevisionStamp from '../../components/ui/RevisionStamp'
 import {
   ArrowLeft,
   Download,
@@ -109,15 +111,16 @@ export default function RevizeDetail() {
 
   const testRow = (label: string, value?: string, instrument?: string) => {
     if (!value) return null
-    const pass = value === 'Vyhovuje'
+    const isPass = value === 'Vyhovuje' || value.startsWith('Vyhovuje') || value.startsWith('V normě') || value.startsWith('V norm')
+    const isFail = value === 'Nevyhovuje' || value.startsWith('Nevyhovuje')
     return (
       <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
         <span className="text-base text-gray-600">{label}</span>
         <span className="flex items-center gap-2 text-base font-medium">
-          {pass ? (
-            <CheckCircle size={18} className="text-green-500" />
-          ) : value === 'Nevyhovuje' ? (
-            <XCircle size={18} className="text-red-500" />
+          {isPass ? (
+            <span>✅</span>
+          ) : isFail ? (
+            <span>❌</span>
           ) : null}
           {value}
           {instrument && <span className="text-sm text-gray-400">({instrument})</span>}
@@ -154,7 +157,7 @@ export default function RevizeDetail() {
   ]
 
   return (
-    <div className="page-enter p-4 md:p-6 flex flex-col gap-5 max-w-4xl mx-auto">
+    <div className="page-enter p-4 md:p-6 flex flex-col gap-3 max-w-4xl mx-auto">
       {/* Back */}
       <button onClick={() => navigate('/revizni-zpravy')} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium mb-4 transition-colors cursor-pointer">
         <ArrowLeft size={20} />
@@ -162,7 +165,7 @@ export default function RevizeDetail() {
       </button>
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
         <div>
           <h1 className="text-2xl font-bold text-[var(--color-text)]">{report.reportNumber}</h1>
           <p className="text-[var(--color-text-secondary)] mt-1">{formatDate(report.date)}</p>
@@ -173,6 +176,16 @@ export default function RevizeDetail() {
             {getConclusionLabel(report.conclusion)}
           </Badge>
         </div>
+      </div>
+
+      {/* Revision Stamp */}
+      <div className="flex justify-center">
+        <RevisionStamp
+          conclusion={report.conclusion}
+          date={formatDate(report.date)}
+          reportNumber={report.reportNumber}
+          technicianName={report.technicianName}
+        />
       </div>
 
       {/* Info */}
@@ -213,7 +226,7 @@ export default function RevizeDetail() {
                     to={`/zarizeni/${d.id}`}
                     className="text-[var(--color-primary)] hover:underline"
                   >
-                    {d.name} — {d.manufacturer} {d.model}
+                    {getDeviceCategoryIcon(d.category)} {d.name} — {d.manufacturer} {d.model}
                   </Link>
                 ))
               ) : (
@@ -270,9 +283,28 @@ export default function RevizeDetail() {
         )}
       </Card>
 
+      {/* Fotodokumentace */}
+      {report.photos && report.photos.length > 0 && (
+        <Card title="📸 Fotodokumentace">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {report.photos.map((photo) => (
+              <div key={photo.id} className="group relative">
+                <img
+                  src={photo.url}
+                  alt={photo.caption}
+                  className="w-full h-32 object-cover rounded-lg border border-gray-200"
+                  loading="lazy"
+                />
+                <div className="mt-1 text-xs text-gray-500 truncate">{photo.caption}</div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
       {/* Conclusion */}
       {report.conclusion === 'schopne' && (
-        <div className="rounded-2xl bg-gradient-to-r from-emerald-50 to-emerald-100 border border-emerald-200 p-6">
+        <div className="rounded-xl bg-gradient-to-r from-emerald-50 to-emerald-100 border border-emerald-200 p-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center">
               <CheckCircle className="text-white" size={24} />
@@ -285,7 +317,7 @@ export default function RevizeDetail() {
         </div>
       )}
       {report.conclusion === 's-vyhradami' && (
-        <div className="rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-200 p-6">
+        <div className="rounded-xl bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-200 p-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center">
               <AlertTriangle className="text-white" size={24} />
@@ -298,7 +330,7 @@ export default function RevizeDetail() {
         </div>
       )}
       {report.conclusion === 'neschopne' && (
-        <div className="rounded-2xl bg-gradient-to-r from-red-50 to-red-100 border border-red-200 p-6">
+        <div className="rounded-xl bg-gradient-to-r from-red-50 to-red-100 border border-red-200 p-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center">
               <XCircle className="text-white" size={24} />
