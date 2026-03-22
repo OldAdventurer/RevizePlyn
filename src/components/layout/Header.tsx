@@ -1,5 +1,6 @@
 import { Menu } from 'lucide-react'
 import { useLocation, Link } from 'react-router-dom'
+import Logo from '../ui/Logo'
 
 interface HeaderProps {
   onMenuToggle: () => void
@@ -21,7 +22,10 @@ export default function Header({ onMenuToggle }: HeaderProps) {
   return (
     <header className="fixed top-0 left-0 right-0 h-16 backdrop-blur-xl bg-white/80 border-b border-[var(--color-border)]/50 z-30 lg:hidden flex items-center justify-between px-4">
       <div className="flex items-center gap-2">
-        <Link to="/" className="text-lg font-bold text-[var(--color-primary)] hover:opacity-80 transition-opacity">RevizePlyn</Link>
+        <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
+          <Logo size={28} />
+          <span className="text-lg font-bold text-[var(--color-primary)]">RevizePlyn</span>
+        </Link>
         <span className="text-slate-300 hidden sm:inline">/</span>
         <span className="text-sm text-[var(--color-text-secondary)] hidden sm:inline">{currentTitle}</span>
       </div>
