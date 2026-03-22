@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom'
 import { Home, ClipboardList, Wrench, Users, FileText, Settings, X } from 'lucide-react'
 
 interface SidebarProps {
@@ -44,10 +44,10 @@ function SidebarContent({ onClose, showClose = false, onItemClick }: { onClose?:
   return (
     <>
       <div className={`flex items-center ${showClose ? 'justify-between' : ''} px-4 py-3 mb-1`}>
-        <h1 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+        <Link to="/" className="text-xl font-bold text-white tracking-tight flex items-center gap-2 hover:opacity-90 transition-opacity" onClick={onClose}>
           <span>🔥</span>
           <span className="bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">RevizePlyn</span>
-        </h1>
+        </Link>
         {showClose && (
           <button
             onClick={onClose}
