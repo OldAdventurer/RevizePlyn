@@ -128,6 +128,12 @@ export default function FakturyList() {
 
   return (
     <div className="space-y-6">
+      {/* Demo disclaimer */}
+      <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-amber-800 text-sm flex items-center gap-2">
+        <span className="text-lg">⚠️</span>
+        <span><strong>Demo režim</strong> — Všechny faktury jsou fiktivní a slouží pouze pro demonstrační účely.</span>
+      </div>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>

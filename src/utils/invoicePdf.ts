@@ -25,6 +25,16 @@ export function generateInvoicePDF(data: InvoicePDFData): void {
 
   let y = 20
 
+  // Demo disclaimer
+  doc.setFillColor(255, 243, 205)
+  doc.rect(14, y - 4, 182, 12, 'F')
+  doc.setFontSize(9)
+  doc.setFont(FONT_NAME, 'normal')
+  doc.setTextColor(146, 64, 14)
+  doc.text('DEMO — Tato faktura je fiktivni a slouzi pouze pro demonstracni ucely.', 105, y + 3, { align: 'center' })
+  doc.setTextColor(0, 0, 0)
+  y += 16
+
   // Title
   doc.setFontSize(20)
   doc.setFont(FONT_NAME, 'bold')
