@@ -15,6 +15,8 @@ import RevizeDetail from './pages/revize/RevizeDetail'
 import RevizeForm from './pages/revize/RevizeForm'
 import SdileniPage from './pages/sdileni/SdileniPage'
 import NastaveniPage from './pages/nastaveni/NastaveniPage'
+import ToastContainer from './components/ui/Toast'
+import NotFound from './pages/NotFound'
 
 export default function App() {
   const dbReady = useDbInit()
@@ -31,6 +33,7 @@ export default function App() {
   }
 
   return (
+    <>
     <BrowserRouter>
       <Routes>
         <Route path="/sdileni/:token" element={<SdileniPage />} />
@@ -49,8 +52,12 @@ export default function App() {
           <Route path="/revizni-zpravy" element={<RevizeList />} />
           <Route path="/revizni-zpravy/:id" element={<RevizeDetail />} />
           <Route path="/nastaveni" element={<NastaveniPage />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
+    <ToastContainer />
+    </>
   )
 }

@@ -2,6 +2,8 @@ import { useState, useMemo } from 'react'
 import { db } from '../../db/schema'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useNavigate } from 'react-router-dom'
+import { ListSkeleton } from '../../components/ui/Skeleton'
+import { usePageTitle } from '../../hooks/usePageTitle'
 import { formatPhone } from '../../utils/format'
 import Badge from '../../components/ui/Badge'
 import Button from '../../components/ui/Button'
@@ -10,7 +12,9 @@ import Select from '../../components/ui/Select'
 import SearchBar from '../../components/ui/SearchBar'
 import Table, { type Column } from '../../components/ui/Table'
 import Modal from '../../components/ui/Modal'
-import { Plus, User } from 'lucide-react'
+import { Plus, User, Users } from 'lucide-react'
+import { toast } from '../../stores/toastStore'
+import EmptyState from '../../components/ui/EmptyState'
 import type { Customer, CustomerType } from '../../types'
 
 interface CustomerRow extends Customer {
@@ -30,6 +34,7 @@ const emptyForm = {
 }
 
 export default function ZakazniciList() {
+  usePageTitle('Zákazníci')
   const navigate = useNavigate()
   const customers = useLiveQuery(() => db.customers.toArray())
   const orders = useLiveQuery(() => db.orders.toArray())
@@ -122,19 +127,13 @@ export default function ZakazniciList() {
     }
 
     await db.customers.put(customer)
+    toast.success('Zákazník byl přidán')
     setForm(emptyForm)
     setModalOpen(false)
   }
 
   if (!customers || !orders) {
-    return (
-      <div className="p-6 flex items-center justify-center min-h-[50vh]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[var(--color-primary)] mx-auto mb-3" />
-          <p className="text-lg text-gray-500">Načítám data…</p>
-        </div>
-      </div>
-    )
+    return <ListSkeleton />
   }
 
   return (
@@ -170,19 +169,20 @@ export default function ZakazniciList() {
       </div>
 
       {/* Table or empty state */}
-      {filtered.length === 0 ? (
+      {customers.length === 0 ? (
+        <EmptyState
+          icon={<Users size={32} />}
+          title="Žádní zákazníci"
+          description="Přidejte svého prvního zákazníka nebo obnovte demo data."
+          actionLabel="+ Nový zákazník"
+          onAction={() => setModalOpen(true)}
+        />
+      ) : filtered.length === 0 ? (
         <div className="text-center py-12">
           <User className="mx-auto text-gray-300 mb-3" size={48} />
           <p className="text-lg text-[var(--color-text-secondary)]">
-            {search || typeFilter
-              ? 'Žádní zákazníci neodpovídají hledání'
-              : 'Zatím nemáte žádné zákazníky'}
+            Žádní zákazníci neodpovídají hledání
           </p>
-          {!search && !typeFilter && (
-            <Button className="mt-4" icon={<Plus size={20} />} onClick={() => setModalOpen(true)}>
-              Přidat prvního zákazníka
-            </Button>
-          )}
         </div>
       ) : (
         <Table<CustomerRow>

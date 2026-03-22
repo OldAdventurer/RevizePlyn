@@ -2,12 +2,15 @@ import { useMemo } from 'react'
 import { db } from '../../db/schema'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
+import { usePageTitle } from '../../hooks/usePageTitle'
 import { QRCodeSVG } from 'qrcode.react'
 import Button from '../../components/ui/Button'
 import { ArrowLeft, Printer } from 'lucide-react'
+import { ListSkeleton } from '../../components/ui/Skeleton'
 import type { Device } from '../../types'
 
 export default function ZarizeniQR() {
+  usePageTitle('QR kód zařízení')
   const { id } = useParams()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -28,7 +31,7 @@ export default function ZarizeniQR() {
   }, [customers])
 
   if (!devices) {
-    return <div className="p-6 text-center text-gray-500">Načítám…</div>
+    return <ListSkeleton />
   }
 
   if (devices.length === 0) {

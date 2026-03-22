@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { db } from '../../db/schema'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useNavigate } from 'react-router-dom'
+import { usePageTitle } from '../../hooks/usePageTitle'
 import { getDeviceCategoryLabel } from '../../utils/format'
 import Card from '../../components/ui/Card'
 import Badge from '../../components/ui/Badge'
@@ -10,9 +11,12 @@ import Input from '../../components/ui/Input'
 import Select from '../../components/ui/Select'
 import SearchBar from '../../components/ui/SearchBar'
 import Table, { type Column } from '../../components/ui/Table'
+import { ListSkeleton } from '../../components/ui/Skeleton'
 import Modal from '../../components/ui/Modal'
-import { Plus, QrCode } from 'lucide-react'
+import { Plus, QrCode, Wrench } from 'lucide-react'
+import EmptyState from '../../components/ui/EmptyState'
 import type { Device, DeviceCategory } from '../../types'
+import { toast } from '../../stores/toastStore'
 
 const categoryOptions = [
   { value: '', label: 'Všechny kategorie' },
@@ -50,6 +54,7 @@ const emptyForm = {
 }
 
 export default function ZarizeniList() {
+  usePageTitle('Zařízení')
   const navigate = useNavigate()
   const devices = useLiveQuery(() => db.devices.toArray())
   const customers = useLiveQuery(() => db.customers.toArray())
@@ -150,6 +155,7 @@ export default function ZarizeniList() {
       technicalParams: form.technicalParams || undefined,
       note: form.note || undefined,
     })
+    toast.success('Zařízení bylo přidáno')
     setForm(emptyForm)
     setModalOpen(false)
   }
@@ -203,20 +209,32 @@ export default function ZarizeniList() {
       </Card>
 
       {/* Table */}
-      <Card>
-        {!devices ? (
-          <p className="text-gray-500 text-center py-8">Načítám…</p>
-        ) : filtered.length === 0 ? (
-          <div className="text-center py-12"><p className="text-lg text-[var(--color-text-secondary)]">Žádná zařízení nenalezena</p></div>
-        ) : (
-          <Table
-            columns={columns}
-            data={filtered}
-            keyExtractor={(d) => d.id}
-            onRowClick={(d) => navigate(`/zarizeni/${d.id}`)}
-          />
-        )}
-      </Card>
+      {!devices ? (
+        <ListSkeleton />
+      ) : devices.length === 0 ? (
+        <EmptyState
+          icon={<Wrench size={32} />}
+          title="Žádná zařízení"
+          description="Přidejte první plynové zařízení do evidence nebo obnovte demo data."
+          actionLabel="+ Nové zařízení"
+          onAction={() => setModalOpen(true)}
+        />
+      ) : (
+        <Card>
+          {filtered.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-lg text-[var(--color-text-secondary)]">Žádná zařízení odpovídající vašim filtrům</p>
+            </div>
+          ) : (
+            <Table
+              columns={columns}
+              data={filtered}
+              keyExtractor={(d) => d.id}
+              onRowClick={(d) => navigate(`/zarizeni/${d.id}`)}
+            />
+          )}
+        </Card>
+      )}
 
       {/* Add device modal */}
       <Modal

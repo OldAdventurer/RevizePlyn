@@ -2,6 +2,8 @@ import { useState, useMemo } from 'react'
 import { db } from '../../db/schema'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useNavigate, Link } from 'react-router-dom'
+import { usePageTitle } from '../../hooks/usePageTitle'
+import { ListSkeleton } from '../../components/ui/Skeleton'
 import { formatDate, getRevisionTypeLabel, getConclusionLabel } from '../../utils/format'
 import Card from '../../components/ui/Card'
 import Badge from '../../components/ui/Badge'
@@ -9,6 +11,7 @@ import SearchBar from '../../components/ui/SearchBar'
 import Select from '../../components/ui/Select'
 import Table, { type Column } from '../../components/ui/Table'
 import { Plus, Filter, FileText } from 'lucide-react'
+import EmptyState from '../../components/ui/EmptyState'
 import type { RevisionReport, Customer } from '../../types'
 
 function conclusionVariant(c: string): 'green' | 'yellow' | 'red' {
@@ -24,6 +27,7 @@ function typeVariant(t: string): 'blue' | 'indigo' | 'orange' {
 }
 
 export default function RevizeList() {
+  usePageTitle('Revizní zprávy')
   const navigate = useNavigate()
   const reports = useLiveQuery(() => db.revisionReports.orderBy('date').reverse().toArray())
   const customers = useLiveQuery(() => db.customers.toArray())
@@ -74,14 +78,7 @@ export default function RevizeList() {
   }, [reports, customers, search, filterType, filterConclusion, dateFrom, dateTo, customerMap])
 
   if (!reports || !customers || !defects) {
-    return (
-      <div className="p-6 flex items-center justify-center min-h-[50vh]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[var(--color-primary)] mx-auto mb-3" />
-          <p className="text-lg text-gray-500">Načítám data…</p>
-        </div>
-      </div>
-    )
+    return <ListSkeleton />
   }
 
   const columns: Column<RevisionReport>[] = [
@@ -244,10 +241,18 @@ export default function RevizeList() {
       </div>
 
       {/* Content */}
-      {filtered.length === 0 ? (
+      {reports.length === 0 ? (
+        <EmptyState
+          icon={<FileText size={32} />}
+          title="Žádné revizní zprávy"
+          description="Revizní zprávy se vytváří z dokončených zakázek. Vytvořte zakázku a proveďte revizi."
+          actionLabel="Zobrazit zakázky"
+          actionHref="/zakazky"
+        />
+      ) : filtered.length === 0 ? (
         <div className="text-center py-12">
           <FileText size={48} className="mx-auto text-gray-300 mb-3" />
-          <p className="text-lg text-[var(--color-text-secondary)]">Žádné revizní zprávy</p>
+          <p className="text-lg text-[var(--color-text-secondary)]">Žádné revizní zprávy odpovídající vašim filtrům</p>
         </div>
       ) : viewMode === 'table' ? (
         <Table<RevisionReport>

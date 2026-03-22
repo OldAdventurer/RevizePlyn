@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { db } from '../../db/schema'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useNavigate, useParams, Link } from 'react-router-dom'
+import { DetailSkeleton } from '../../components/ui/Skeleton'
+import { usePageTitle } from '../../hooks/usePageTitle'
 import {
   formatDate,
   formatPhone,
@@ -30,12 +32,14 @@ import {
   Plus,
 } from 'lucide-react'
 import type { Customer, CustomerType } from '../../types'
+import { toast } from '../../stores/toastStore'
 
 export default function ZakaznikDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
 
   const customer = useLiveQuery(() => db.customers.get(id!), [id])
+  usePageTitle(customer?.name ?? 'Detail zákazníka')
   const objects = useLiveQuery(
     () => db.objects.where('customerId').equals(id!).toArray(),
     [id]
@@ -102,24 +106,19 @@ export default function ZakaznikDetail() {
     }
 
     await db.customers.put(updated)
+    toast.success('Zákazník byl upraven')
     setEditOpen(false)
   }
 
   const handleDelete = async () => {
     if (!customer) return
     await db.customers.delete(customer.id)
+    toast.success('Zákazník byl smazán')
     navigate('/zakaznici')
   }
 
   if (customer === undefined || objects === undefined || devices === undefined || orders === undefined) {
-    return (
-      <div className="p-6 flex items-center justify-center min-h-[50vh]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[var(--color-primary)] mx-auto mb-3" />
-          <p className="text-lg text-gray-500">Načítám data…</p>
-        </div>
-      </div>
-    )
+    return <DetailSkeleton />
   }
 
   if (customer === null || !customer) {

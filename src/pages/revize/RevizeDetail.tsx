@@ -2,6 +2,8 @@ import { useState, useMemo } from 'react'
 import { db } from '../../db/schema'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useNavigate, useParams, Link } from 'react-router-dom'
+import { usePageTitle } from '../../hooks/usePageTitle'
+import { DetailSkeleton } from '../../components/ui/Skeleton'
 import {
   formatDate,
   getRevisionTypeLabel,
@@ -24,6 +26,7 @@ import {
 } from 'lucide-react'
 import { generateRevisionPDF } from '../../utils/pdf'
 import type { Defect, Technician } from '../../types'
+import { toast } from '../../stores/toastStore'
 
 function conclusionVariant(c: string): 'green' | 'yellow' | 'red' {
   if (c === 'schopne') return 'green'
@@ -41,9 +44,9 @@ export default function RevizeDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
   const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [shareToast, setShareToast] = useState(false)
 
   const report = useLiveQuery(() => db.revisionReports.get(id!), [id])
+  usePageTitle(report?.reportNumber ?? 'Detail revize')
   const customer = useLiveQuery(
     () => (report ? db.customers.get(report.customerId) : undefined),
     [report]
@@ -65,14 +68,7 @@ export default function RevizeDetail() {
   }, [report, allDevices])
 
   if (!report || !customer || !defects || !allDevices) {
-    return (
-      <div className="p-6 flex items-center justify-center min-h-[50vh]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[var(--color-primary)] mx-auto mb-3" />
-          <p className="text-lg text-gray-500">Načítám data…</p>
-        </div>
-      </div>
-    )
+    return <DetailSkeleton />
   }
 
   const handleDownloadPDF = () => {
@@ -101,13 +97,13 @@ export default function RevizeDetail() {
     })
     const url = `${window.location.origin}/sdileni/${token}`
     await navigator.clipboard.writeText(url)
-    setShareToast(true)
-    setTimeout(() => setShareToast(false), 3000)
+    toast.success('Odkaz byl zkopírován do schránky')
   }
 
   const handleDelete = async () => {
     await db.defects.where('revisionReportId').equals(report.id).delete()
     await db.revisionReports.delete(report.id)
+    toast.success('Revizní zpráva byla smazána')
     navigate('/revizni-zpravy')
   }
 
@@ -330,13 +326,6 @@ export default function RevizeDetail() {
           Smazat
         </Button>
       </div>
-
-      {/* Share toast */}
-      {shareToast && (
-        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 bg-green-600 text-white px-5 py-3 rounded-lg shadow-lg z-50 text-base font-medium">
-          Odkaz zkopírován do schránky ✅
-        </div>
-      )}
 
       {/* Delete modal */}
       <Modal

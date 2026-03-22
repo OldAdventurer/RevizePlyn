@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { db } from '../../db/schema'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { usePageTitle } from '../../hooks/usePageTitle'
 import { formatDate } from '../../utils/format'
 import { resetDatabase } from '../../db/seed'
 import Card from '../../components/ui/Card'
@@ -9,6 +10,7 @@ import Input from '../../components/ui/Input'
 import Modal from '../../components/ui/Modal'
 import { Save, RefreshCw, User, Wrench, AlertTriangle, Trash2 } from 'lucide-react'
 import type { Technician, Instrument } from '../../types'
+import { toast } from '../../stores/toastStore'
 
 // ── Helpers ────────────────────────────────────────────────────────
 function emptyInstrument(): Instrument {
@@ -31,6 +33,7 @@ function calibrationBadge(dateStr: string): string {
 
 // ── Main component ─────────────────────────────────────────────────
 export default function NastaveniPage() {
+  usePageTitle('Nastavení')
   // ── DB queries ──
   const techSetting = useLiveQuery(() => db.settings.get('technician'))
   const technician = techSetting?.value as Technician | undefined
@@ -57,6 +60,7 @@ export default function NastaveniPage() {
   const saveTechnician = async () => {
     if (!form) return
     await db.settings.put({ key: 'technician', value: form })
+    toast.success('Nastavení bylo uloženo')
     setSaveMsg(true)
     setTimeout(() => setSaveMsg(false), 2000)
   }
@@ -108,6 +112,7 @@ export default function NastaveniPage() {
 
   const handleReset = async () => {
     await resetDatabase()
+    toast.info('Demo data byla obnovena')
     window.location.reload()
   }
 
@@ -122,6 +127,7 @@ export default function NastaveniPage() {
       db.shareLinks.clear(),
       db.settings.clear(),
     ])
+    toast.warning('Všechna data byla smazána')
     setDeleteModalOpen(false)
     setForm(null)
   }

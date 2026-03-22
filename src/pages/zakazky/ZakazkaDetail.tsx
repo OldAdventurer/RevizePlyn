@@ -1,5 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams, useNavigate, Link } from 'react-router-dom'
+import { usePageTitle } from '../../hooks/usePageTitle'
 import { db } from '../../db/schema'
 import { formatDate, getOrderStatusLabel, getOrderStatusColor, getOrderTypeLabel } from '../../utils/format'
 import type { OrderStatus } from '../../types'
@@ -7,6 +8,8 @@ import Card from '../../components/ui/Card'
 import Badge from '../../components/ui/Badge'
 import Button from '../../components/ui/Button'
 import { ArrowLeft, Edit, Trash2, FileText, ChevronRight } from 'lucide-react'
+import { toast } from '../../stores/toastStore'
+import { DetailSkeleton } from '../../components/ui/Skeleton'
 
 const statusTransitions: Record<OrderStatus, { label: string; next: OrderStatus; variant: 'primary' | 'secondary' | 'danger' }[]> = {
   nova: [
@@ -32,6 +35,7 @@ const statusTransitions: Record<OrderStatus, { label: string; next: OrderStatus;
 }
 
 export default function ZakazkaDetail() {
+  usePageTitle('Detail zakázky')
   const { id } = useParams()
   const navigate = useNavigate()
 
@@ -44,6 +48,10 @@ export default function ZakazkaDetail() {
     () => db.revisionReports.where('orderId').equals(id!).toArray(),
     [id],
   )
+
+  if (order === undefined) {
+    return <DetailSkeleton />
+  }
 
   if (!order) {
     return (
@@ -60,11 +68,13 @@ export default function ZakazkaDetail() {
       status: newStatus,
       updatedAt: new Date().toISOString(),
     })
+    toast.success('Stav zakázky byl změněn')
   }
 
   async function handleDelete() {
     if (!window.confirm('Opravdu chcete smazat tuto zakázku?')) return
     await db.orders.delete(id!)
+    toast.success('Zakázka byla smazána')
     navigate('/zakazky')
   }
 

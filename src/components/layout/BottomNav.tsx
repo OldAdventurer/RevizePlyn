@@ -1,11 +1,12 @@
 import { NavLink } from 'react-router-dom'
-import { Home, ClipboardList, FileText, Settings } from 'lucide-react'
+import { Home, ClipboardList, Wrench, FileText, Users } from 'lucide-react'
 
 const tabs = [
   { to: '/', icon: Home, label: 'Domů' },
   { to: '/zakazky', icon: ClipboardList, label: 'Zakázky' },
+  { to: '/zarizeni', icon: Wrench, label: 'Zařízení' },
   { to: '/revizni-zpravy', icon: FileText, label: 'Revize' },
-  { to: '/nastaveni', icon: Settings, label: 'Více' },
+  { to: '/zakaznici', icon: Users, label: 'Zákazníci' },
 ]
 
 export default function BottomNav() {
@@ -18,7 +19,7 @@ export default function BottomNav() {
             to={tab.to}
             end={tab.to === '/'}
             className={({ isActive }) =>
-              `flex-1 flex flex-col items-center justify-center min-h-[56px] gap-1 text-xs font-medium transition-all duration-200 ${
+              `flex-1 flex flex-col items-center justify-center min-h-[56px] gap-0.5 text-[10px] font-medium transition-all duration-200 ${
                 isActive
                   ? 'text-[var(--color-primary)]'
                   : 'text-gray-400 hover:text-[var(--color-text)]'
@@ -27,10 +28,10 @@ export default function BottomNav() {
           >
             {({ isActive }) => (
               <>
-                <span className={`transition-all duration-200 ${isActive ? 'bg-[var(--color-primary)] text-white rounded-full p-1.5' : 'p-1.5'}`}>
-                  <tab.icon size={20} />
+                <span className={`transition-all duration-200 ${isActive ? 'bg-[var(--color-primary)] text-white rounded-full p-1' : 'p-1'}`}>
+                  <tab.icon size={18} />
                 </span>
-                <span>{tab.label}</span>
+                <span className="truncate max-w-full">{tab.label}</span>
               </>
             )}
           </NavLink>
