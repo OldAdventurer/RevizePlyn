@@ -7,7 +7,7 @@ import type { OrderStatus } from '../../types'
 import Card from '../../components/ui/Card'
 import Badge from '../../components/ui/Badge'
 import Button from '../../components/ui/Button'
-import { ArrowLeft, Edit, Trash2, FileText, ChevronRight } from 'lucide-react'
+import { ArrowLeft, Edit, Trash2, FileText, ChevronRight, Receipt } from 'lucide-react'
 import { toast } from '../../stores/toastStore'
 import { DetailSkeleton } from '../../components/ui/Skeleton'
 
@@ -199,6 +199,13 @@ export default function ZakazkaDetail() {
         {canCreateReport && (
           <Link to={`/zakazky/${id}/revize`}>
             <Button icon={<FileText size={18} />}>Vytvořit revizní zprávu</Button>
+          </Link>
+        )}
+        {order.status === 'dokoncena' && (
+          <Link to={`/finance/faktury/nova?orderId=${order.id}`}>
+            <Button variant="secondary" icon={<Receipt size={18} />}>
+              Vystavit fakturu
+            </Button>
           </Link>
         )}
         <Link to={`/zakazky/${id}/upravit`}>

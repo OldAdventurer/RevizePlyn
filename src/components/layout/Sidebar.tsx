@@ -1,5 +1,5 @@
 import { NavLink, Link } from 'react-router-dom'
-import { Home, ClipboardList, Wrench, Users, FileText, Settings, X } from 'lucide-react'
+import { Home, ClipboardList, Wrench, Users, FileText, Banknote, Settings, X } from 'lucide-react'
 import Logo from '../ui/Logo'
 
 interface SidebarProps {
@@ -13,6 +13,7 @@ const navItems = [
   { to: '/zarizeni', icon: Wrench, label: 'Zařízení' },
   { to: '/zakaznici', icon: Users, label: 'Zákazníci' },
   { to: '/revizni-zpravy', icon: FileText, label: 'Revizní zprávy' },
+  { to: '/finance', icon: Banknote, label: 'Finance' },
   { to: '/nastaveni', icon: Settings, label: 'Nastavení' },
 ]
 

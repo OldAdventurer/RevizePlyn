@@ -8,6 +8,7 @@ import type {
   Defect,
   ShareLink,
   Technician,
+  Invoice,
 } from '../types'
 
 // ─── Technician ─────────────────────────────────────────────────────────────
@@ -1224,6 +1225,273 @@ const shareLinks: ShareLink[] = [
   },
 ]
 
+// ─── Invoices ───────────────────────────────────────────────────────────────
+
+const invoices: Invoice[] = [
+  // === Zaplacené faktury (tied to 'fakturovano' orders) ===
+  {
+    id: 'inv-01',
+    invoiceNumber: '2025001',
+    orderId: 'ord-01',      // Jan Novák, provozní revize RD
+    customerId: 'cust-01',
+    issueDate: '2025-10-16',
+    dueDate: '2025-10-30',
+    paidDate: '2025-10-25',
+    items: [
+      { description: 'Provozní revize plynových zařízení — RD Horní 14', quantity: 1, unitPrice: 1800, total: 1800 },
+      { description: 'Kontrola těsnosti rozvodů', quantity: 1, unitPrice: 450, total: 450 },
+    ],
+    subtotal: 2250, vatRate: 0, vatAmount: 0, total: 2250,
+    paymentMethod: 'prevod',
+    bankAccount: 'CZ65 0800 0000 1923 4567 8901',
+    variableSymbol: '2025001',
+    status: 'zaplacena',
+    note: '',
+    createdAt: '2025-10-16T08:00:00Z',
+    updatedAt: '2025-10-25T10:00:00Z',
+  },
+  {
+    id: 'inv-02',
+    invoiceNumber: '2025002',
+    orderId: 'ord-04',      // MORAVOSTAV, výchozí revize novostavba
+    customerId: 'cust-09',
+    issueDate: '2025-11-02',
+    dueDate: '2025-11-16',
+    paidDate: '2025-11-12',
+    items: [
+      { description: 'Výchozí revize plynové instalace — novostavba RD', quantity: 1, unitPrice: 3500, total: 3500 },
+      { description: 'Tlaková zkouška plynovodu', quantity: 1, unitPrice: 800, total: 800 },
+      { description: 'Revize plynového kotle Vaillant ecoTEC plus', quantity: 1, unitPrice: 1200, total: 1200 },
+    ],
+    subtotal: 5500, vatRate: 0, vatAmount: 0, total: 5500,
+    paymentMethod: 'prevod',
+    bankAccount: 'CZ65 0800 0000 1923 4567 8901',
+    variableSymbol: '2025002',
+    status: 'zaplacena',
+    note: '',
+    createdAt: '2025-11-02T09:00:00Z',
+    updatedAt: '2025-11-12T14:00:00Z',
+  },
+  {
+    id: 'inv-03',
+    invoiceNumber: '2025003',
+    orderId: 'ord-07',      // Restaurace U Zlatého lva, revize
+    customerId: 'cust-12',
+    issueDate: '2025-11-20',
+    dueDate: '2025-12-04',
+    paidDate: '2025-12-01',
+    items: [
+      { description: 'Provozní revize — Restaurace U Zlatého lva, kuchyňská linka', quantity: 1, unitPrice: 2500, total: 2500 },
+      { description: 'Revize plynových spotřebičů (sporáky, gril)', quantity: 1, unitPrice: 2200, total: 2200 },
+      { description: 'Doprava', quantity: 1, unitPrice: 350, total: 350 },
+    ],
+    subtotal: 5050, vatRate: 0, vatAmount: 0, total: 5050,
+    paymentMethod: 'prevod',
+    bankAccount: 'CZ65 0800 0000 1923 4567 8901',
+    variableSymbol: '2025003',
+    status: 'zaplacena',
+    note: '',
+    createdAt: '2025-11-20T10:00:00Z',
+    updatedAt: '2025-12-01T08:00:00Z',
+  },
+  {
+    id: 'inv-04',
+    invoiceNumber: '2025004',
+    orderId: 'ord-10',      // Ludmila Marková, pravidelná kontrola
+    customerId: 'cust-08',
+    issueDate: '2025-12-05',
+    dueDate: '2025-12-19',
+    paidDate: '2025-12-18',
+    items: [
+      { description: 'Pravidelná kontrola plynového kotle — byt Botanická 24/5', quantity: 1, unitPrice: 1400, total: 1400 },
+      { description: 'Kontrola spalinových cest', quantity: 1, unitPrice: 600, total: 600 },
+    ],
+    subtotal: 2000, vatRate: 0, vatAmount: 0, total: 2000,
+    paymentMethod: 'prevod',
+    bankAccount: 'CZ65 0800 0000 1923 4567 8901',
+    variableSymbol: '2025004',
+    status: 'zaplacena',
+    note: '',
+    createdAt: '2025-12-05T11:00:00Z',
+    updatedAt: '2025-12-18T09:00:00Z',
+  },
+  // === Odeslané / nezaplacené faktury ===
+  {
+    id: 'inv-05',
+    invoiceNumber: '2026001',
+    orderId: 'ord-02',      // Marie Svobodová, pravidelná kontrola
+    customerId: 'cust-02',
+    issueDate: '2026-01-10',
+    dueDate: '2026-01-24',
+    paidDate: undefined,
+    items: [
+      { description: 'Pravidelná kontrola plynových zařízení — byt Palackého tř. 87/3', quantity: 1, unitPrice: 1800, total: 1800 },
+      { description: 'Kontrola detektoru úniku plynu', quantity: 1, unitPrice: 350, total: 350 },
+    ],
+    subtotal: 2150, vatRate: 0, vatAmount: 0, total: 2150,
+    paymentMethod: 'prevod',
+    bankAccount: 'CZ65 0800 0000 1923 4567 8901',
+    variableSymbol: '2026001',
+    status: 'odeslana',
+    note: '',
+    createdAt: '2026-01-10T08:00:00Z',
+    updatedAt: '2026-01-10T08:00:00Z',
+  },
+  {
+    id: 'inv-06',
+    invoiceNumber: '2026002',
+    orderId: 'ord-06',      // Bytové družstvo Harmonie, BD revize
+    customerId: 'cust-10',
+    issueDate: '2026-01-22',
+    dueDate: '2026-02-05',
+    paidDate: undefined,
+    items: [
+      { description: 'Provozní revize — BD Loosova 13, bytové jednotky', quantity: 12, unitPrice: 1100, total: 13200 },
+      { description: 'Revize společných rozvodů a regulátoru', quantity: 1, unitPrice: 3200, total: 3200 },
+      { description: 'Zpracování souhrnné revizní zprávy', quantity: 1, unitPrice: 1500, total: 1500 },
+    ],
+    subtotal: 17900, vatRate: 0, vatAmount: 0, total: 17900,
+    paymentMethod: 'prevod',
+    bankAccount: 'CZ65 0800 0000 1923 4567 8901',
+    variableSymbol: '2026002',
+    status: 'odeslana',
+    note: 'Dle rámcové smlouvy správce budovy',
+    createdAt: '2026-01-22T09:00:00Z',
+    updatedAt: '2026-01-22T09:00:00Z',
+  },
+  // === Po splatnosti ===
+  {
+    id: 'inv-07',
+    invoiceNumber: '2025005',
+    orderId: 'ord-08',      // Alena Procházková, pravidelná revize
+    customerId: 'cust-04',
+    issueDate: '2025-12-10',
+    dueDate: '2025-12-24',
+    paidDate: undefined,
+    items: [
+      { description: 'Provozní revize plynových kotlů — RD Na Kopci 7', quantity: 1, unitPrice: 2200, total: 2200 },
+      { description: 'Kontrola těsnosti po výměně ventilů', quantity: 1, unitPrice: 650, total: 650 },
+    ],
+    subtotal: 2850, vatRate: 0, vatAmount: 0, total: 2850,
+    paymentMethod: 'prevod',
+    bankAccount: 'CZ65 0800 0000 1923 4567 8901',
+    variableSymbol: '2025005',
+    status: 'po-splatnosti',
+    note: 'Upomínka odeslána 2.1.2026',
+    createdAt: '2025-12-10T10:00:00Z',
+    updatedAt: '2026-01-02T08:00:00Z',
+  },
+  // === Nové (vystavené, ještě neodeslané) ===
+  {
+    id: 'inv-08',
+    invoiceNumber: '2026003',
+    orderId: 'ord-11',      // DOMOSTAV, novostavba Modřice
+    customerId: 'cust-13',
+    issueDate: '2026-02-15',
+    dueDate: '2026-03-01',
+    paidDate: undefined,
+    items: [
+      { description: 'Výchozí revize plynové instalace — řadový dům Modřice A1', quantity: 1, unitPrice: 1500, total: 1500 },
+      { description: 'Tlaková zkouška plynovodu', quantity: 1, unitPrice: 850, total: 850 },
+    ],
+    subtotal: 2350, vatRate: 0, vatAmount: 0, total: 2350,
+    paymentMethod: 'prevod',
+    bankAccount: 'CZ65 0800 0000 1923 4567 8901',
+    variableSymbol: '2026003',
+    status: 'nova',
+    note: '',
+    createdAt: '2026-02-15T14:00:00Z',
+    updatedAt: '2026-02-15T14:00:00Z',
+  },
+  // === Zaplaceno hotově ===
+  {
+    id: 'inv-09',
+    invoiceNumber: '2025006',
+    orderId: 'ord-05',      // MORAVOSTAV, výchozí revize novostavba
+    customerId: 'cust-09',
+    issueDate: '2025-11-08',
+    dueDate: '2025-11-22',
+    paidDate: '2025-11-08',
+    items: [
+      { description: 'Výchozí revize plynové instalace — novostavba RD Kuřim č. 2', quantity: 1, unitPrice: 1400, total: 1400 },
+    ],
+    subtotal: 1400, vatRate: 0, vatAmount: 0, total: 1400,
+    paymentMethod: 'hotovost',
+    bankAccount: 'CZ65 0800 0000 1923 4567 8901',
+    variableSymbol: '2025006',
+    status: 'zaplacena',
+    note: 'Zaplaceno hotově na místě',
+    createdAt: '2025-11-08T15:00:00Z',
+    updatedAt: '2025-11-08T15:00:00Z',
+  },
+  {
+    id: 'inv-10',
+    invoiceNumber: '2026004',
+    orderId: 'ord-03',      // Petr Veselý, pravidelná revize
+    customerId: 'cust-03',
+    issueDate: '2026-02-28',
+    dueDate: '2026-03-14',
+    paidDate: undefined,
+    items: [
+      { description: 'Provozní revize plynových zařízení — RD Jihlavská 42', quantity: 1, unitPrice: 1800, total: 1800 },
+      { description: 'Revize plynového kotle a rozvodů', quantity: 1, unitPrice: 1200, total: 1200 },
+      { description: 'Doprava', quantity: 1, unitPrice: 400, total: 400 },
+    ],
+    subtotal: 3400, vatRate: 0, vatAmount: 0, total: 3400,
+    paymentMethod: 'prevod',
+    bankAccount: 'CZ65 0800 0000 1923 4567 8901',
+    variableSymbol: '2026004',
+    status: 'odeslana',
+    note: '',
+    createdAt: '2026-02-28T09:00:00Z',
+    updatedAt: '2026-02-28T09:00:00Z',
+  },
+  // === Stornovaná faktura ===
+  {
+    id: 'inv-11',
+    invoiceNumber: '2025007',
+    orderId: 'ord-09',      // Domov seniorů Tišnov, pravidelná revize
+    customerId: 'cust-14',
+    issueDate: '2025-11-25',
+    dueDate: '2025-12-09',
+    paidDate: undefined,
+    items: [
+      { description: 'Provozní revize — Domov seniorů Tišnov (STORNO — přesunutá zakázka)', quantity: 1, unitPrice: 1800, total: 1800 },
+    ],
+    subtotal: 1800, vatRate: 0, vatAmount: 0, total: 1800,
+    paymentMethod: 'prevod',
+    bankAccount: 'CZ65 0800 0000 1923 4567 8901',
+    variableSymbol: '2025007',
+    status: 'stornovana',
+    note: 'Stornováno — termín přesunut, nová faktura bude vystavena',
+    createdAt: '2025-11-25T10:00:00Z',
+    updatedAt: '2025-11-28T08:00:00Z',
+  },
+  {
+    id: 'inv-12',
+    invoiceNumber: '2026005',
+    orderId: 'ord-25',      // Marie Svobodová, oprava + revize
+    customerId: 'cust-02',
+    issueDate: '2026-03-05',
+    dueDate: '2026-03-19',
+    paidDate: undefined,
+    items: [
+      { description: 'Oprava plynového rozvodu — byt Palackého tř. 87/3', quantity: 1, unitPrice: 2500, total: 2500 },
+      { description: 'Provozní revize po opravě', quantity: 1, unitPrice: 1800, total: 1800 },
+      { description: 'Tlaková zkouška', quantity: 1, unitPrice: 800, total: 800 },
+      { description: 'Materiál (fitinky, těsnění)', quantity: 1, unitPrice: 450, total: 450 },
+    ],
+    subtotal: 5550, vatRate: 0, vatAmount: 0, total: 5550,
+    paymentMethod: 'prevod',
+    bankAccount: 'CZ65 0800 0000 1923 4567 8901',
+    variableSymbol: '2026005',
+    status: 'nova',
+    note: '',
+    createdAt: '2026-03-05T08:00:00Z',
+    updatedAt: '2026-03-05T08:00:00Z',
+  },
+]
+
 // ─── Seed Function ──────────────────────────────────────────────────────────
 
 export async function seedDatabase() {
@@ -1232,7 +1500,7 @@ export async function seedDatabase() {
 
   await db.transaction(
     'rw',
-    [db.customers, db.objects, db.devices, db.orders, db.revisionReports, db.defects, db.shareLinks, db.settings],
+    [db.customers, db.objects, db.devices, db.orders, db.revisionReports, db.defects, db.shareLinks, db.invoices, db.settings],
     async () => {
       await db.settings.put({ key: 'technician', value: technician })
       await db.customers.bulkPut(customers)
@@ -1242,6 +1510,7 @@ export async function seedDatabase() {
       await db.revisionReports.bulkPut(revisionReports)
       await db.defects.bulkPut(defects)
       await db.shareLinks.bulkPut(shareLinks)
+      await db.invoices.bulkPut(invoices)
     }
   )
 }
