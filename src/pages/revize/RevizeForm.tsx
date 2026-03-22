@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { db } from '../../db/schema'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { useNavigate, useParams, Link } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Card from '../../components/ui/Card'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
@@ -215,23 +215,22 @@ export default function RevizeForm() {
   ]
 
   return (
-    <div className="p-4 md:p-6 flex flex-col gap-5 max-w-4xl mx-auto">
+    <div className="page-enter p-4 md:p-6 flex flex-col gap-5 max-w-4xl mx-auto">
       {/* Back */}
-      <Link
-        to={`/zakazky/${order.id}`}
-        className="inline-flex items-center gap-2 text-base text-[var(--color-primary)] font-medium hover:underline w-fit"
-      >
-        <ArrowLeft size={18} />
-        Zpět na zakázku
-      </Link>
+      <button onClick={() => navigate(`/zakazky/${order.id}`)} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium mb-4 transition-colors cursor-pointer">
+        <ArrowLeft size={20} />
+        <span>Zpět na zakázku</span>
+      </button>
 
-      <h1 className="text-2xl font-bold text-[var(--color-text)]">Nová revizní zpráva</h1>
-      <p className="text-base text-gray-500">
-        Zákazník: <strong>{customer.name}</strong> — {order.address}
-      </p>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-[var(--color-text)]">Nová revizní zpráva</h1>
+        <p className="text-[var(--color-text-secondary)] mt-1">
+          Zákazník: <strong>{customer.name}</strong> — {order.address}
+        </p>
+      </div>
 
       {/* Basic info */}
-      <Card title="Základní údaje">
+      <Card title="Základní údaje" accent="blue">
         <div className="flex flex-col gap-4">
           <Input label="Číslo zprávy" value={reportNumber} readOnly />
           <Select
@@ -249,7 +248,7 @@ export default function RevizeForm() {
       </Card>
 
       {/* Devices */}
-      <Card title="Revidovaná zařízení">
+      <Card title="Revidovaná zařízení" accent="blue">
         {availableDevices.length === 0 ? (
           <p className="text-gray-400">Žádná zařízení zákazníka</p>
         ) : (
@@ -276,7 +275,7 @@ export default function RevizeForm() {
       </Card>
 
       {/* Technician */}
-      <Card title="Revizní technik">
+      <Card title="Revizní technik" accent="blue">
         <div className="flex flex-col gap-4">
           <Input label="Jméno technika" value={techName} onChange={(e) => setTechName(e.target.value)} />
           <Input
@@ -288,7 +287,7 @@ export default function RevizeForm() {
       </Card>
 
       {/* Tests */}
-      <Card title="Provedené zkoušky">
+      <Card title="Provedené zkoušky" accent="green">
         <div className="flex flex-col gap-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Select
@@ -349,23 +348,23 @@ export default function RevizeForm() {
       </Card>
 
       {/* Defects */}
-      <Card title="Zjištěné závady">
+      <Card title="Zjištěné závady" accent="red">
         <div className="flex flex-col gap-4">
           {defectDrafts.map((draft) => (
             <div
               key={draft.tempId}
-              className="border border-[var(--color-border)] rounded-lg p-4 flex flex-col gap-3"
+              className="border border-[var(--color-border)] rounded-xl p-4 flex flex-col gap-3"
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1">
-                  <label className="block text-base font-medium text-[var(--color-text)] mb-1">
+                  <label className="block text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-2">
                     Popis závady
                   </label>
                   <textarea
                     value={draft.description}
                     onChange={(e) => updateDefect(draft.tempId, 'description', e.target.value)}
                     rows={2}
-                    className="w-full min-h-[44px] text-base p-3 border border-[var(--color-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+                    className="w-full min-h-[44px] text-base p-3 border border-[var(--color-border)] rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
                   />
                 </div>
                 <button
@@ -412,7 +411,7 @@ export default function RevizeForm() {
       </Card>
 
       {/* Conclusion */}
-      <Card title="Závěr">
+      <Card title="Závěr" accent="yellow">
         <div className="flex flex-col gap-4">
           <Select
             label="Závěr revize"
@@ -425,14 +424,14 @@ export default function RevizeForm() {
             ]}
           />
           <div className="w-full">
-            <label className="block text-base font-medium text-[var(--color-text)] mb-1">
+            <label className="block text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-2">
               Poznámka k závěru
             </label>
             <textarea
               value={conclusionNote}
               onChange={(e) => setConclusionNote(e.target.value)}
               rows={3}
-              className="w-full min-h-[44px] text-base p-3 border border-[var(--color-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+              className="w-full min-h-[44px] text-base p-3 border border-[var(--color-border)] rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
               placeholder="Volitelná poznámka…"
             />
           </div>

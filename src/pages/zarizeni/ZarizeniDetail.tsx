@@ -112,8 +112,8 @@ export default function ZarizeniDetail() {
 
   const InfoRow = ({ label, value }: { label: string; value?: string | number | null }) =>
     value ? (
-      <div className="flex flex-col sm:flex-row sm:items-baseline py-2 border-b border-gray-100">
-        <span className="font-medium text-gray-500 sm:w-52 shrink-0">{label}</span>
+      <div className="flex flex-col sm:flex-row sm:items-baseline py-2 border-b border-[var(--color-border)]/40">
+        <span className="font-medium text-[var(--color-text-secondary)] sm:w-52 shrink-0">{label}</span>
         <span className="text-[var(--color-text)]">{value}</span>
       </div>
     ) : null
@@ -121,16 +121,17 @@ export default function ZarizeniDetail() {
   const qrUrl = `${window.location.origin}/zarizeni/${device.id}`
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="page-enter p-6 space-y-6">
       {/* Back */}
-      <Button variant="ghost" icon={<ArrowLeft size={20} />} onClick={() => navigate('/zarizeni')}>
-        Zpět na zařízení
-      </Button>
+      <button onClick={() => navigate('/zarizeni')} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium mb-4 transition-colors cursor-pointer">
+        <ArrowLeft size={20} />
+        <span>Zpět na zařízení</span>
+      </button>
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-3 flex-wrap">
-          <h1 className="text-2xl font-bold">{device.name}</h1>
+          <h1 className="text-2xl font-bold text-[var(--color-text)]">{device.name}</h1>
           <Badge variant={categoryBadge[device.category]}>{getDeviceCategoryLabel(device.category)}</Badge>
         </div>
         <div className="flex flex-wrap gap-3">
@@ -148,7 +149,7 @@ export default function ZarizeniDetail() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Device info */}
-        <Card title="Informace o zařízení" className="lg:col-span-2">
+        <Card title="Informace o zařízení" accent="blue" className="lg:col-span-2">
           <InfoRow label="Výrobce" value={device.manufacturer} />
           <InfoRow label="Model" value={device.model} />
           <InfoRow label="Sériové číslo" value={device.serialNumber} />
@@ -157,8 +158,8 @@ export default function ZarizeniDetail() {
           <InfoRow label="Výkon" value={device.power} />
           <InfoRow label="Umístění" value={device.location} />
           <InfoRow label="Technické parametry" value={device.technicalParams} />
-          <div className="flex flex-col sm:flex-row sm:items-baseline py-2 border-b border-gray-100">
-            <span className="font-medium text-gray-500 sm:w-52 shrink-0">Zákazník</span>
+          <div className="flex flex-col sm:flex-row sm:items-baseline py-2 border-b border-[var(--color-border)]/40">
+            <span className="font-medium text-[var(--color-text-secondary)] sm:w-52 shrink-0">Zákazník</span>
             {customer ? (
               <Link to={`/zakaznici/${customer.id}`} className="text-[var(--color-primary)] hover:underline">
                 {customer.name}
@@ -172,7 +173,7 @@ export default function ZarizeniDetail() {
         </Card>
 
         {/* QR code */}
-        <Card title="QR kód">
+        <Card title="QR kód" accent="green">
           <div className="flex flex-col items-center gap-4">
             <QRCodeSVG value={qrUrl} size={200} />
             <p className="text-sm text-gray-500 text-center">Naskenujte pro zobrazení detailu zařízení</p>
@@ -184,15 +185,15 @@ export default function ZarizeniDetail() {
       </div>
 
       {/* Revision history */}
-      <Card title="Historie revizí">
+      <Card title="Historie revizí" accent="yellow">
         {deviceReports.length === 0 ? (
-          <p className="text-gray-500 py-4">Zatím žádné revize pro toto zařízení</p>
+          <div className="text-center py-8"><p className="text-[var(--color-text-secondary)]">Zatím žádné revize pro toto zařízení</p></div>
         ) : (
           <div className="space-y-3">
             {deviceReports.map((r) => (
               <div
                 key={r.id}
-                className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-4 rounded-lg border border-gray-100 cursor-pointer hover:bg-gray-50"
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-4 border border-[var(--color-border)] rounded-xl cursor-pointer hover:bg-blue-50/50 hover:border-blue-200 transition-all"
                 onClick={() => navigate(`/revizni-zpravy/${r.id}`)}
               >
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2">

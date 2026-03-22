@@ -88,14 +88,6 @@ export default function SdileniPage() {
   const typeVariant = report.type === 'vychozi' ? 'blue'
     : report.type === 'provozni' ? 'indigo' : 'orange'
 
-  const conclusionBg = report.conclusion === 'schopne' ? 'bg-green-50 border-green-200'
-    : report.conclusion === 's-vyhradami' ? 'bg-yellow-50 border-yellow-200'
-    : 'bg-red-50 border-red-200'
-
-  const conclusionText = report.conclusion === 'schopne' ? 'text-green-800'
-    : report.conclusion === 's-vyhradami' ? 'text-yellow-800'
-    : 'text-red-800'
-
   const testRow = (label: string, value?: string, instrument?: string) => {
     if (!value) return null
     const pass = value === 'Vyhovuje'
@@ -133,7 +125,7 @@ export default function SdileniPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-[800px] mx-auto px-4 py-8">
+      <div className="page-enter max-w-[800px] mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-gray-800">RevizePlyn</h1>
@@ -141,7 +133,7 @@ export default function SdileniPage() {
         </div>
 
         {/* Report header */}
-        <Card className="mb-4">
+        <Card className="mb-4" accent="blue">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
               <h2 className="text-xl font-bold text-gray-800">{report.reportNumber}</h2>
@@ -156,7 +148,7 @@ export default function SdileniPage() {
 
         {/* Customer */}
         {customer && (
-          <Card title="Provozovatel" className="mb-4">
+          <Card title="Provozovatel" className="mb-4" accent="blue">
             <div className="flex flex-col gap-1">
               <span className="text-base font-medium text-gray-800">{customer.name}</span>
               <span className="text-base text-gray-600">{customer.address}</span>
@@ -168,7 +160,7 @@ export default function SdileniPage() {
         )}
 
         {/* Technician */}
-        <Card title="Revizní technik" className="mb-4">
+        <Card title="Revizní technik" className="mb-4" accent="blue">
           <div className="flex flex-col gap-1">
             <span className="text-base font-medium text-gray-800">{report.technicianName}</span>
             <span className="text-base text-gray-500">Č. oprávnění: {report.technicianLicense}</span>
@@ -177,7 +169,7 @@ export default function SdileniPage() {
 
         {/* Devices */}
         {reportDevices && reportDevices.length > 0 && (
-          <Card title="Revidovaná zařízení" className="mb-4">
+          <Card title="Revidovaná zařízení" className="mb-4" accent="blue">
             <div className="flex flex-col gap-2">
               {reportDevices.map((device) => (
                 <div key={device.id} className="flex flex-col py-2 border-b border-gray-100 last:border-0">
@@ -192,7 +184,7 @@ export default function SdileniPage() {
         )}
 
         {/* Tests */}
-        <Card title="Provedené zkoušky" className="mb-4">
+        <Card title="Provedené zkoušky" className="mb-4" accent="green">
           <div className="flex flex-col">
             {testRow('Zkouška těsnosti', report.leakTestResult, report.leakTestInstrument)}
             {testRow('Zkouška funkčnosti', report.functionalityTest)}
@@ -210,7 +202,7 @@ export default function SdileniPage() {
 
         {/* Defects */}
         {defects && defects.length > 0 && (
-          <Card title="Zjištěné závady" className="mb-4">
+          <Card title="Zjištěné závady" className="mb-4" accent="red">
             <div className="flex flex-col gap-3">
               {defects.map((defect) => (
                 <div key={defect.id} className="flex flex-col gap-1 py-2 border-b border-gray-100 last:border-0">
@@ -233,15 +225,48 @@ export default function SdileniPage() {
         )}
 
         {/* Conclusion */}
-        <div className={`rounded-xl border p-6 mb-6 ${conclusionBg}`}>
-          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Závěr</h3>
-          <p className={`text-xl font-bold ${conclusionText}`}>
-            {getConclusionLabel(report.conclusion)}
-          </p>
-          {report.conclusionNote && (
-            <p className={`text-base mt-2 ${conclusionText} opacity-80`}>{report.conclusionNote}</p>
-          )}
-        </div>
+        {report.conclusion === 'schopne' && (
+          <div className="rounded-2xl bg-gradient-to-r from-emerald-50 to-emerald-100 border border-emerald-200 p-6 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center">
+                <CheckCircle className="text-white" size={24} />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold uppercase tracking-wider text-emerald-600 mb-1">Závěr</h3>
+                <p className="text-lg font-bold text-emerald-800">{getConclusionLabel(report.conclusion)}</p>
+                {report.conclusionNote && <p className="text-emerald-600 mt-1">{report.conclusionNote}</p>}
+              </div>
+            </div>
+          </div>
+        )}
+        {report.conclusion === 's-vyhradami' && (
+          <div className="rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-200 p-6 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center">
+                <XCircle className="text-white" size={24} />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold uppercase tracking-wider text-amber-600 mb-1">Závěr</h3>
+                <p className="text-lg font-bold text-amber-800">{getConclusionLabel(report.conclusion)}</p>
+                {report.conclusionNote && <p className="text-amber-600 mt-1">{report.conclusionNote}</p>}
+              </div>
+            </div>
+          </div>
+        )}
+        {report.conclusion === 'neschopne' && (
+          <div className="rounded-2xl bg-gradient-to-r from-red-50 to-red-100 border border-red-200 p-6 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center">
+                <XCircle className="text-white" size={24} />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold uppercase tracking-wider text-red-600 mb-1">Závěr</h3>
+                <p className="text-lg font-bold text-red-800">{getConclusionLabel(report.conclusion)}</p>
+                {report.conclusionNote && <p className="text-red-600 mt-1">{report.conclusionNote}</p>}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Download PDF */}
         {customer && technician && (

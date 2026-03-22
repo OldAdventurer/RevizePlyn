@@ -10,7 +10,7 @@ import Button from '../../components/ui/Button'
 import Select from '../../components/ui/Select'
 import SearchBar from '../../components/ui/SearchBar'
 import Table, { type Column } from '../../components/ui/Table'
-import { Plus, Filter } from 'lucide-react'
+import { Plus, Filter, FileText } from 'lucide-react'
 
 type OrderWithCustomer = Order & { customerName: string }
 
@@ -130,10 +130,13 @@ export default function ZakazkyList() {
   ]
 
   return (
-    <div className="p-4 md:p-6 space-y-4">
+    <div className="page-enter p-4 md:p-6 space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <h1 className="text-2xl font-bold text-[var(--color-text)]">Zakázky</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-[var(--color-text)]">Zakázky</h1>
+          <p className="text-[var(--color-text-secondary)] mt-1">Přehled všech zakázek</p>
+        </div>
         <Link to="/zakazky/nova">
           <Button icon={<Plus size={20} />}>Nová zakázka</Button>
         </Link>
@@ -157,7 +160,7 @@ export default function ZakazkyList() {
       </div>
 
       {/* Filters */}
-      <div className={`grid grid-cols-1 sm:grid-cols-3 gap-3 ${showFilters ? '' : 'hidden sm:grid'}`}>
+      <div className={`bg-white rounded-2xl border border-[var(--color-border)]/60 p-4 grid grid-cols-1 sm:grid-cols-3 gap-3 ${showFilters ? '' : 'hidden sm:grid'}`}>
         <Select
           options={statusOptions}
           value={statusFilter}
@@ -181,8 +184,9 @@ export default function ZakazkyList() {
       {/* Table / empty state */}
       <Card>
         {filteredOrders.length === 0 ? (
-          <div className="text-center py-12 text-gray-500 text-lg">
-            Žádné zakázky nenalezeny
+          <div className="text-center py-12">
+            <FileText className="mx-auto text-gray-300 mb-3" size={48} />
+            <p className="text-lg text-[var(--color-text-secondary)]">Žádné zakázky nenalezeny</p>
           </div>
         ) : (
           <Table<OrderWithCustomer>

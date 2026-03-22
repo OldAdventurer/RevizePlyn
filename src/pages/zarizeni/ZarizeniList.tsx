@@ -160,10 +160,13 @@ export default function ZarizeniList() {
   }
 
   return (
-    <div className="p-6 space-y-5">
+    <div className="page-enter p-6 space-y-5">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold">Zařízení</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-[var(--color-text)]">Zařízení</h1>
+          <p className="text-[var(--color-text-secondary)] mt-1">Evidence plynových zařízení</p>
+        </div>
         <div className="flex flex-wrap gap-3">
           {selectedIds.size > 0 && (
             <Button variant="secondary" icon={<QrCode size={20} />} onClick={handleBatchPrint}>
@@ -177,7 +180,7 @@ export default function ZarizeniList() {
       </div>
 
       {/* Search & Filters */}
-      <Card>
+      <Card subtitle="Vyhledávání a filtry">
         <div className="flex flex-col md:flex-row gap-4">
           <SearchBar
             placeholder="Hledat dle názvu, výrobce, modelu, sériového čísla…"
@@ -204,7 +207,7 @@ export default function ZarizeniList() {
         {!devices ? (
           <p className="text-gray-500 text-center py-8">Načítám…</p>
         ) : filtered.length === 0 ? (
-          <p className="text-gray-500 text-center py-8">Žádná zařízení nenalezena</p>
+          <div className="text-center py-12"><p className="text-lg text-[var(--color-text-secondary)]">Žádná zařízení nenalezena</p></div>
         ) : (
           <Table
             columns={columns}

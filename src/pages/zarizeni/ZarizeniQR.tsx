@@ -36,12 +36,13 @@ export default function ZarizeniQR() {
   }
 
   return (
-    <div className="p-6">
+    <div className="page-enter p-6">
       {/* Action buttons — hidden in print */}
       <div className="no-print flex flex-wrap gap-3 mb-6">
-        <Button variant="secondary" icon={<ArrowLeft size={20} />} onClick={() => navigate(-1)}>
-          Zpět
-        </Button>
+        <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium transition-colors cursor-pointer">
+          <ArrowLeft size={20} />
+          <span>Zpět</span>
+        </button>
         <Button icon={<Printer size={20} />} onClick={() => window.print()}>
           Tisknout
         </Button>
@@ -54,7 +55,7 @@ export default function ZarizeniQR() {
           return (
             <div
               key={device.id}
-              className="flex flex-col items-center border border-gray-200 rounded-xl p-6 print:border-gray-400 print:rounded-none print:p-4 break-inside-avoid"
+              className="flex flex-col items-center border border-[var(--color-border)] shadow-[var(--shadow-sm)] rounded-2xl p-6 print:border-gray-400 print:rounded-none print:p-4 break-inside-avoid"
             >
               <QRCodeSVG value={qrUrl} size={200} />
               <h2 className="text-lg font-bold mt-4 text-center">{device.name}</h2>

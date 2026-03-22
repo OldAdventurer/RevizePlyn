@@ -128,11 +128,14 @@ export default function NastaveniPage() {
 
   // ── Render ──
   return (
-    <div className="p-4 md:p-6 max-w-3xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold">Nastavení</h1>
+    <div className="page-enter p-4 md:p-6 max-w-3xl mx-auto space-y-6">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-[var(--color-text)]">Nastavení</h1>
+        <p className="text-[var(--color-text-secondary)] mt-1">Konfigurace aplikace a údajů technika</p>
+      </div>
 
       {/* ── Section 1: Technician ─────────────────────────────── */}
-      <Card title="Údaje revizního technika">
+      <Card title="Údaje revizního technika" accent="blue">
         <div className="flex items-center gap-2 mb-4 text-[var(--color-text-secondary)]">
           <User size={20} />
           <span className="text-sm">Tyto údaje se přenášejí do revizních zpráv</span>
@@ -212,7 +215,7 @@ export default function NastaveniPage() {
       </Card>
 
       {/* ── Section 2: Instruments ────────────────────────────── */}
-      <Card title="Měřicí přístroje">
+      <Card title="Měřicí přístroje" accent="green">
         <div className="flex items-center gap-2 mb-4 text-[var(--color-text-secondary)]">
           <Wrench size={20} />
           <span className="text-sm">Přístroje používané při revizích</span>
@@ -223,7 +226,7 @@ export default function NastaveniPage() {
             {form.instruments.map((instr) => (
               <div
                 key={instr.id}
-                className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]"
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]"
               >
                 <div className="min-w-0">
                   <p className="font-semibold">{instr.name}</p>
@@ -275,7 +278,7 @@ export default function NastaveniPage() {
       </Card>
 
       {/* ── Section 3: Data management ────────────────────────── */}
-      <Card title="Správa dat">
+      <Card title="Správa dat" accent="yellow">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
           {[
             { label: 'Zákazníků', value: customerCount },
@@ -285,7 +288,7 @@ export default function NastaveniPage() {
           ].map((s) => (
             <div
               key={s.label}
-              className="text-center p-3 rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)]"
+              className="text-center p-3 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)]"
             >
               <p className="text-2xl font-bold text-[var(--color-primary)]">{s.value}</p>
               <p className="text-sm text-[var(--color-text-secondary)]">{s.label}</p>
