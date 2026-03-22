@@ -1,0 +1,85 @@
+import { useMemo } from 'react'
+import { db } from '../../db/schema'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
+import { QRCodeSVG } from 'qrcode.react'
+import Button from '../../components/ui/Button'
+import { ArrowLeft, Printer } from 'lucide-react'
+import type { Device } from '../../types'
+
+export default function ZarizeniQR() {
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const batchParam = searchParams.get('batch')
+
+  const batchIds = useMemo(() => (batchParam ? batchParam.split(',').filter(Boolean) : id ? [id] : []), [batchParam, id])
+
+  const devices = useLiveQuery<Device[]>(
+    () => (batchIds.length > 0 ? db.devices.where('id').anyOf(batchIds).toArray() : Promise.resolve([] as Device[])),
+    [batchIds],
+  )
+  const customers = useLiveQuery(() => db.customers.toArray())
+
+  const customerMap = useMemo(() => {
+    const map = new Map<string, string>()
+    customers?.forEach((c) => map.set(c.id, c.name))
+    return map
+  }, [customers])
+
+  if (!devices) {
+    return <div className="p-6 text-center text-gray-500">Načítám…</div>
+  }
+
+  if (devices.length === 0) {
+    return <div className="p-6 text-center text-gray-500">Žádná zařízení k zobrazení</div>
+  }
+
+  return (
+    <div className="p-6">
+      {/* Action buttons — hidden in print */}
+      <div className="no-print flex flex-wrap gap-3 mb-6">
+        <Button variant="secondary" icon={<ArrowLeft size={20} />} onClick={() => navigate(-1)}>
+          Zpět
+        </Button>
+        <Button icon={<Printer size={20} />} onClick={() => window.print()}>
+          Tisknout
+        </Button>
+      </div>
+
+      {/* QR grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 print:grid-cols-2 print:gap-6">
+        {devices.map((device) => {
+          const qrUrl = `${window.location.origin}/zarizeni/${device.id}`
+          return (
+            <div
+              key={device.id}
+              className="flex flex-col items-center border border-gray-200 rounded-xl p-6 print:border-gray-400 print:rounded-none print:p-4 break-inside-avoid"
+            >
+              <QRCodeSVG value={qrUrl} size={200} />
+              <h2 className="text-lg font-bold mt-4 text-center">{device.name}</h2>
+              <p className="text-base text-gray-600 text-center">
+                {[device.manufacturer, device.model].filter(Boolean).join(' — ')}
+              </p>
+              {customerMap.get(device.customerId) && (
+                <p className="text-sm text-gray-500 mt-1">{customerMap.get(device.customerId)}</p>
+              )}
+              <p className="text-xs text-gray-400 mt-3 text-center">
+                Naskenujte pro zobrazení detailu zařízení
+              </p>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Print styles */}
+      <style>{`
+        @media print {
+          .no-print { display: none !important; }
+          body { font-size: 12pt; }
+          @page { margin: 1cm; }
+        }
+      `}</style>
+    </div>
+  )
+}

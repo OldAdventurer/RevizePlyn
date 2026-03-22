@@ -1,0 +1,356 @@
+import { useState, useMemo } from 'react'
+import { db } from '../../db/schema'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { useNavigate, useParams, Link } from 'react-router-dom'
+import {
+  formatDate,
+  getRevisionTypeLabel,
+  getConclusionLabel,
+  getSeverityLabel,
+  getDefectStatusLabel,
+} from '../../utils/format'
+import Card from '../../components/ui/Card'
+import Badge from '../../components/ui/Badge'
+import Button from '../../components/ui/Button'
+import Modal from '../../components/ui/Modal'
+import Table, { type Column } from '../../components/ui/Table'
+import {
+  ArrowLeft,
+  Download,
+  Share2,
+  AlertTriangle,
+  CheckCircle,
+  XCircle,
+} from 'lucide-react'
+import { generateRevisionPDF } from '../../utils/pdf'
+import type { Defect, Technician } from '../../types'
+
+function conclusionVariant(c: string): 'green' | 'yellow' | 'red' {
+  if (c === 'schopne') return 'green'
+  if (c === 's-vyhradami') return 'yellow'
+  return 'red'
+}
+
+function typeVariant(t: string): 'blue' | 'indigo' | 'orange' {
+  if (t === 'vychozi') return 'blue'
+  if (t === 'provozni') return 'indigo'
+  return 'orange'
+}
+
+export default function RevizeDetail() {
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [shareToast, setShareToast] = useState(false)
+
+  const report = useLiveQuery(() => db.revisionReports.get(id!), [id])
+  const customer = useLiveQuery(
+    () => (report ? db.customers.get(report.customerId) : undefined),
+    [report]
+  )
+  const order = useLiveQuery(
+    () => (report ? db.orders.get(report.orderId) : undefined),
+    [report]
+  )
+  const defects = useLiveQuery(
+    () => db.defects.where('revisionReportId').equals(id!).toArray(),
+    [id]
+  )
+  const allDevices = useLiveQuery(() => db.devices.toArray())
+  const technicianSetting = useLiveQuery(() => db.settings.get('technician'))
+
+  const devices = useMemo(() => {
+    if (!report || !allDevices) return []
+    return allDevices.filter((d) => report.deviceIds.includes(d.id))
+  }, [report, allDevices])
+
+  if (!report || !customer || !defects || !allDevices) {
+    return (
+      <div className="p-6 flex items-center justify-center min-h-[50vh]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[var(--color-primary)] mx-auto mb-3" />
+          <p className="text-lg text-gray-500">Načítám data…</p>
+        </div>
+      </div>
+    )
+  }
+
+  const handleDownloadPDF = () => {
+    const tech = technicianSetting?.value as Technician | undefined
+    generateRevisionPDF({
+      report,
+      customer,
+      devices,
+      defects,
+      technician: {
+        name: tech?.name ?? report.technicianName,
+        licenseNumber: report.technicianLicense,
+        address: tech?.address ?? '',
+        ico: tech?.ico ?? '',
+      },
+    })
+  }
+
+  const handleShare = async () => {
+    const token = crypto.randomUUID()
+    await db.shareLinks.add({
+      id: crypto.randomUUID(),
+      token,
+      revisionReportId: report.id,
+      createdAt: new Date().toISOString(),
+    })
+    const url = `${window.location.origin}/sdileni/${token}`
+    await navigator.clipboard.writeText(url)
+    setShareToast(true)
+    setTimeout(() => setShareToast(false), 3000)
+  }
+
+  const handleDelete = async () => {
+    await db.defects.where('revisionReportId').equals(report.id).delete()
+    await db.revisionReports.delete(report.id)
+    navigate('/revizni-zpravy')
+  }
+
+  const testRow = (label: string, value?: string, instrument?: string) => {
+    if (!value) return null
+    const pass = value === 'Vyhovuje'
+    return (
+      <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+        <span className="text-base text-gray-600">{label}</span>
+        <span className="flex items-center gap-2 text-base font-medium">
+          {pass ? (
+            <CheckCircle size={18} className="text-green-500" />
+          ) : value === 'Nevyhovuje' ? (
+            <XCircle size={18} className="text-red-500" />
+          ) : null}
+          {value}
+          {instrument && <span className="text-sm text-gray-400">({instrument})</span>}
+        </span>
+      </div>
+    )
+  }
+
+  const defectColumns: Column<Defect>[] = [
+    { key: 'description', header: 'Popis' },
+    {
+      key: 'severity',
+      header: 'Závažnost',
+      render: (d) => (
+        <Badge variant={d.severity === 'A' ? 'red' : d.severity === 'B' ? 'yellow' : 'blue'}>
+          {getSeverityLabel(d.severity)}
+        </Badge>
+      ),
+    },
+    {
+      key: 'deadline',
+      header: 'Termín odstranění',
+      render: (d) => (d.deadline ? formatDate(d.deadline) : '—'),
+    },
+    {
+      key: 'status',
+      header: 'Stav',
+      render: (d) => (
+        <Badge variant={d.status === 'odstranena' ? 'green' : 'red'}>
+          {getDefectStatusLabel(d.status)}
+        </Badge>
+      ),
+    },
+  ]
+
+  const conclusionBg =
+    report.conclusion === 'schopne'
+      ? 'bg-green-50 border-green-200'
+      : report.conclusion === 's-vyhradami'
+        ? 'bg-yellow-50 border-yellow-200'
+        : 'bg-red-50 border-red-200'
+  const conclusionTextColor =
+    report.conclusion === 'schopne'
+      ? 'text-green-800'
+      : report.conclusion === 's-vyhradami'
+        ? 'text-yellow-800'
+        : 'text-red-800'
+
+  return (
+    <div className="p-4 md:p-6 flex flex-col gap-5 max-w-4xl mx-auto">
+      {/* Back */}
+      <Link
+        to="/revizni-zpravy"
+        className="inline-flex items-center gap-2 text-base text-[var(--color-primary)] font-medium hover:underline w-fit"
+      >
+        <ArrowLeft size={18} />
+        Zpět na revizní zprávy
+      </Link>
+
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+        <div className="flex-1">
+          <h1 className="text-2xl font-bold text-[var(--color-text)]">{report.reportNumber}</h1>
+          <p className="text-base text-gray-500 mt-1">{formatDate(report.date)}</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Badge variant={typeVariant(report.type)}>{getRevisionTypeLabel(report.type)}</Badge>
+          <Badge variant={conclusionVariant(report.conclusion)}>
+            {getConclusionLabel(report.conclusion)}
+          </Badge>
+        </div>
+      </div>
+
+      {/* Info */}
+      <Card title="Informace">
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
+            <span className="font-medium text-gray-500 w-48 shrink-0">Zákazník:</span>
+            <span>
+              <Link
+                to={`/zakaznici/${customer.id}`}
+                className="text-[var(--color-primary)] hover:underline font-medium"
+              >
+                {customer.name}
+              </Link>
+              <span className="text-gray-500 ml-2">{customer.address}</span>
+            </span>
+          </div>
+
+          {order && (
+            <div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
+              <span className="font-medium text-gray-500 w-48 shrink-0">Zakázka:</span>
+              <Link
+                to={`/zakazky/${order.id}`}
+                className="text-[var(--color-primary)] hover:underline font-medium"
+              >
+                {order.description || order.address}
+              </Link>
+            </div>
+          )}
+
+          <div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
+            <span className="font-medium text-gray-500 w-48 shrink-0">Revidovaná zařízení:</span>
+            <div className="flex flex-col gap-1">
+              {devices.length > 0 ? (
+                devices.map((d) => (
+                  <Link
+                    key={d.id}
+                    to={`/zarizeni/${d.id}`}
+                    className="text-[var(--color-primary)] hover:underline"
+                  >
+                    {d.name} — {d.manufacturer} {d.model}
+                  </Link>
+                ))
+              ) : (
+                <span className="text-gray-400">—</span>
+              )}
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
+            <span className="font-medium text-gray-500 w-48 shrink-0">Revizní technik:</span>
+            <span>
+              {report.technicianName}, oprávnění č. {report.technicianLicense}
+            </span>
+          </div>
+        </div>
+      </Card>
+
+      {/* Tests */}
+      <Card title="Provedené zkoušky">
+        <div className="flex flex-col">
+          {testRow('Zkouška těsnosti', report.leakTestResult, report.leakTestInstrument)}
+          {testRow('Zkouška funkčnosti', report.functionalityTest)}
+          {testRow('Kontrola odvodu spalin', report.fluegasTest)}
+          {report.coMeasurement &&
+            testRow(
+              'Měření CO',
+              `${report.coMeasurement} — ${report.coMeasurementValue ?? ''}`,
+              report.coMeasurementInstrument
+            )}
+          {testRow('Kontrola větrání', report.ventilationCheck)}
+          {!report.leakTestResult &&
+            !report.functionalityTest &&
+            !report.fluegasTest &&
+            !report.coMeasurement &&
+            !report.ventilationCheck && (
+              <p className="text-gray-400 py-2">Žádné zkoušky nebyly zaznamenány</p>
+            )}
+        </div>
+      </Card>
+
+      {/* Defects */}
+      <Card title="Zjištěné závady">
+        {defects.length > 0 ? (
+          <Table<Defect>
+            columns={defectColumns}
+            data={defects}
+            keyExtractor={(d) => d.id}
+          />
+        ) : (
+          <p className="text-green-600 font-medium flex items-center gap-2 py-2">
+            <CheckCircle size={20} />
+            Nebyly zjištěny žádné závady ✅
+          </p>
+        )}
+      </Card>
+
+      {/* Conclusion */}
+      <div className={`rounded-xl border-2 p-6 ${conclusionBg}`}>
+        <div className="flex items-center gap-3 mb-2">
+          {report.conclusion === 'schopne' && <CheckCircle size={32} className="text-green-600" />}
+          {report.conclusion === 's-vyhradami' && (
+            <AlertTriangle size={32} className="text-yellow-600" />
+          )}
+          {report.conclusion === 'neschopne' && <XCircle size={32} className="text-red-600" />}
+          <h2 className={`text-xl font-bold ${conclusionTextColor}`}>
+            {getConclusionLabel(report.conclusion)}
+          </h2>
+        </div>
+        {report.conclusionNote && (
+          <p className={`text-base mt-2 ${conclusionTextColor}`}>{report.conclusionNote}</p>
+        )}
+      </div>
+
+      {/* Actions */}
+      <div className="flex flex-wrap gap-3 pt-2 pb-4">
+        <Button icon={<Download size={18} />} onClick={handleDownloadPDF}>
+          Stáhnout PDF
+        </Button>
+        <Button variant="secondary" icon={<Share2 size={18} />} onClick={handleShare}>
+          Sdílet
+        </Button>
+        <Button variant="secondary" onClick={() => navigate(`/revizni-zpravy/${report.id}/upravit`)}>
+          Upravit
+        </Button>
+        <Button variant="danger" onClick={() => setShowDeleteModal(true)}>
+          Smazat
+        </Button>
+      </div>
+
+      {/* Share toast */}
+      {shareToast && (
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 bg-green-600 text-white px-5 py-3 rounded-lg shadow-lg z-50 text-base font-medium">
+          Odkaz zkopírován do schránky ✅
+        </div>
+      )}
+
+      {/* Delete modal */}
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        title="Smazat revizní zprávu?"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+              Zrušit
+            </Button>
+            <Button variant="danger" onClick={handleDelete}>
+              Smazat
+            </Button>
+          </>
+        }
+      >
+        <p className="text-base">
+          Opravdu chcete smazat zprávu <strong>{report.reportNumber}</strong>? Tato akce je nevratná
+          a smaže i všechny přiřazené závady.
+        </p>
+      </Modal>
+    </div>
+  )
+}

@@ -1,0 +1,1253 @@
+import { db } from './schema'
+import type {
+  Customer,
+  ObjectRecord,
+  Device,
+  Order,
+  RevisionReport,
+  Defect,
+  ShareLink,
+  Technician,
+} from '../types'
+
+// ─── Technician ─────────────────────────────────────────────────────────────
+
+const technician: Technician = {
+  name: 'Ing. Miroslav Dvořák',
+  licenseNumber: 'RT-P-2019/0847',
+  licenseValidFrom: '2024-03-01',
+  licenseValidTo: '2029-02-28',
+  ico: '76543210',
+  address: 'Kotlářská 1247/12, 602 00 Brno',
+  phone: '+420 602 345 678',
+  email: 'dvorak.revize@email.cz',
+  instruments: [
+    {
+      id: 'instr-01',
+      name: 'Detektor úniku plynu',
+      model: 'Testo 316-2',
+      calibrationValidUntil: '2026-09-15',
+    },
+    {
+      id: 'instr-02',
+      name: 'Analyzátor spalin',
+      model: 'Testo 300',
+      calibrationValidUntil: '2026-11-22',
+    },
+    {
+      id: 'instr-03',
+      name: 'Digitální manometr',
+      model: 'Keller LEO 2',
+      calibrationValidUntil: '2027-05-03',
+    },
+  ],
+}
+
+// ─── Customers ──────────────────────────────────────────────────────────────
+
+const customers: Customer[] = [
+  // Physical persons
+  {
+    id: 'cust-01',
+    name: 'Jan Novák',
+    type: 'fyzicka-osoba',
+    phone: '+420 731 222 456',
+    email: 'jan.novak@email.cz',
+    address: 'Horní 14, 639 00 Brno-Štýřice',
+    note: 'Starší kotel, pravidelný zákazník od 2019',
+    createdAt: '2019-04-12',
+  },
+  {
+    id: 'cust-02',
+    name: 'Marie Svobodová',
+    type: 'fyzicka-osoba',
+    phone: '+420 608 111 234',
+    email: 'marie.svobodova@seznam.cz',
+    address: 'Palackého tř. 87/3, 612 00 Brno',
+    note: 'Byt 3+1, plynový sporák + karma',
+    createdAt: '2021-09-05',
+  },
+  {
+    id: 'cust-03',
+    name: 'Petr Veselý',
+    type: 'fyzicka-osoba',
+    phone: '+420 775 333 890',
+    email: 'vesely.petr@gmail.com',
+    address: 'Jihlavská 42, 664 41 Troubsko',
+    note: 'Novostavba 2023, výchozí revize hotová',
+    createdAt: '2023-06-20',
+  },
+  {
+    id: 'cust-04',
+    name: 'Alena Procházková',
+    type: 'fyzicka-osoba',
+    phone: '+420 602 444 567',
+    address: 'Na Kopci 7, 664 48 Moravany',
+    note: 'Dva kotle (podlažní vytápění)',
+    createdAt: '2020-11-03',
+  },
+  {
+    id: 'cust-05',
+    name: 'Jiří Černý',
+    type: 'fyzicka-osoba',
+    phone: '+420 723 555 123',
+    email: 'jiri.cerny@email.cz',
+    address: 'Vídeňská 119/28, 619 00 Brno',
+    note: 'SVJ požaduje revizi za celý dům',
+    createdAt: '2022-03-15',
+  },
+  {
+    id: 'cust-06',
+    name: 'Hana Kučerová',
+    type: 'fyzicka-osoba',
+    phone: '+420 606 666 789',
+    address: 'Hlavní 203, 664 34 Kuřim',
+    note: 'Starý průtokový ohřívač, doporučena výměna',
+    createdAt: '2020-05-22',
+  },
+  {
+    id: 'cust-07',
+    name: 'František Dvořáček',
+    type: 'fyzicka-osoba',
+    phone: '+420 739 777 012',
+    email: 'fdvoracek@centrum.cz',
+    address: 'Nádražní 31, 666 01 Tišnov',
+    note: 'Vzdálený zákazník, dojezd 40 min',
+    createdAt: '2021-01-18',
+  },
+  {
+    id: 'cust-08',
+    name: 'Ludmila Marková',
+    type: 'fyzicka-osoba',
+    phone: '+420 774 888 345',
+    address: 'Botanická 24/5, 602 00 Brno',
+    note: 'Seniorka, nutno volat den předem',
+    createdAt: '2022-08-30',
+  },
+  // Companies
+  {
+    id: 'cust-09',
+    name: 'MORAVOSTAV s.r.o.',
+    type: 'firma',
+    ico: '26247852',
+    dic: 'CZ26247852',
+    contactPerson: 'Ing. Tomáš Hora',
+    phone: '+420 541 235 100',
+    email: 'hora@moravostav.cz',
+    address: 'Příkop 838/6, 602 00 Brno',
+    note: 'Staví RD v Kuřimi a Tišnově, výchozí revize novostaveb',
+    createdAt: '2022-02-10',
+  },
+  {
+    id: 'cust-10',
+    name: 'Bytové družstvo Harmonie',
+    type: 'firma',
+    ico: '00558214',
+    contactPerson: 'Vladimír Kratochvíl',
+    phone: '+420 545 222 333',
+    email: 'kratochvil@bdharmonie.cz',
+    address: 'Loosova 13/2, 638 00 Brno-Lesná',
+    note: '3 bytové domy, 48 bytových jednotek',
+    createdAt: '2019-11-25',
+  },
+  {
+    id: 'cust-11',
+    name: 'SB Správa budov a.s.',
+    type: 'firma',
+    ico: '28301587',
+    dic: 'CZ28301587',
+    contactPerson: 'Jana Pokorná',
+    phone: '+420 543 210 555',
+    email: 'pokorna@sbsprava.cz',
+    address: 'Cejl 107/48, 602 00 Brno',
+    note: 'Spravuje 12 objektů v Brně',
+    createdAt: '2020-07-14',
+  },
+  {
+    id: 'cust-12',
+    name: 'Restaurace U Zlatého lva s.r.o.',
+    type: 'firma',
+    ico: '04521963',
+    dic: 'CZ04521963',
+    contactPerson: 'Pavel Krejčí',
+    phone: '+420 530 123 456',
+    email: 'krejci@uzlateholva.cz',
+    address: 'Zelný trh 8, 602 00 Brno',
+    note: 'Profesionální kuchyně, 2 plynové sporáky + gril',
+    createdAt: '2021-04-08',
+  },
+  {
+    id: 'cust-13',
+    name: 'DOMOSTAV Group a.s.',
+    type: 'firma',
+    ico: '25527843',
+    dic: 'CZ25527843',
+    contactPerson: 'Ing. Radek Šimek',
+    phone: '+420 541 777 888',
+    email: 'simek@domostav.cz',
+    address: 'Masarykova 427/31, 602 00 Brno',
+    note: 'Projekt 24 RD v Modřicích, hromadné výchozí revize',
+    createdAt: '2023-09-01',
+  },
+  {
+    id: 'cust-14',
+    name: 'Domov seniorů Tišnov, p.o.',
+    type: 'firma',
+    ico: '71184520',
+    contactPerson: 'Mgr. Eva Součková',
+    phone: '+420 549 418 200',
+    email: 'souckova@domovtinov.cz',
+    address: 'Černohorská 101, 666 01 Tišnov',
+    note: 'Kotelna + kuchyně, zvýšené nároky na bezpečnost',
+    createdAt: '2020-03-06',
+  },
+]
+
+// ─── Objects ────────────────────────────────────────────────────────────────
+
+const objects: ObjectRecord[] = [
+  // Physical persons — one object each
+  { id: 'obj-01', customerId: 'cust-01', name: 'RD Horní 14', type: 'rodinny-dum', address: 'Horní 14, 639 00 Brno-Štýřice' },
+  { id: 'obj-02', customerId: 'cust-02', name: 'Byt Palackého tř. 87/3', type: 'byt', address: 'Palackého tř. 87/3, 612 00 Brno' },
+  { id: 'obj-03', customerId: 'cust-03', name: 'RD Jihlavská 42', type: 'rodinny-dum', address: 'Jihlavská 42, 664 41 Troubsko' },
+  { id: 'obj-04', customerId: 'cust-04', name: 'RD Na Kopci 7', type: 'rodinny-dum', address: 'Na Kopci 7, 664 48 Moravany' },
+  { id: 'obj-05', customerId: 'cust-05', name: 'Byt Vídeňská 119/28', type: 'byt', address: 'Vídeňská 119/28, 619 00 Brno', note: 'Bytový dům, SVJ' },
+  { id: 'obj-06', customerId: 'cust-06', name: 'RD Hlavní 203', type: 'rodinny-dum', address: 'Hlavní 203, 664 34 Kuřim' },
+  { id: 'obj-07', customerId: 'cust-07', name: 'RD Nádražní 31', type: 'rodinny-dum', address: 'Nádražní 31, 666 01 Tišnov' },
+  { id: 'obj-08', customerId: 'cust-08', name: 'Byt Botanická 24/5', type: 'byt', address: 'Botanická 24/5, 602 00 Brno' },
+  // BD Harmonie — 3 bytové domy
+  { id: 'obj-09', customerId: 'cust-10', name: 'BD Loosova 13', type: 'bytovy-dum', address: 'Loosova 13, 638 00 Brno-Lesná', note: '16 bytových jednotek' },
+  { id: 'obj-10', customerId: 'cust-10', name: 'BD Loosova 15', type: 'bytovy-dum', address: 'Loosova 15, 638 00 Brno-Lesná', note: '16 bytových jednotek' },
+  { id: 'obj-11', customerId: 'cust-10', name: 'BD Loosova 17', type: 'bytovy-dum', address: 'Loosova 17, 638 00 Brno-Lesná', note: '16 bytových jednotek' },
+  // MORAVOSTAV — 3 novostavby
+  { id: 'obj-12', customerId: 'cust-09', name: 'Novostavba RD Kuřim č. 1', type: 'rodinny-dum', address: 'Blanenská 112, 664 34 Kuřim', note: 'Etapa I, kolaudace 12/2025' },
+  { id: 'obj-13', customerId: 'cust-09', name: 'Novostavba RD Kuřim č. 2', type: 'rodinny-dum', address: 'Blanenská 114, 664 34 Kuřim', note: 'Etapa I, kolaudace 01/2026' },
+  { id: 'obj-14', customerId: 'cust-09', name: 'Novostavba RD Kuřim č. 3', type: 'rodinny-dum', address: 'Blanenská 116, 664 34 Kuřim', note: 'Etapa II, kolaudace plán 04/2026' },
+  // SB Správa budov — 2 spravované BD
+  { id: 'obj-15', customerId: 'cust-11', name: 'BD Kounicova 64', type: 'bytovy-dum', address: 'Kounicova 64, 602 00 Brno', note: '24 bytových jednotek' },
+  { id: 'obj-16', customerId: 'cust-11', name: 'BD Pellicova 19', type: 'bytovy-dum', address: 'Pellicova 19, 602 00 Brno', note: '12 bytových jednotek' },
+  // Restaurace U Zlatého lva
+  { id: 'obj-17', customerId: 'cust-12', name: 'Restaurace U Zlatého lva', type: 'provozovna', address: 'Zelný trh 8, 602 00 Brno', note: 'Profesionální kuchyně' },
+  // DOMOSTAV — 3 řadové domy Modřice
+  { id: 'obj-18', customerId: 'cust-13', name: 'Řadový dům Modřice A1', type: 'rodinny-dum', address: 'Tyršova 201, 664 42 Modřice', note: 'Etapa 1' },
+  { id: 'obj-19', customerId: 'cust-13', name: 'Řadový dům Modřice A2', type: 'rodinny-dum', address: 'Tyršova 202, 664 42 Modřice', note: 'Etapa 1' },
+  { id: 'obj-20', customerId: 'cust-13', name: 'Řadový dům Modřice A3', type: 'rodinny-dum', address: 'Tyršova 203, 664 42 Modřice', note: 'Etapa 1' },
+  // Domov seniorů Tišnov
+  { id: 'obj-21', customerId: 'cust-14', name: 'Domov seniorů Tišnov', type: 'ostatni', address: 'Černohorská 101, 666 01 Tišnov', note: 'Kotelna + kuchyně' },
+]
+
+// ─── Devices ────────────────────────────────────────────────────────────────
+
+const devices: Device[] = [
+  // ── Jan Novák (obj-01) ──
+  {
+    id: 'dev-01', objectId: 'obj-01', customerId: 'cust-01', category: 'kotel',
+    name: 'Plynový kotel Junkers ZWE 24-5 MFK', manufacturer: 'Bosch (Junkers)',
+    model: 'ZWE 24-5 MFK', serialNumber: 'CE-2008-7741235',
+    yearOfManufacture: 2008, yearOfInstallation: 2008,
+    location: 'Kotelna, 1. PP', technicalParams: 'Atmosférický, otevřená spalinová cesta',
+    power: '24 kW', note: 'Starší typ, zvýšená pozornost při revizi',
+  },
+  {
+    id: 'dev-02', objectId: 'obj-01', customerId: 'cust-01', category: 'rozvod',
+    name: 'NTL plynovod — RD', manufacturer: 'ocelové potrubí',
+    model: 'DN 25', yearOfInstallation: 2008,
+    location: 'Celý objekt', technicalParams: 'Ocel, DN 25, NTL 2,1 kPa',
+  },
+
+  // ── Marie Svobodová (obj-02) ──
+  {
+    id: 'dev-03', objectId: 'obj-02', customerId: 'cust-02', category: 'ohrivac',
+    name: 'Průtokový ohřívač Junkers WR 11-2 P', manufacturer: 'Bosch (Junkers)',
+    model: 'WR 11-2 P', serialNumber: 'FD-0619-334187',
+    yearOfManufacture: 2006, yearOfInstallation: 2006,
+    location: 'Koupelna', power: '19,2 kW',
+    note: 'Karma v bytě, nutno kontrolovat odvod spalin',
+  },
+  {
+    id: 'dev-04', objectId: 'obj-02', customerId: 'cust-02', category: 'sporak',
+    name: 'Plynový sporák Mora Premium 6106 AW', manufacturer: 'Mora',
+    model: 'Premium 6106 AW', serialNumber: 'MR-19-08823',
+    yearOfManufacture: 2019, yearOfInstallation: 2019,
+    location: 'Kuchyně', technicalParams: 'Elektrická trouba, plynový vařič 4 hořáky',
+  },
+
+  // ── Petr Veselý (obj-03) ──
+  {
+    id: 'dev-05', objectId: 'obj-03', customerId: 'cust-03', category: 'kotel',
+    name: 'Plynový kotel Protherm Gepard Condens 25 MKO', manufacturer: 'Protherm',
+    model: 'Gepard Condens 25 MKO', serialNumber: 'PT-22-5541890',
+    yearOfManufacture: 2022, yearOfInstallation: 2023,
+    location: 'Technická místnost, 1. NP', technicalParams: 'Kondenzační, turbo, koaxiální odkouření',
+    power: '25 kW',
+  },
+  {
+    id: 'dev-06', objectId: 'obj-03', customerId: 'cust-03', category: 'rozvod',
+    name: 'Přípojka plynu + domovní plynovod', manufacturer: 'PE-HD / ocel',
+    model: 'PE-HD DN 32 + ocel DN 25',
+    yearOfInstallation: 2023,
+    location: 'Od HUP po kotel', technicalParams: 'PE-HD DN 32 (přípojka), ocel DN 25 (domovní rozvod), NTL',
+  },
+
+  // ── Alena Procházková (obj-04) ──
+  {
+    id: 'dev-07', objectId: 'obj-04', customerId: 'cust-04', category: 'kotel',
+    name: 'Plynový kotel Vaillant ecoTEC plus VU 256/5-5', manufacturer: 'Vaillant',
+    model: 'ecoTEC plus VU 256/5-5', serialNumber: 'VA-18-2209871',
+    yearOfManufacture: 2018, yearOfInstallation: 2018,
+    location: 'Kotelna, 1. PP', technicalParams: 'Kondenzační, turbo',
+    power: '25 kW', note: '1. NP + 2. NP podlahové vytápění',
+  },
+  {
+    id: 'dev-08', objectId: 'obj-04', customerId: 'cust-04', category: 'kotel',
+    name: 'Plynový kotel Baxi Luna Duo-tec+ 28 GA', manufacturer: 'Baxi',
+    model: 'Luna Duo-tec+ 28 GA', serialNumber: 'BX-19-4437821',
+    yearOfManufacture: 2019, yearOfInstallation: 2019,
+    location: 'Kotelna, 1. PP', technicalParams: 'Kondenzační, turbo, kaskáda s VU 256',
+    power: '28 kW', note: 'Druhý kotel pro špičkový provoz',
+  },
+  {
+    id: 'dev-09', objectId: 'obj-04', customerId: 'cust-04', category: 'rozvod',
+    name: 'NTL plynovod — RD', manufacturer: 'ocelové potrubí',
+    model: 'DN 25', yearOfInstallation: 2005,
+    location: 'Celý objekt', technicalParams: 'Ocel, DN 25, NTL 2,1 kPa',
+  },
+
+  // ── Jiří Černý (obj-05) ──
+  {
+    id: 'dev-10', objectId: 'obj-05', customerId: 'cust-05', category: 'kotel',
+    name: 'Plynový kotel Junkers CerapurComfort ZWBC 28-3 C', manufacturer: 'Bosch (Junkers)',
+    model: 'CerapurComfort ZWBC 28-3 C', serialNumber: 'CE-2020-8814523',
+    yearOfManufacture: 2020, yearOfInstallation: 2020,
+    location: 'Technická místnost, byt 28', technicalParams: 'Kondenzační, turbo, kombinovaný',
+    power: '28 kW',
+  },
+
+  // ── Hana Kučerová (obj-06) ──
+  {
+    id: 'dev-11', objectId: 'obj-06', customerId: 'cust-06', category: 'ohrivac',
+    name: 'Průtokový ohřívač Vaillant atmoMAG 114/1', manufacturer: 'Vaillant',
+    model: 'atmoMAG 114/1', serialNumber: 'VA-10-1123650',
+    yearOfManufacture: 2010, yearOfInstallation: 2010,
+    location: 'Koupelna, 1. NP', power: '19,2 kW',
+    note: 'Starší karma, doporučena výměna při příští revizi',
+  },
+  {
+    id: 'dev-12', objectId: 'obj-06', customerId: 'cust-06', category: 'sporak',
+    name: 'Plynový sporák Gorenje GI 6322 XA', manufacturer: 'Gorenje',
+    model: 'GI 6322 XA', serialNumber: 'GR-21-56201',
+    yearOfManufacture: 2021, yearOfInstallation: 2021,
+    location: 'Kuchyně', technicalParams: 'Plynový vařič + plynová trouba',
+  },
+  {
+    id: 'dev-13', objectId: 'obj-06', customerId: 'cust-06', category: 'rozvod',
+    name: 'NTL plynovod — RD', manufacturer: 'ocelové potrubí',
+    model: 'DN 25', yearOfInstallation: 2003,
+    location: 'Celý objekt', technicalParams: 'Ocel, DN 25, NTL 2,1 kPa',
+  },
+
+  // ── František Dvořáček (obj-07) ──
+  {
+    id: 'dev-14', objectId: 'obj-07', customerId: 'cust-07', category: 'kotel',
+    name: 'Plynový kotel Protherm Medvěd Condens 25 KKS', manufacturer: 'Protherm',
+    model: 'Medvěd Condens 25 KKS', serialNumber: 'PT-16-3345601',
+    yearOfManufacture: 2016, yearOfInstallation: 2016,
+    location: 'Kotelna, 1. PP', technicalParams: 'Kondenzační, stacionární',
+    power: '25 kW',
+  },
+  {
+    id: 'dev-15', objectId: 'obj-07', customerId: 'cust-07', category: 'rozvod',
+    name: 'NTL plynovod — RD', manufacturer: 'ocelové potrubí',
+    model: 'DN 25', yearOfInstallation: 2010,
+    location: 'Celý objekt', technicalParams: 'Ocel, DN 25, NTL 2,1 kPa',
+  },
+  {
+    id: 'dev-16', objectId: 'obj-07', customerId: 'cust-07', category: 'regulator',
+    name: 'Regulátor tlaku B6 (Tartarini)', manufacturer: 'Tartarini',
+    model: 'B6', yearOfInstallation: 2012,
+    location: 'HUP, fasáda', technicalParams: 'Vstup STL, výstup NTL 2,1 kPa',
+  },
+
+  // ── Ludmila Marková (obj-08) ──
+  {
+    id: 'dev-17', objectId: 'obj-08', customerId: 'cust-08', category: 'kotel',
+    name: 'Plynový kotel Viessmann Vitodens 100-W B1HF', manufacturer: 'Viessmann',
+    model: 'Vitodens 100-W B1HF', serialNumber: 'VS-23-7712104',
+    yearOfManufacture: 2023, yearOfInstallation: 2023,
+    location: 'Technická místnost', technicalParams: 'Kondenzační, turbo',
+    power: '19 kW', note: 'Nový kotel, výměna v 09/2023',
+  },
+
+  // ── BD Harmonie — Loosova 13 (obj-09) ──
+  {
+    id: 'dev-18', objectId: 'obj-09', customerId: 'cust-10', category: 'rozvod',
+    name: 'Domovní plynovod — BD Loosova 13', manufacturer: 'ocelové potrubí',
+    model: 'DN 50', yearOfInstallation: 1998,
+    location: 'Stoupací vedení, 3 podlaží', technicalParams: 'Ocel, DN 50, NTL 2,1 kPa, 16 BJ',
+  },
+  {
+    id: 'dev-19', objectId: 'obj-09', customerId: 'cust-10', category: 'regulator',
+    name: 'Regulátor tlaku Francel B10', manufacturer: 'Francel',
+    model: 'B10', yearOfInstallation: 2015,
+    location: 'HUP, přístupová skříň u vstupu',
+    technicalParams: 'Vstup STL, výstup NTL 2,1 kPa',
+  },
+
+  // ── BD Harmonie — Loosova 15 (obj-10) ──
+  {
+    id: 'dev-20', objectId: 'obj-10', customerId: 'cust-10', category: 'rozvod',
+    name: 'Domovní plynovod — BD Loosova 15', manufacturer: 'ocelové potrubí',
+    model: 'DN 50', yearOfInstallation: 1998,
+    location: 'Stoupací vedení, 3 podlaží', technicalParams: 'Ocel, DN 50, NTL 2,1 kPa, 16 BJ',
+  },
+
+  // ── BD Harmonie — Loosova 17 (obj-11) ──
+  {
+    id: 'dev-21', objectId: 'obj-11', customerId: 'cust-10', category: 'rozvod',
+    name: 'Domovní plynovod — BD Loosova 17', manufacturer: 'ocelové potrubí',
+    model: 'DN 50', yearOfInstallation: 1998,
+    location: 'Stoupací vedení, 3 podlaží', technicalParams: 'Ocel, DN 50, NTL 2,1 kPa, 16 BJ',
+  },
+
+  // ── MORAVOSTAV — Kuřim novostavby ──
+  {
+    id: 'dev-22', objectId: 'obj-12', customerId: 'cust-09', category: 'kotel',
+    name: 'Plynový kotel Protherm Gepard Condens 25 MKO', manufacturer: 'Protherm',
+    model: 'Gepard Condens 25 MKO', serialNumber: 'PT-25-7781001',
+    yearOfManufacture: 2025, yearOfInstallation: 2025,
+    location: 'Technická místnost, 1. NP', technicalParams: 'Kondenzační, turbo',
+    power: '25 kW',
+  },
+  {
+    id: 'dev-23', objectId: 'obj-12', customerId: 'cust-09', category: 'rozvod',
+    name: 'Přípojka plynu + domovní plynovod', manufacturer: 'PE-HD / ocel',
+    model: 'PE-HD DN 32 + ocel DN 25', yearOfInstallation: 2025,
+    location: 'Od HUP po kotel', technicalParams: 'PE-HD DN 32 (přípojka), ocel DN 25 (domovní), NTL',
+  },
+  {
+    id: 'dev-24', objectId: 'obj-13', customerId: 'cust-09', category: 'kotel',
+    name: 'Plynový kotel Viessmann Vitodens 100-W B1HF', manufacturer: 'Viessmann',
+    model: 'Vitodens 100-W B1HF', serialNumber: 'VS-25-7712340',
+    yearOfManufacture: 2025, yearOfInstallation: 2025,
+    location: 'Technická místnost, 1. NP', technicalParams: 'Kondenzační, turbo',
+    power: '19 kW',
+  },
+  {
+    id: 'dev-25', objectId: 'obj-13', customerId: 'cust-09', category: 'rozvod',
+    name: 'Přípojka plynu + domovní plynovod', manufacturer: 'PE-HD / ocel',
+    model: 'PE-HD DN 32 + ocel DN 25', yearOfInstallation: 2025,
+    location: 'Od HUP po kotel', technicalParams: 'PE-HD DN 32 (přípojka), ocel DN 25 (domovní), NTL',
+  },
+  {
+    id: 'dev-26', objectId: 'obj-14', customerId: 'cust-09', category: 'kotel',
+    name: 'Plynový kotel Protherm Gepard Condens 25 MKO', manufacturer: 'Protherm',
+    model: 'Gepard Condens 25 MKO', serialNumber: 'PT-25-7781003',
+    yearOfManufacture: 2025, yearOfInstallation: 2025,
+    location: 'Technická místnost, 1. NP', technicalParams: 'Kondenzační, turbo',
+    power: '25 kW',
+  },
+  {
+    id: 'dev-27', objectId: 'obj-14', customerId: 'cust-09', category: 'rozvod',
+    name: 'Přípojka plynu + domovní plynovod', manufacturer: 'PE-HD / ocel',
+    model: 'PE-HD DN 32 + ocel DN 25', yearOfInstallation: 2025,
+    location: 'Od HUP po kotel', technicalParams: 'PE-HD DN 32 (přípojka), ocel DN 25 (domovní), NTL',
+  },
+
+  // ── SB Správa budov — BD Kounicova 64 (obj-15) ──
+  {
+    id: 'dev-28', objectId: 'obj-15', customerId: 'cust-11', category: 'rozvod',
+    name: 'Domovní plynovod — BD Kounicova 64', manufacturer: 'ocelové potrubí',
+    model: 'DN 40', yearOfInstallation: 2005,
+    location: 'Stoupací vedení, 4 podlaží', technicalParams: 'Ocel, DN 40, NTL 2,1 kPa, 24 BJ',
+  },
+
+  // ── SB Správa budov — BD Pellicova 19 (obj-16) ──
+  {
+    id: 'dev-29', objectId: 'obj-16', customerId: 'cust-11', category: 'rozvod',
+    name: 'Domovní plynovod — BD Pellicova 19', manufacturer: 'ocelové potrubí',
+    model: 'DN 40', yearOfInstallation: 2002,
+    location: 'Stoupací vedení, 3 podlaží', technicalParams: 'Ocel, DN 40, NTL 2,1 kPa, 12 BJ',
+  },
+
+  // ── Restaurace U Zlatého lva (obj-17) ──
+  {
+    id: 'dev-30', objectId: 'obj-17', customerId: 'cust-12', category: 'sporak',
+    name: 'Gastro sporák RedFox SP-90/5 GLS', manufacturer: 'RedFox',
+    model: 'SP-90/5 GLS', serialNumber: 'RF-20-44810',
+    yearOfManufacture: 2020, yearOfInstallation: 2020,
+    location: 'Kuchyně, hlavní linka', technicalParams: '5 hořáků, plynová trouba',
+    power: '27 kW',
+  },
+  {
+    id: 'dev-31', objectId: 'obj-17', customerId: 'cust-12', category: 'sporak',
+    name: 'Plynový sporák Electrolux EKK54953OX', manufacturer: 'Electrolux',
+    model: 'EKK54953OX', serialNumber: 'EL-18-90215',
+    yearOfManufacture: 2018, yearOfInstallation: 2018,
+    location: 'Kuchyně, přípravna', technicalParams: 'Kombinovaný, 4 plynové hořáky + el. trouba',
+  },
+  {
+    id: 'dev-32', objectId: 'obj-17', customerId: 'cust-12', category: 'ostatni',
+    name: 'Plynový gril Gastro-Line 800', manufacturer: 'Gastro-Line',
+    model: '800', serialNumber: 'GL-21-00347',
+    yearOfManufacture: 2021, yearOfInstallation: 2021,
+    location: 'Kuchyně, grilová sekce', power: '14 kW',
+  },
+  {
+    id: 'dev-33', objectId: 'obj-17', customerId: 'cust-12', category: 'rozvod',
+    name: 'NTL plynovod — provozovna', manufacturer: 'ocelové potrubí',
+    model: 'DN 40', yearOfInstallation: 2015,
+    location: 'Kuchyně + přípravna', technicalParams: 'Ocel, DN 40, NTL 2,1 kPa',
+  },
+
+  // ── DOMOSTAV — Modřice řadovky ──
+  {
+    id: 'dev-34', objectId: 'obj-18', customerId: 'cust-13', category: 'kotel',
+    name: 'Plynový kotel Viessmann Vitodens 100-W B1HF', manufacturer: 'Viessmann',
+    model: 'Vitodens 100-W B1HF', serialNumber: 'VS-25-7712501',
+    yearOfManufacture: 2025, yearOfInstallation: 2025,
+    location: 'Technická místnost, 1. NP', technicalParams: 'Kondenzační, turbo',
+    power: '19 kW',
+  },
+  {
+    id: 'dev-35', objectId: 'obj-18', customerId: 'cust-13', category: 'rozvod',
+    name: 'Přípojka plynu + domovní plynovod', manufacturer: 'PE-HD / ocel',
+    model: 'PE-HD DN 32 + ocel DN 25', yearOfInstallation: 2025,
+    location: 'Od HUP po kotel', technicalParams: 'PE-HD DN 32, ocel DN 25, NTL',
+  },
+  {
+    id: 'dev-36', objectId: 'obj-19', customerId: 'cust-13', category: 'kotel',
+    name: 'Plynový kotel Viessmann Vitodens 100-W B1HF', manufacturer: 'Viessmann',
+    model: 'Vitodens 100-W B1HF', serialNumber: 'VS-25-7712502',
+    yearOfManufacture: 2025, yearOfInstallation: 2025,
+    location: 'Technická místnost, 1. NP', technicalParams: 'Kondenzační, turbo',
+    power: '19 kW',
+  },
+  {
+    id: 'dev-37', objectId: 'obj-19', customerId: 'cust-13', category: 'rozvod',
+    name: 'Přípojka plynu + domovní plynovod', manufacturer: 'PE-HD / ocel',
+    model: 'PE-HD DN 32 + ocel DN 25', yearOfInstallation: 2025,
+    location: 'Od HUP po kotel', technicalParams: 'PE-HD DN 32, ocel DN 25, NTL',
+  },
+  {
+    id: 'dev-38', objectId: 'obj-20', customerId: 'cust-13', category: 'kotel',
+    name: 'Plynový kotel Viessmann Vitodens 100-W B1HF', manufacturer: 'Viessmann',
+    model: 'Vitodens 100-W B1HF', serialNumber: 'VS-25-7712503',
+    yearOfManufacture: 2025, yearOfInstallation: 2025,
+    location: 'Technická místnost, 1. NP', technicalParams: 'Kondenzační, turbo',
+    power: '19 kW',
+  },
+  {
+    id: 'dev-39', objectId: 'obj-20', customerId: 'cust-13', category: 'rozvod',
+    name: 'Přípojka plynu + domovní plynovod', manufacturer: 'PE-HD / ocel',
+    model: 'PE-HD DN 32 + ocel DN 25', yearOfInstallation: 2025,
+    location: 'Od HUP po kotel', technicalParams: 'PE-HD DN 32, ocel DN 25, NTL',
+  },
+
+  // ── Domov seniorů Tišnov (obj-21) ──
+  {
+    id: 'dev-40', objectId: 'obj-21', customerId: 'cust-14', category: 'kotel',
+    name: 'Plynový kotel Vaillant ecoTEC plus VU 256/5-5', manufacturer: 'Vaillant',
+    model: 'ecoTEC plus VU 256/5-5', serialNumber: 'VA-18-2209955',
+    yearOfManufacture: 2018, yearOfInstallation: 2018,
+    location: 'Kotelna, 1. PP', technicalParams: 'Kondenzační, turbo, kaskáda 2 ks',
+    power: '25 kW', note: 'Kotel č. 1 — vytápění budovy',
+  },
+  {
+    id: 'dev-41', objectId: 'obj-21', customerId: 'cust-14', category: 'kotel',
+    name: 'Plynový kotel Vaillant ecoTEC plus VU 256/5-5', manufacturer: 'Vaillant',
+    model: 'ecoTEC plus VU 256/5-5', serialNumber: 'VA-18-2209956',
+    yearOfManufacture: 2018, yearOfInstallation: 2018,
+    location: 'Kotelna, 1. PP', technicalParams: 'Kondenzační, turbo, kaskáda 2 ks',
+    power: '25 kW', note: 'Kotel č. 2 — vytápění budovy',
+  },
+  {
+    id: 'dev-42', objectId: 'obj-21', customerId: 'cust-14', category: 'sporak',
+    name: 'Gastro sporák RedFox SP-90/5 GLS', manufacturer: 'RedFox',
+    model: 'SP-90/5 GLS', serialNumber: 'RF-20-44825',
+    yearOfManufacture: 2020, yearOfInstallation: 2020,
+    location: 'Kuchyně', technicalParams: '5 hořáků, plynová trouba',
+    power: '27 kW',
+  },
+  {
+    id: 'dev-43', objectId: 'obj-21', customerId: 'cust-14', category: 'rozvod',
+    name: 'NTL plynovod — objekt', manufacturer: 'ocelové potrubí',
+    model: 'DN 50', yearOfInstallation: 2005,
+    location: 'Kotelna + kuchyně', technicalParams: 'Ocel, DN 50, NTL 2,1 kPa',
+  },
+
+  // ── Sporák for Ludmila Marková ──
+  {
+    id: 'dev-44', objectId: 'obj-08', customerId: 'cust-08', category: 'sporak',
+    name: 'Plynový sporák Mora Premium 6106 AW', manufacturer: 'Mora',
+    model: 'Premium 6106 AW', serialNumber: 'MR-20-11042',
+    yearOfManufacture: 2020, yearOfInstallation: 2020,
+    location: 'Kuchyně', technicalParams: 'Elektrická trouba, plynový vařič 4 hořáky',
+  },
+
+  // ── Ohřívač Mora Vega for BD Loosova 15 ──
+  {
+    id: 'dev-45', objectId: 'obj-10', customerId: 'cust-10', category: 'ohrivac',
+    name: 'Průtokový ohřívač Mora Vega 13', manufacturer: 'Mora',
+    model: 'Vega 13', serialNumber: 'MR-17-52104',
+    yearOfManufacture: 2017, yearOfInstallation: 2017,
+    location: 'Společná kotelna, 1. PP', power: '22,1 kW',
+    note: 'Centrální ohřev TUV pro celý BD',
+  },
+]
+
+// ─── Orders ─────────────────────────────────────────────────────────────────
+
+const orders: Order[] = [
+  // ── DOKONČENO / FAKTUROVÁNO (11) ──
+  {
+    id: 'ord-01', customerId: 'cust-01', objectId: 'obj-01',
+    type: 'pravidelna-revize', status: 'fakturovano',
+    description: 'Provozní revize plynového kotle a rozvodu',
+    address: 'Horní 14, 639 00 Brno-Štýřice',
+    plannedDate: '2025-10-15', completedDate: '2025-10-15',
+    priority: 'normalni', createdAt: '2025-09-20', updatedAt: '2025-10-20',
+  },
+  {
+    id: 'ord-02', customerId: 'cust-02', objectId: 'obj-02',
+    type: 'pravidelna-kontrola', status: 'fakturovano',
+    description: 'Roční kontrola karmy a sporáku',
+    address: 'Palackého tř. 87/3, 612 00 Brno',
+    plannedDate: '2025-11-08', completedDate: '2025-11-08',
+    priority: 'normalni', createdAt: '2025-10-12', updatedAt: '2025-11-15',
+  },
+  {
+    id: 'ord-03', customerId: 'cust-03', objectId: 'obj-03',
+    type: 'pravidelna-revize', status: 'dokoncena',
+    description: 'Provozní revize — první po výchozí (3 roky)',
+    address: 'Jihlavská 42, 664 41 Troubsko',
+    plannedDate: '2025-11-22', completedDate: '2025-11-22',
+    priority: 'normalni', createdAt: '2025-10-05', updatedAt: '2025-11-22',
+  },
+  {
+    id: 'ord-04', customerId: 'cust-09', objectId: 'obj-12',
+    type: 'nova-stavba', status: 'fakturovano',
+    description: 'Výchozí revize — novostavba RD Kuřim č. 1',
+    address: 'Blanenská 112, 664 34 Kuřim',
+    plannedDate: '2025-12-05', completedDate: '2025-12-05',
+    priority: 'normalni', createdAt: '2025-11-01', updatedAt: '2025-12-10',
+  },
+  {
+    id: 'ord-05', customerId: 'cust-09', objectId: 'obj-13',
+    type: 'nova-stavba', status: 'fakturovano',
+    description: 'Výchozí revize — novostavba RD Kuřim č. 2',
+    address: 'Blanenská 114, 664 34 Kuřim',
+    plannedDate: '2026-01-10', completedDate: '2026-01-10',
+    priority: 'normalni', createdAt: '2025-12-01', updatedAt: '2026-01-15',
+  },
+  {
+    id: 'ord-06', customerId: 'cust-10', objectId: 'obj-09',
+    type: 'pravidelna-revize', status: 'dokoncena',
+    description: 'Provozní revize domovního plynovodu BD Loosova 13',
+    address: 'Loosova 13, 638 00 Brno-Lesná',
+    plannedDate: '2025-12-12', completedDate: '2025-12-12',
+    priority: 'normalni', createdAt: '2025-10-18', updatedAt: '2025-12-12',
+  },
+  {
+    id: 'ord-07', customerId: 'cust-12', objectId: 'obj-17',
+    type: 'pravidelna-revize', status: 'fakturovano',
+    description: 'Provozní revize plynových spotřebičů restaurace',
+    address: 'Zelný trh 8, 602 00 Brno',
+    plannedDate: '2026-01-20', completedDate: '2026-01-20',
+    priority: 'normalni', createdAt: '2025-12-15', updatedAt: '2026-01-25',
+  },
+  {
+    id: 'ord-08', customerId: 'cust-04', objectId: 'obj-04',
+    type: 'pravidelna-revize', status: 'dokoncena',
+    description: 'Provozní revize dvou kotlů a plynovodu',
+    address: 'Na Kopci 7, 664 48 Moravany',
+    plannedDate: '2026-01-28', completedDate: '2026-01-28',
+    priority: 'normalni', createdAt: '2025-12-10', updatedAt: '2026-01-28',
+  },
+  {
+    id: 'ord-09', customerId: 'cust-14', objectId: 'obj-21',
+    type: 'pravidelna-revize', status: 'fakturovano',
+    description: 'Provozní revize kotelny a kuchyně domova seniorů',
+    address: 'Černohorská 101, 666 01 Tišnov',
+    plannedDate: '2026-02-05', completedDate: '2026-02-05',
+    priority: 'normalni', createdAt: '2025-12-20', updatedAt: '2026-02-10',
+  },
+  {
+    id: 'ord-10', customerId: 'cust-08', objectId: 'obj-08',
+    type: 'pravidelna-kontrola', status: 'fakturovano',
+    description: 'Roční kontrola kotle a sporáku',
+    address: 'Botanická 24/5, 602 00 Brno',
+    plannedDate: '2026-02-12', completedDate: '2026-02-12',
+    priority: 'normalni', createdAt: '2026-01-05', updatedAt: '2026-02-15',
+  },
+  {
+    id: 'ord-11', customerId: 'cust-13', objectId: 'obj-18',
+    type: 'nova-stavba', status: 'dokoncena',
+    description: 'Výchozí revize — řadový dům Modřice A1',
+    address: 'Tyršova 201, 664 42 Modřice',
+    plannedDate: '2026-02-20', completedDate: '2026-02-20',
+    priority: 'normalni', createdAt: '2026-01-15', updatedAt: '2026-02-20',
+  },
+
+  // ── PO TERMÍNU (2) — should have been done Jan-Feb 2026 ──
+  {
+    id: 'ord-12', customerId: 'cust-06', objectId: 'obj-06',
+    type: 'pravidelna-revize', status: 'naplanovana',
+    description: 'Provozní revize — ohřívač + sporák + rozvod',
+    address: 'Hlavní 203, 664 34 Kuřim',
+    plannedDate: '2026-01-15',
+    priority: 'normalni',
+    note: 'Zákaznice opakovaně ruší termín',
+    createdAt: '2025-11-20', updatedAt: '2026-01-10',
+  },
+  {
+    id: 'ord-13', customerId: 'cust-11', objectId: 'obj-15',
+    type: 'pravidelna-kontrola', status: 'naplanovana',
+    description: 'Roční kontrola plynovodu BD Kounicova 64',
+    address: 'Kounicova 64, 602 00 Brno',
+    plannedDate: '2026-02-01',
+    priority: 'normalni',
+    note: 'Správce odložil kvůli rekonstrukci chodby',
+    createdAt: '2025-12-18', updatedAt: '2026-01-28',
+  },
+
+  // ── PROBÍHÁ (2) — March 2026 ──
+  {
+    id: 'ord-14', customerId: 'cust-07', objectId: 'obj-07',
+    type: 'pravidelna-revize', status: 'probiha',
+    description: 'Provozní revize kotle, regulátoru a plynovodu',
+    address: 'Nádražní 31, 666 01 Tišnov',
+    plannedDate: '2026-03-10',
+    priority: 'normalni',
+    note: 'Revize provedena, zpracovávám zprávu',
+    createdAt: '2026-02-01', updatedAt: '2026-03-10',
+  },
+  {
+    id: 'ord-15', customerId: 'cust-13', objectId: 'obj-19',
+    type: 'nova-stavba', status: 'probiha',
+    description: 'Výchozí revize — řadový dům Modřice A2',
+    address: 'Tyršova 202, 664 42 Modřice',
+    plannedDate: '2026-03-12',
+    priority: 'normalni',
+    note: 'Na místě provedeno, čeká se na dokončení zprávy',
+    createdAt: '2026-02-10', updatedAt: '2026-03-12',
+  },
+
+  // ── NOVÁ (3) — March 2026, just received ──
+  {
+    id: 'ord-16', customerId: 'cust-05', objectId: 'obj-05',
+    type: 'pravidelna-revize', status: 'nova',
+    description: 'Provozní revize kotle v bytě',
+    address: 'Vídeňská 119/28, 619 00 Brno',
+    priority: 'normalni',
+    createdAt: '2026-03-08', updatedAt: '2026-03-08',
+  },
+  {
+    id: 'ord-17', customerId: 'cust-10', objectId: 'obj-10',
+    type: 'pravidelna-kontrola', status: 'nova',
+    description: 'Roční kontrola BD Loosova 15',
+    address: 'Loosova 15, 638 00 Brno-Lesná',
+    priority: 'normalni',
+    createdAt: '2026-03-11', updatedAt: '2026-03-11',
+  },
+  {
+    id: 'ord-18', customerId: 'cust-11', objectId: 'obj-16',
+    type: 'rekonstrukce', status: 'nova',
+    description: 'Revize po rekonstrukci plynovodu BD Pellicova 19',
+    address: 'Pellicova 19, 602 00 Brno',
+    priority: 'specha',
+    note: 'Rekonstrukce dokončena, nutná revize pro znovuuvedení do provozu',
+    createdAt: '2026-03-14', updatedAt: '2026-03-14',
+  },
+
+  // ── NAPLÁNOVANÁ (4) — April 2026 ──
+  {
+    id: 'ord-19', customerId: 'cust-09', objectId: 'obj-14',
+    type: 'nova-stavba', status: 'naplanovana',
+    description: 'Výchozí revize — novostavba RD Kuřim č. 3',
+    address: 'Blanenská 116, 664 34 Kuřim',
+    plannedDate: '2026-04-08',
+    priority: 'normalni', createdAt: '2026-03-01', updatedAt: '2026-03-05',
+  },
+  {
+    id: 'ord-20', customerId: 'cust-13', objectId: 'obj-20',
+    type: 'nova-stavba', status: 'naplanovana',
+    description: 'Výchozí revize — řadový dům Modřice A3',
+    address: 'Tyršova 203, 664 42 Modřice',
+    plannedDate: '2026-04-15',
+    priority: 'normalni', createdAt: '2026-03-05', updatedAt: '2026-03-05',
+  },
+  {
+    id: 'ord-21', customerId: 'cust-10', objectId: 'obj-11',
+    type: 'pravidelna-revize', status: 'naplanovana',
+    description: 'Provozní revize domovního plynovodu BD Loosova 17',
+    address: 'Loosova 17, 638 00 Brno-Lesná',
+    plannedDate: '2026-04-22',
+    priority: 'normalni', createdAt: '2026-02-28', updatedAt: '2026-03-02',
+  },
+  {
+    id: 'ord-22', customerId: 'cust-01', objectId: 'obj-01',
+    type: 'pravidelna-kontrola', status: 'naplanovana',
+    description: 'Roční kontrola kotle',
+    address: 'Horní 14, 639 00 Brno-Štýřice',
+    plannedDate: '2026-04-28',
+    priority: 'normalni', createdAt: '2026-03-10', updatedAt: '2026-03-10',
+  },
+
+  // ── ODLOŽENÁ (1) ──
+  {
+    id: 'ord-23', customerId: 'cust-06', objectId: 'obj-06',
+    type: 'rekonstrukce', status: 'odlozena',
+    description: 'Výměna starého ohřívače za nový kotel — revize po rekonstrukci',
+    address: 'Hlavní 203, 664 34 Kuřim',
+    plannedDate: '2026-02-15',
+    priority: 'normalni',
+    note: 'Zákaznice čeká na instalaci nového kotle — dodávka se zpozdila',
+    createdAt: '2025-12-05', updatedAt: '2026-02-10',
+  },
+
+  // ── ZRUŠENÁ (1) ──
+  {
+    id: 'ord-24', customerId: 'cust-05', objectId: 'obj-05',
+    type: 'mimoradna-revize', status: 'zrusena',
+    description: 'Mimořádná revize po nahlášeném zápachu plynu',
+    address: 'Vídeňská 119/28, 619 00 Brno',
+    priority: 'specha',
+    note: 'Falešný poplach — zápach byl z vedlejšího bytu (čistící prostředek). Zrušeno.',
+    createdAt: '2026-02-18', updatedAt: '2026-02-19',
+  },
+
+  // ── Extra completed: oprava-revize ──
+  {
+    id: 'ord-25', customerId: 'cust-02', objectId: 'obj-02',
+    type: 'oprava-revize', status: 'dokoncena',
+    description: 'Oprava netěsné přípojky flexi hadice u karmy + mimořádná revize',
+    address: 'Palackého tř. 87/3, 612 00 Brno',
+    plannedDate: '2026-02-25', completedDate: '2026-02-25',
+    priority: 'specha',
+    note: 'Zjištěno při roční kontrole, opraveno montérem, provedena revize',
+    createdAt: '2026-02-18', updatedAt: '2026-02-25',
+  },
+]
+
+// ─── Revision Reports ───────────────────────────────────────────────────────
+
+const revisionReports: RevisionReport[] = [
+  // RZ-2025-0038 — ord-01 — Jan Novák, provozní revize
+  {
+    id: 'rz-2025-0038', reportNumber: 'RZ-2025-0038',
+    orderId: 'ord-01', customerId: 'cust-01', deviceIds: ['dev-01', 'dev-02'],
+    type: 'provozni', date: '2025-10-15',
+    technicianName: 'Ing. Miroslav Dvořák', technicianLicense: 'RT-P-2019/0847',
+    leakTestResult: 'Vyhovuje — bez zjištěného úniku',
+    leakTestInstrument: 'Testo 316-2',
+    functionalityTest: 'Vyhovuje — kotel startuje a reguluje správně',
+    fluegasTest: 'Vyhovuje — tah komínu v normě',
+    coMeasurement: 'V normě',
+    coMeasurementValue: '28 ppm',
+    coMeasurementInstrument: 'Testo 300',
+    ventilationCheck: 'Nevyhovuje — nedostatečný průřez větrací mřížky',
+    conclusion: 's-vyhradami',
+    conclusionNote: 'Zařízení schopné provozu s výhradami. Nutno zajistit dostatečné větrání kotelny do 3 měsíců.',
+    createdAt: '2025-10-15',
+  },
+  // RZ-2025-0039 — ord-02 — Marie Svobodová, roční kontrola
+  {
+    id: 'rz-2025-0039', reportNumber: 'RZ-2025-0039',
+    orderId: 'ord-02', customerId: 'cust-02', deviceIds: ['dev-03', 'dev-04'],
+    type: 'provozni', date: '2025-11-08',
+    technicianName: 'Ing. Miroslav Dvořák', technicianLicense: 'RT-P-2019/0847',
+    leakTestResult: 'Vyhovuje — bez zjištěného úniku',
+    leakTestInstrument: 'Testo 316-2',
+    functionalityTest: 'Vyhovuje — karma i sporák fungují správně',
+    fluegasTest: 'Vyhovuje — odvod spalin v normě',
+    coMeasurement: 'V normě',
+    coMeasurementValue: '12 ppm',
+    coMeasurementInstrument: 'Testo 300',
+    ventilationCheck: 'Vyhovuje',
+    conclusion: 'schopne',
+    conclusionNote: 'Zařízení schopné bezpečného provozu. Doporučena výměna flexi hadice u karmy (stáří > 10 let).',
+    createdAt: '2025-11-08',
+  },
+  // RZ-2025-0040 — ord-03 — Petr Veselý, provozní revize
+  {
+    id: 'rz-2025-0040', reportNumber: 'RZ-2025-0040',
+    orderId: 'ord-03', customerId: 'cust-03', deviceIds: ['dev-05', 'dev-06'],
+    type: 'provozni', date: '2025-11-22',
+    technicianName: 'Ing. Miroslav Dvořák', technicianLicense: 'RT-P-2019/0847',
+    leakTestResult: 'Vyhovuje — bez zjištěného úniku',
+    leakTestInstrument: 'Testo 316-2',
+    functionalityTest: 'Vyhovuje — kotel pracuje dle specifikace',
+    fluegasTest: 'Vyhovuje — koaxiální odkouření v pořádku',
+    coMeasurement: 'V normě',
+    coMeasurementValue: '5 ppm',
+    coMeasurementInstrument: 'Testo 300',
+    ventilationCheck: 'Vyhovuje — turbo kotel, nezávislý na větrání místnosti',
+    conclusion: 'schopne',
+    conclusionNote: 'Zařízení schopné bezpečného provozu bez závad.',
+    createdAt: '2025-11-22',
+  },
+  // RZ-2025-0041 — ord-04 — MORAVOSTAV, výchozí revize Kuřim č. 1
+  {
+    id: 'rz-2025-0041', reportNumber: 'RZ-2025-0041',
+    orderId: 'ord-04', customerId: 'cust-09', deviceIds: ['dev-22', 'dev-23'],
+    type: 'vychozi', date: '2025-12-05',
+    technicianName: 'Ing. Miroslav Dvořák', technicianLicense: 'RT-P-2019/0847',
+    leakTestResult: 'Vyhovuje — zkušební tlak 50 kPa / 30 min, bez poklesu',
+    leakTestInstrument: 'Keller LEO 2',
+    functionalityTest: 'Vyhovuje — kotel uveden do provozu, všechny funkce OK',
+    fluegasTest: 'Vyhovuje — koaxiální odkouření správně instalováno',
+    coMeasurement: 'V normě',
+    coMeasurementValue: '4 ppm',
+    coMeasurementInstrument: 'Testo 300',
+    ventilationCheck: 'Vyhovuje — turbo kotel',
+    conclusion: 'schopne',
+    conclusionNote: 'Nová instalace schopná bezpečného provozu. Splňuje požadavky NV 191/2022 Sb.',
+    createdAt: '2025-12-05',
+  },
+  // RZ-2026-0001 — ord-05 — MORAVOSTAV, výchozí revize Kuřim č. 2
+  {
+    id: 'rz-2026-0001', reportNumber: 'RZ-2026-0001',
+    orderId: 'ord-05', customerId: 'cust-09', deviceIds: ['dev-24', 'dev-25'],
+    type: 'vychozi', date: '2026-01-10',
+    technicianName: 'Ing. Miroslav Dvořák', technicianLicense: 'RT-P-2019/0847',
+    leakTestResult: 'Vyhovuje — zkušební tlak 50 kPa / 30 min, bez poklesu',
+    leakTestInstrument: 'Keller LEO 2',
+    functionalityTest: 'Vyhovuje — kotel uveden do provozu',
+    fluegasTest: 'Vyhovuje',
+    coMeasurement: 'V normě',
+    coMeasurementValue: '3 ppm',
+    coMeasurementInstrument: 'Testo 300',
+    ventilationCheck: 'Vyhovuje — turbo kotel',
+    conclusion: 'schopne',
+    conclusionNote: 'Nová instalace schopná bezpečného provozu.',
+    createdAt: '2026-01-10',
+  },
+  // RZ-2026-0002 — ord-06 — BD Harmonie, Loosova 13
+  {
+    id: 'rz-2026-0002', reportNumber: 'RZ-2026-0002',
+    orderId: 'ord-06', customerId: 'cust-10', deviceIds: ['dev-18', 'dev-19'],
+    type: 'provozni', date: '2025-12-12',
+    technicianName: 'Ing. Miroslav Dvořák', technicianLicense: 'RT-P-2019/0847',
+    leakTestResult: 'Vyhovuje — zkouška stoupacího vedení bez úniku',
+    leakTestInstrument: 'Testo 316-2',
+    functionalityTest: 'Regulátor — výstupní tlak 2,1 kPa, v normě',
+    fluegasTest: 'Kontrola společných prostor — v pořádku',
+    coMeasurement: 'Neměřeno — domovní plynovod bez spalovacích zařízení',
+    ventilationCheck: 'Vyhovuje — větrání schodiště a společných prostor v pořádku',
+    conclusion: 's-vyhradami',
+    conclusionNote: 'Domovní plynovod schopný provozu s výhradami. Zjištěn zatarasený prostor u spotřebičů v bytech č. 7 a č. 11.',
+    createdAt: '2025-12-12',
+  },
+  // RZ-2026-0003 — ord-07 — Restaurace U Zlatého lva
+  {
+    id: 'rz-2026-0003', reportNumber: 'RZ-2026-0003',
+    orderId: 'ord-07', customerId: 'cust-12', deviceIds: ['dev-30', 'dev-31', 'dev-32', 'dev-33'],
+    type: 'provozni', date: '2026-01-20',
+    technicianName: 'Ing. Miroslav Dvořák', technicianLicense: 'RT-P-2019/0847',
+    leakTestResult: 'Nevyhovuje — zjištěn únik u přípojného spoje grilu',
+    leakTestInstrument: 'Testo 316-2',
+    functionalityTest: 'Sporáky — vyhovuje. Gril — odstaven!',
+    fluegasTest: 'Digestoř — vyhovuje, odvod v pořádku',
+    coMeasurement: 'Sporáky v normě',
+    coMeasurementValue: '8 ppm (RedFox), 11 ppm (Electrolux)',
+    coMeasurementInstrument: 'Testo 300',
+    ventilationCheck: 'Vyhovuje — nucené větrání kuchyně funkční',
+    conclusion: 'neschopne',
+    conclusionNote: 'Gril Gastro-Line 800 ODSTAVEN z provozu — netěsný přípojný spoj, nebezpečí úniku plynu! Ostatní spotřebiče provozuschopné. Nutná oprava grilu před znovuuvedením do provozu.',
+    createdAt: '2026-01-20',
+  },
+  // RZ-2026-0004 — ord-08 — Alena Procházková
+  {
+    id: 'rz-2026-0004', reportNumber: 'RZ-2026-0004',
+    orderId: 'ord-08', customerId: 'cust-04', deviceIds: ['dev-07', 'dev-08', 'dev-09'],
+    type: 'provozni', date: '2026-01-28',
+    technicianName: 'Ing. Miroslav Dvořák', technicianLicense: 'RT-P-2019/0847',
+    leakTestResult: 'Vyhovuje — bez zjištěného úniku',
+    leakTestInstrument: 'Testo 316-2',
+    functionalityTest: 'Oba kotle — vyhovuje, kaskádní regulace v pořádku',
+    fluegasTest: 'Vyhovuje — obě odkouření v normě',
+    coMeasurement: 'V normě',
+    coMeasurementValue: '7 ppm (Vaillant), 9 ppm (Baxi)',
+    coMeasurementInstrument: 'Testo 300',
+    ventilationCheck: 'Vyhovuje — turbo kotle',
+    conclusion: 'schopne',
+    conclusionNote: 'Oba kotle i plynovod schopné bezpečného provozu.',
+    createdAt: '2026-01-28',
+  },
+  // RZ-2026-0005 — ord-09 — Domov seniorů Tišnov
+  {
+    id: 'rz-2026-0005', reportNumber: 'RZ-2026-0005',
+    orderId: 'ord-09', customerId: 'cust-14', deviceIds: ['dev-40', 'dev-41', 'dev-42', 'dev-43'],
+    type: 'provozni', date: '2026-02-05',
+    technicianName: 'Ing. Miroslav Dvořák', technicianLicense: 'RT-P-2019/0847',
+    leakTestResult: 'Vyhovuje — bez zjištěného úniku',
+    leakTestInstrument: 'Testo 316-2',
+    functionalityTest: 'Kotle — vyhovuje, kaskáda OK. Sporák — vyhovuje.',
+    fluegasTest: 'Vyhovuje — kotelna i kuchyně',
+    coMeasurement: 'V normě',
+    coMeasurementValue: '6 ppm (kotle), 15 ppm (sporák)',
+    coMeasurementInstrument: 'Testo 300',
+    ventilationCheck: 'Vyhovuje — nucené větrání kotelny i kuchyně',
+    conclusion: 's-vyhradami',
+    conclusionNote: 'Zařízení schopné provozu s výhradami. Zjištěna koroze na úseku potrubí v kotelně — nutno opravit do 6 měsíců. Chybí provozní řád kotelny.',
+    createdAt: '2026-02-05',
+  },
+  // RZ-2026-0006 — ord-10 — Ludmila Marková, roční kontrola
+  {
+    id: 'rz-2026-0006', reportNumber: 'RZ-2026-0006',
+    orderId: 'ord-10', customerId: 'cust-08', deviceIds: ['dev-17', 'dev-44'],
+    type: 'provozni', date: '2026-02-12',
+    technicianName: 'Ing. Miroslav Dvořák', technicianLicense: 'RT-P-2019/0847',
+    leakTestResult: 'Vyhovuje — bez zjištěného úniku',
+    leakTestInstrument: 'Testo 316-2',
+    functionalityTest: 'Vyhovuje — kotel i sporák OK',
+    fluegasTest: 'Vyhovuje — koaxiální odkouření v pořádku',
+    coMeasurement: 'V normě',
+    coMeasurementValue: '4 ppm',
+    coMeasurementInstrument: 'Testo 300',
+    ventilationCheck: 'Vyhovuje',
+    conclusion: 'schopne',
+    conclusionNote: 'Zařízení schopné bezpečného provozu.',
+    createdAt: '2026-02-12',
+  },
+  // RZ-2026-0007 — ord-11 — DOMOSTAV, výchozí Modřice A1
+  {
+    id: 'rz-2026-0007', reportNumber: 'RZ-2026-0007',
+    orderId: 'ord-11', customerId: 'cust-13', deviceIds: ['dev-34', 'dev-35'],
+    type: 'vychozi', date: '2026-02-20',
+    technicianName: 'Ing. Miroslav Dvořák', technicianLicense: 'RT-P-2019/0847',
+    leakTestResult: 'Vyhovuje — zkušební tlak 50 kPa / 30 min, bez poklesu',
+    leakTestInstrument: 'Keller LEO 2',
+    functionalityTest: 'Vyhovuje — kotel uveden do provozu',
+    fluegasTest: 'Vyhovuje — odkouření správně',
+    coMeasurement: 'V normě',
+    coMeasurementValue: '3 ppm',
+    coMeasurementInstrument: 'Testo 300',
+    ventilationCheck: 'Vyhovuje — turbo kotel',
+    conclusion: 'schopne',
+    conclusionNote: 'Nová instalace schopná bezpečného provozu.',
+    createdAt: '2026-02-20',
+  },
+  // RZ-2025-0042 — ord-25 — Marie Svobodová, oprava+revize
+  {
+    id: 'rz-2025-0042', reportNumber: 'RZ-2025-0042',
+    orderId: 'ord-25', customerId: 'cust-02', deviceIds: ['dev-03'],
+    type: 'mimoradna', date: '2026-02-25',
+    technicianName: 'Ing. Miroslav Dvořák', technicianLicense: 'RT-P-2019/0847',
+    leakTestResult: 'Vyhovuje — po výměně flexi hadice bez úniku',
+    leakTestInstrument: 'Testo 316-2',
+    functionalityTest: 'Vyhovuje — karma funguje správně po opravě',
+    fluegasTest: 'Vyhovuje — odvod spalin v normě',
+    coMeasurement: 'V normě',
+    coMeasurementValue: '14 ppm',
+    coMeasurementInstrument: 'Testo 300',
+    ventilationCheck: 'Vyhovuje',
+    conclusion: 'schopne',
+    conclusionNote: 'Po opravě přípojné hadice je zařízení schopné bezpečného provozu.',
+    createdAt: '2026-02-25',
+  },
+  // RZ-2025-0043 — historical report for Jiří Černý
+  {
+    id: 'rz-2025-0043', reportNumber: 'RZ-2025-0043',
+    orderId: 'ord-16', customerId: 'cust-05', deviceIds: ['dev-10'],
+    type: 'provozni', date: '2023-11-18',
+    technicianName: 'Ing. Miroslav Dvořák', technicianLicense: 'RT-P-2019/0847',
+    leakTestResult: 'Vyhovuje',
+    leakTestInstrument: 'Testo 316-2',
+    functionalityTest: 'Vyhovuje',
+    fluegasTest: 'Vyhovuje',
+    coMeasurement: 'V normě',
+    coMeasurementValue: '10 ppm',
+    coMeasurementInstrument: 'Testo 300',
+    ventilationCheck: 'Vyhovuje',
+    conclusion: 'schopne',
+    conclusionNote: 'Zařízení schopné bezpečného provozu.',
+    createdAt: '2023-11-18',
+  },
+]
+
+// ─── Defects ────────────────────────────────────────────────────────────────
+
+const defects: Defect[] = [
+  // ── RZ-2025-0038 — Jan Novák ──
+  {
+    id: 'def-01', revisionReportId: 'rz-2025-0038',
+    description: 'Nedostatečné větrání kotelny — průřez větrací mřížky neodpovídá požadavkům ČSN 38 6405',
+    severity: 'B', deadline: '2026-01-15', status: 'odstranena',
+    resolvedDate: '2025-12-20',
+    note: 'Zákazník nechal zvětšit větrací mřížku, zkontrolováno',
+  },
+  {
+    id: 'def-13', revisionReportId: 'rz-2025-0038',
+    description: 'Prošlá lhůta kalibrace detektoru CO v kotelně — detektor neaktuální',
+    severity: 'B', deadline: '2026-01-15', status: 'odstranena',
+    resolvedDate: '2025-11-10',
+    note: 'Zákazník nechal rekalibrovat detektor',
+  },
+  // ── RZ-2025-0039 — Marie Svobodová ──
+  {
+    id: 'def-02', revisionReportId: 'rz-2025-0039',
+    description: 'Doporučení výměny přívodní flexi hadice u karmy — stáří > 10 let, povrchové praskliny',
+    severity: 'C', status: 'odstranena',
+    resolvedDate: '2026-02-25',
+    note: 'Vyměněno při opravě (ord-25)',
+  },
+  // ── RZ-2025-0040 — Petr Veselý ──
+  {
+    id: 'def-16', revisionReportId: 'rz-2025-0040',
+    description: 'Doporučení — prověřit stav regulátoru tlaku při příští revizi (stáří > 8 let)',
+    severity: 'C', status: 'neodstranena',
+    note: 'Regulátor funkční, ale doporučeno preventivně kontrolovat',
+  },
+  // ── RZ-2026-0002 — BD Harmonie, Loosova 13 ──
+  {
+    id: 'def-03', revisionReportId: 'rz-2026-0002',
+    description: 'Zatarasený prostor u plynových spotřebičů v bytě č. 7 — uskladněné předměty v těsné blízkosti sporáku',
+    severity: 'B', deadline: '2026-03-12', status: 'odstranena',
+    resolvedDate: '2026-01-08',
+    note: 'Nájemník odstranil předměty, zkontrolováno správcem',
+  },
+  {
+    id: 'def-04', revisionReportId: 'rz-2026-0002',
+    description: 'Zatarasený prostor u plynových spotřebičů v bytě č. 11 — police těsně u plynové trouby',
+    severity: 'B', deadline: '2026-03-12', status: 'neodstranena',
+    note: 'Nájemník dosud nezajistil nápravu',
+  },
+  {
+    id: 'def-05', revisionReportId: 'rz-2026-0002',
+    description: 'Chybějící označení HUP — štítek „Hlavní uzávěr plynu" na fasádě zcela vybledlý, nečitelný',
+    severity: 'C', deadline: '2026-06-12', status: 'neodstranena',
+    note: 'Doporučeno vyměnit štítek',
+  },
+  {
+    id: 'def-18', revisionReportId: 'rz-2026-0002',
+    description: 'Poškozené těsnění kohoutu na stoupacím vedení v 2. NP — drobný průsak zjištěn detektorem',
+    severity: 'B', deadline: '2026-03-12', status: 'odstranena',
+    resolvedDate: '2026-01-15',
+    note: 'Těsnění vyměněno instalatérem BD',
+  },
+  // ── RZ-2026-0003 — Restaurace U Zlatého lva ──
+  {
+    id: 'def-06', revisionReportId: 'rz-2026-0003',
+    description: 'Netěsný přípojný spoj u přívodu plynu k grilu Gastro-Line 800 — zjištěn únik detektorem Testo 316-2',
+    severity: 'A', deadline: '2026-01-20', status: 'neodstranena',
+    note: 'NEBEZPEČÍ — gril odstaven z provozu do opravy spoje. Nutno opravit ihned!',
+  },
+  {
+    id: 'def-07', revisionReportId: 'rz-2026-0003',
+    description: 'Chybějící štítek na HUP — hlavní uzávěr plynu na fasádě bez označení',
+    severity: 'C', deadline: '2026-07-20', status: 'neodstranena',
+  },
+  // ── RZ-2026-0004 — Alena Procházková ──
+  {
+    id: 'def-08', revisionReportId: 'rz-2026-0004',
+    description: 'Doporučení — starší ocelový plynovod (2005), zvážit výměnu při budoucí rekonstrukci',
+    severity: 'C', status: 'neodstranena',
+    note: 'Plynovod zatím vyhovuje, ale stáří 20+ let',
+  },
+  // ── RZ-2026-0005 — Domov seniorů Tišnov ──
+  {
+    id: 'def-09', revisionReportId: 'rz-2026-0005',
+    description: 'Koroze na úseku potrubí v kotelně — viditelné povrchové korozní produkty na svislém potrubí DN 50',
+    severity: 'B', deadline: '2026-08-05', status: 'neodstranena',
+    note: 'Nutno ošetřit antikorozním nátěrem nebo vyměnit úsek',
+  },
+  {
+    id: 'def-10', revisionReportId: 'rz-2026-0005',
+    description: 'Chybějící provozní řád kotelny — kotelna bez vyvěšeného provozního řádu',
+    severity: 'B', deadline: '2026-05-05', status: 'neodstranena',
+    note: 'Požadavek ČSN 38 6405 — provozní řád musí být vyvěšen v kotelně',
+  },
+  {
+    id: 'def-11', revisionReportId: 'rz-2026-0005',
+    description: 'Doporučení — zvážit výměnu sporáku za model s pojistkou plamene (thermocouple)',
+    severity: 'C', status: 'neodstranena',
+    note: 'Stávající sporák bez pojistky, v domově seniorů zvýšené riziko',
+  },
+  {
+    id: 'def-14', revisionReportId: 'rz-2026-0005',
+    description: 'Poškozené těsnění příruby na vstupu do kotelny — viditelné stopy průsaku',
+    severity: 'B', deadline: '2026-05-05', status: 'neodstranena',
+    note: 'Vyměnit těsnění při nejbližší odstávce',
+  },
+  {
+    id: 'def-17', revisionReportId: 'rz-2026-0005',
+    description: 'Vadný snímač plamene (ionizační elektroda) na kotli č. 2 — občasné nechtěné odstavení',
+    severity: 'A', deadline: '2026-02-20', status: 'odstranena',
+    resolvedDate: '2026-02-12',
+    note: 'Vyměněna ionizační elektroda servisním technikem Vaillant',
+  },
+  // ── RZ-2025-0042 — Marie Svobodová, mimořádná ──
+  {
+    id: 'def-12', revisionReportId: 'rz-2025-0042',
+    description: 'Netěsná přívodní flexi hadice u průtokového ohřívače — zjištěna při roční kontrole',
+    severity: 'A', status: 'odstranena',
+    resolvedDate: '2026-02-25',
+    note: 'Hadice vyměněna montérem, revize potvrdila těsnost',
+  },
+  // ── RZ-2025-0043 — Jiří Černý, historical ──
+  {
+    id: 'def-15', revisionReportId: 'rz-2025-0043',
+    description: 'Doporučení modernizace — kotel CerapurComfort je 3 roky starý, zatím OK, plánovat výhled na výměnu',
+    severity: 'C', status: 'neodstranena',
+  },
+]
+
+// ─── Share Links ────────────────────────────────────────────────────────────
+
+const shareLinks: ShareLink[] = [
+  {
+    id: 'share-01',
+    token: 'a3f7c2e1-nov-2025',
+    revisionReportId: 'rz-2025-0038',
+    createdAt: '2025-10-16',
+  },
+  {
+    id: 'share-02',
+    token: 'b8d4a9f0-mor-2025',
+    revisionReportId: 'rz-2025-0041',
+    createdAt: '2025-12-06',
+  },
+  {
+    id: 'share-03',
+    token: 'c1e5b7d3-bdh-2025',
+    revisionReportId: 'rz-2026-0002',
+    createdAt: '2025-12-13',
+    lastViewedAt: '2026-01-05',
+  },
+  {
+    id: 'share-04',
+    token: 'd9a2c8f6-old-2023',
+    revisionReportId: 'rz-2025-0043',
+    createdAt: '2023-11-20',
+    lastViewedAt: '2024-02-10',
+  },
+]
+
+// ─── Seed Function ──────────────────────────────────────────────────────────
+
+export async function seedDatabase() {
+  const count = await db.customers.count()
+  if (count > 0) return
+
+  await db.transaction(
+    'rw',
+    [db.customers, db.objects, db.devices, db.orders, db.revisionReports, db.defects, db.shareLinks, db.settings],
+    async () => {
+      await db.settings.put({ key: 'technician', value: technician })
+      await db.customers.bulkPut(customers)
+      await db.objects.bulkPut(objects)
+      await db.devices.bulkPut(devices)
+      await db.orders.bulkPut(orders)
+      await db.revisionReports.bulkPut(revisionReports)
+      await db.defects.bulkPut(defects)
+      await db.shareLinks.bulkPut(shareLinks)
+    }
+  )
+}
+
+export async function resetDatabase() {
+  await db.delete()
+  await db.open()
+  await seedDatabase()
+}

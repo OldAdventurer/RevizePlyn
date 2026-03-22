@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #1E40AF;
+  --color-primary-light: #3B82F6;
+  --color-success: #16A34A;
+  --color-warning: #EA580C;
+  --color-error: #DC2626;
+  --color-text: #1F2937;
+  --color-bg: #FFFFFF;
+  --color-border: #D1D5DB;
+  --color-surface: #F3F4F6;
+}
+
+html {
+  font-size: 18px;
+}
+
+body {
+  @apply text-[var(--color-text)] bg-[var(--color-bg)] leading-relaxed antialiased;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  min-height: 100dvh;
+}
+
+/* Large touch targets for older users */
+button, a, input, select, textarea {
+  min-height: 2.75rem;
+}
+
+input, select, textarea {
+  @apply text-base p-3 border border-[var(--color-border)] rounded-lg;
+  font-size: 1rem;
+}
+
+/* Status colors */
+.status-nova { @apply bg-blue-100 text-blue-800; }
+.status-naplanovana { @apply bg-indigo-100 text-indigo-800; }
+.status-probiha { @apply bg-yellow-100 text-yellow-800; }
+.status-dokoncena { @apply bg-green-100 text-green-800; }
+.status-fakturovano { @apply bg-emerald-100 text-emerald-800; }
+.status-odlozena { @apply bg-gray-100 text-gray-600; }
+.status-zrusena { @apply bg-red-100 text-red-800; }
+
+/* Severity badges */
+.severity-a { @apply bg-red-600 text-white font-bold; }
+.severity-b { @apply bg-orange-500 text-white font-bold; }
+.severity-c { @apply bg-blue-500 text-white; }

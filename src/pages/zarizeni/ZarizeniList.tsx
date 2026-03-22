@@ -1,0 +1,275 @@
+import { useState, useMemo } from 'react'
+import { db } from '../../db/schema'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { useNavigate } from 'react-router-dom'
+import { getDeviceCategoryLabel } from '../../utils/format'
+import Card from '../../components/ui/Card'
+import Badge from '../../components/ui/Badge'
+import Button from '../../components/ui/Button'
+import Input from '../../components/ui/Input'
+import Select from '../../components/ui/Select'
+import SearchBar from '../../components/ui/SearchBar'
+import Table, { type Column } from '../../components/ui/Table'
+import Modal from '../../components/ui/Modal'
+import { Plus, QrCode } from 'lucide-react'
+import type { Device, DeviceCategory } from '../../types'
+
+const categoryOptions = [
+  { value: '', label: 'Všechny kategorie' },
+  { value: 'kotel', label: 'Kotel' },
+  { value: 'ohrivac', label: 'Ohřívač' },
+  { value: 'sporak', label: 'Sporák' },
+  { value: 'rozvod', label: 'Rozvod' },
+  { value: 'regulator', label: 'Regulátor' },
+  { value: 'ostatni', label: 'Ostatní' },
+]
+
+const categoryBadgeColor: Record<DeviceCategory, 'blue' | 'green' | 'yellow' | 'red' | 'gray' | 'indigo' | 'emerald' | 'orange'> = {
+  kotel: 'red',
+  ohrivac: 'blue',
+  sporak: 'orange',
+  rozvod: 'indigo',
+  regulator: 'emerald',
+  ostatni: 'gray',
+}
+
+const emptyForm = {
+  name: '',
+  category: 'kotel' as DeviceCategory,
+  manufacturer: '',
+  model: '',
+  serialNumber: '',
+  yearOfManufacture: '',
+  yearOfInstallation: '',
+  power: '',
+  location: '',
+  technicalParams: '',
+  customerId: '',
+  objectId: '',
+  note: '',
+}
+
+export default function ZarizeniList() {
+  const navigate = useNavigate()
+  const devices = useLiveQuery(() => db.devices.toArray())
+  const customers = useLiveQuery(() => db.customers.toArray())
+  const objects = useLiveQuery(() => db.objects.toArray())
+
+  const [search, setSearch] = useState('')
+  const [categoryFilter, setCategoryFilter] = useState('')
+  const [manufacturerFilter, setManufacturerFilter] = useState('')
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [modalOpen, setModalOpen] = useState(false)
+  const [form, setForm] = useState(emptyForm)
+
+  const customerMap = useMemo(() => {
+    const map = new Map<string, string>()
+    customers?.forEach((c) => map.set(c.id, c.name))
+    return map
+  }, [customers])
+
+  const manufacturerOptions = useMemo(() => {
+    const unique = [...new Set(devices?.map((d) => d.manufacturer).filter(Boolean) ?? [])]
+    unique.sort((a, b) => a.localeCompare(b, 'cs'))
+    return [{ value: '', label: 'Všichni výrobci' }, ...unique.map((m) => ({ value: m, label: m }))]
+  }, [devices])
+
+  const filteredObjects = useMemo(() => {
+    if (!form.customerId) return objects ?? []
+    return (objects ?? []).filter((o) => o.customerId === form.customerId)
+  }, [objects, form.customerId])
+
+  const filtered = useMemo(() => {
+    if (!devices) return []
+    const q = search.toLowerCase()
+    return devices.filter((d) => {
+      if (q && ![d.name, d.manufacturer, d.model, d.serialNumber ?? ''].some((v) => v.toLowerCase().includes(q))) return false
+      if (categoryFilter && d.category !== categoryFilter) return false
+      if (manufacturerFilter && d.manufacturer !== manufacturerFilter) return false
+      return true
+    })
+  }, [devices, search, categoryFilter, manufacturerFilter])
+
+  const toggleSelect = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  const columns: Column<Device>[] = [
+    {
+      key: '_select',
+      header: '',
+      render: (d) => (
+        <input
+          type="checkbox"
+          checked={selectedIds.has(d.id)}
+          onChange={() => {}}
+          onClick={(e) => toggleSelect(d.id, e)}
+          className="w-5 h-5 cursor-pointer accent-[var(--color-primary)]"
+        />
+      ),
+    },
+    { key: 'name', header: 'Název', sortable: true },
+    { key: 'manufacturer', header: 'Výrobce', sortable: true },
+    { key: 'model', header: 'Model', sortable: true },
+    {
+      key: 'category',
+      header: 'Kategorie',
+      sortable: true,
+      render: (d) => <Badge variant={categoryBadgeColor[d.category]}>{getDeviceCategoryLabel(d.category)}</Badge>,
+    },
+    {
+      key: 'customerId',
+      header: 'Zákazník',
+      render: (d) => customerMap.get(d.customerId) ?? '—',
+    },
+    { key: 'yearOfManufacture', header: 'Rok výroby', sortable: true },
+  ]
+
+  const handleSave = async () => {
+    if (!form.name || !form.customerId || !form.objectId) return
+    const id = crypto.randomUUID()
+    await db.devices.put({
+      id,
+      objectId: form.objectId,
+      customerId: form.customerId,
+      category: form.category,
+      name: form.name,
+      manufacturer: form.manufacturer,
+      model: form.model,
+      serialNumber: form.serialNumber || undefined,
+      yearOfManufacture: form.yearOfManufacture ? Number(form.yearOfManufacture) : undefined,
+      yearOfInstallation: form.yearOfInstallation ? Number(form.yearOfInstallation) : undefined,
+      power: form.power || undefined,
+      location: form.location || undefined,
+      technicalParams: form.technicalParams || undefined,
+      note: form.note || undefined,
+    })
+    setForm(emptyForm)
+    setModalOpen(false)
+  }
+
+  const handleBatchPrint = () => {
+    const ids = [...selectedIds].join(',')
+    navigate(`/zarizeni/batch/qr?batch=${ids}`)
+  }
+
+  return (
+    <div className="p-6 space-y-5">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h1 className="text-2xl font-bold">Zařízení</h1>
+        <div className="flex flex-wrap gap-3">
+          {selectedIds.size > 0 && (
+            <Button variant="secondary" icon={<QrCode size={20} />} onClick={handleBatchPrint}>
+              Tisknout QR ({selectedIds.size})
+            </Button>
+          )}
+          <Button icon={<Plus size={20} />} onClick={() => setModalOpen(true)}>
+            Nové zařízení
+          </Button>
+        </div>
+      </div>
+
+      {/* Search & Filters */}
+      <Card>
+        <div className="flex flex-col md:flex-row gap-4">
+          <SearchBar
+            placeholder="Hledat dle názvu, výrobce, modelu, sériového čísla…"
+            onSearch={setSearch}
+            className="flex-1"
+          />
+          <Select
+            options={categoryOptions}
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            className="md:w-56"
+          />
+          <Select
+            options={manufacturerOptions}
+            value={manufacturerFilter}
+            onChange={(e) => setManufacturerFilter(e.target.value)}
+            className="md:w-56"
+          />
+        </div>
+      </Card>
+
+      {/* Table */}
+      <Card>
+        {!devices ? (
+          <p className="text-gray-500 text-center py-8">Načítám…</p>
+        ) : filtered.length === 0 ? (
+          <p className="text-gray-500 text-center py-8">Žádná zařízení nenalezena</p>
+        ) : (
+          <Table
+            columns={columns}
+            data={filtered}
+            keyExtractor={(d) => d.id}
+            onRowClick={(d) => navigate(`/zarizeni/${d.id}`)}
+          />
+        )}
+      </Card>
+
+      {/* Add device modal */}
+      <Modal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title="Nové zařízení"
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setModalOpen(false)}>Zrušit</Button>
+            <Button onClick={handleSave} disabled={!form.name || !form.customerId || !form.objectId}>Uložit</Button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <Input label="Název *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          <Select
+            label="Kategorie"
+            options={[
+              { value: 'kotel', label: 'Kotel' },
+              { value: 'ohrivac', label: 'Průtokový ohřívač' },
+              { value: 'sporak', label: 'Sporák' },
+              { value: 'rozvod', label: 'Plynový rozvod' },
+              { value: 'regulator', label: 'Regulátor' },
+              { value: 'ostatni', label: 'Ostatní' },
+            ]}
+            value={form.category}
+            onChange={(e) => setForm({ ...form, category: e.target.value as DeviceCategory })}
+          />
+          <Input label="Výrobce" value={form.manufacturer} onChange={(e) => setForm({ ...form, manufacturer: e.target.value })} />
+          <Input label="Model" value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} />
+          <Input label="Sériové číslo" value={form.serialNumber} onChange={(e) => setForm({ ...form, serialNumber: e.target.value })} />
+          <div className="grid grid-cols-2 gap-4">
+            <Input label="Rok výroby" type="number" value={form.yearOfManufacture} onChange={(e) => setForm({ ...form, yearOfManufacture: e.target.value })} />
+            <Input label="Rok instalace" type="number" value={form.yearOfInstallation} onChange={(e) => setForm({ ...form, yearOfInstallation: e.target.value })} />
+          </div>
+          <Input label="Výkon" value={form.power} onChange={(e) => setForm({ ...form, power: e.target.value })} />
+          <Input label="Umístění" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
+          <Input label="Technické parametry" value={form.technicalParams} onChange={(e) => setForm({ ...form, technicalParams: e.target.value })} />
+          <Select
+            label="Zákazník *"
+            options={(customers ?? []).map((c) => ({ value: c.id, label: c.name }))}
+            placeholder="Vyberte zákazníka"
+            value={form.customerId}
+            onChange={(e) => setForm({ ...form, customerId: e.target.value, objectId: '' })}
+          />
+          <Select
+            label="Objekt *"
+            options={filteredObjects.map((o) => ({ value: o.id, label: `${o.name} — ${o.address}` }))}
+            placeholder={form.customerId ? 'Vyberte objekt' : 'Nejprve vyberte zákazníka'}
+            value={form.objectId}
+            onChange={(e) => setForm({ ...form, objectId: e.target.value })}
+            disabled={!form.customerId}
+          />
+          <Input label="Poznámka" value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} />
+        </div>
+      </Modal>
+    </div>
+  )
+}
