@@ -2608,7 +2608,19 @@ const invoices: Invoice[] = [
 
 // ─── Seed Function ──────────────────────────────────────────────────────────
 
+const SEED_VERSION = 2 // bump this to force re-seed on next load
+
 export async function seedDatabase() {
+  const versionEntry = await db.settings.get('seedVersion')
+  const currentVersion = versionEntry?.value as number | undefined
+  if (currentVersion === SEED_VERSION) return
+
+  // New seed version → wipe and re-seed
+  if (currentVersion !== undefined) {
+    await db.delete()
+    await db.open()
+  }
+
   const count = await db.customers.count()
   if (count > 0) return
 
@@ -2624,7 +2636,8 @@ export async function seedDatabase() {
       await db.revisionReports.bulkPut(revisionReports)
       await db.defects.bulkPut(defects)
       await db.shareLinks.bulkPut(shareLinks)
-      await db.invoices.bulkPut(invoices)
+            await db.invoices.bulkPut(invoices)
+      await db.settings.put({ key: 'seedVersion', value: SEED_VERSION })
     }
   )
 }
