@@ -82,7 +82,7 @@ export default function FakturaDetail() {
     | 'blue' | 'green' | 'yellow' | 'red' | 'gray'
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Demo disclaimer */}
       <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-amber-800 text-sm flex items-center gap-2">
         <span className="text-lg">⚠️</span>
@@ -152,7 +152,7 @@ export default function FakturaDetail() {
       </div>
 
       {/* Info Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Card 1 — Základní údaje */}
         <Card title="Základní údaje" accent="blue">
           <dl className="space-y-3">
@@ -251,7 +251,7 @@ export default function FakturaDetail() {
         </div>
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Card 4 — Platební údaje */}
         <Card title="Platební údaje" accent="yellow">
           <dl className="space-y-3">

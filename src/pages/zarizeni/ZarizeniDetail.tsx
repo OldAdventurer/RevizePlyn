@@ -4,7 +4,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { DetailSkeleton } from '../../components/ui/Skeleton'
 import { usePageTitle } from '../../hooks/usePageTitle'
-import { formatDate, getDeviceCategoryLabel, getConclusionLabel, getRevisionTypeLabel } from '../../utils/format'
+import { formatDate, getDeviceCategoryLabel, getConclusionLabel, getRevisionTypeLabel, getDeviceCategoryIcon } from '../../utils/format'
 import Card from '../../components/ui/Card'
 import Badge from '../../components/ui/Badge'
 import Button from '../../components/ui/Button'
@@ -127,7 +127,7 @@ export default function ZarizeniDetail() {
   const qrUrl = `${window.location.origin}/zarizeni/${device.id}`
 
   return (
-    <div className="page-enter p-6 space-y-6">
+    <div className="page-enter p-4 md:p-4 space-y-4">
       {/* Back */}
       <button onClick={() => navigate('/zarizeni')} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium mb-4 transition-colors cursor-pointer">
         <ArrowLeft size={20} />
@@ -135,9 +135,9 @@ export default function ZarizeniDetail() {
       </button>
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
         <div className="flex items-center gap-3 flex-wrap">
-          <h1 className="text-2xl font-bold text-[var(--color-text)]">{device.name}</h1>
+          <h1 className="text-2xl font-bold text-[var(--color-text)]">{getDeviceCategoryIcon(device.category)} {device.name}</h1>
           <Badge variant={categoryBadge[device.category]}>{getDeviceCategoryLabel(device.category)}</Badge>
         </div>
         <div className="flex flex-wrap gap-3">
@@ -153,7 +153,7 @@ export default function ZarizeniDetail() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Device info */}
         <Card title="Informace o zařízení" accent="blue" className="lg:col-span-2">
           <InfoRow label="Výrobce" value={device.manufacturer} />

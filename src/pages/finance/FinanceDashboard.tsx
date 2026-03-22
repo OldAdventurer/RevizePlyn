@@ -139,7 +139,7 @@ export default function FinanceDashboard() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Demo disclaimer */}
       <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-amber-800 text-sm flex items-center gap-2">
         <span className="text-lg">⚠️</span>

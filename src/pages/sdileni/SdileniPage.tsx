@@ -3,11 +3,12 @@ import { db } from '../../db/schema'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 import { usePageTitle } from '../../hooks/usePageTitle'
-import { formatDate, getRevisionTypeLabel, getConclusionLabel, getSeverityLabel } from '../../utils/format'
+import { formatDate, getRevisionTypeLabel, getConclusionLabel, getSeverityLabel, getDeviceCategoryIcon } from '../../utils/format'
 import { generateRevisionPDF } from '../../utils/pdf'
 import Card from '../../components/ui/Card'
 import Badge from '../../components/ui/Badge'
 import Button from '../../components/ui/Button'
+import RevisionStamp from '../../components/ui/RevisionStamp'
 import { Download, CheckCircle, XCircle, Shield } from 'lucide-react'
 import { Skeleton } from '../../components/ui/Skeleton'
 import type { Technician } from '../../types'
@@ -93,15 +94,16 @@ export default function SdileniPage() {
 
   const testRow = (label: string, value?: string, instrument?: string) => {
     if (!value) return null
-    const pass = value === 'Vyhovuje'
+    const isPass = value === 'Vyhovuje' || value.startsWith('Vyhovuje') || value.startsWith('V normě') || value.startsWith('V norm')
+    const isFail = value === 'Nevyhovuje' || value.startsWith('Nevyhovuje')
     return (
       <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
         <span className="text-base text-gray-600">{label}</span>
         <span className="flex items-center gap-2 text-base font-medium">
-          {pass ? (
-            <CheckCircle size={18} className="text-green-500" />
-          ) : value === 'Nevyhovuje' ? (
-            <XCircle size={18} className="text-red-500" />
+          {isPass ? (
+            <span>✅</span>
+          ) : isFail ? (
+            <span>❌</span>
           ) : null}
           {value}
           {instrument && <span className="text-sm text-gray-400">({instrument})</span>}
@@ -149,6 +151,16 @@ export default function SdileniPage() {
           </div>
         </Card>
 
+        {/* Revision Stamp */}
+        <div className="flex justify-center mb-4">
+          <RevisionStamp
+            conclusion={report.conclusion}
+            date={formatDate(report.date)}
+            reportNumber={report.reportNumber}
+            technicianName={report.technicianName}
+          />
+        </div>
+
         {/* Customer */}
         {customer && (
           <Card title="Provozovatel" className="mb-4" accent="blue">
@@ -176,7 +188,7 @@ export default function SdileniPage() {
             <div className="flex flex-col gap-2">
               {reportDevices.map((device) => (
                 <div key={device.id} className="flex flex-col py-2 border-b border-gray-100 last:border-0">
-                  <span className="text-base font-medium text-gray-800">{device.name}</span>
+                  <span className="text-base font-medium text-gray-800">{getDeviceCategoryIcon(device.category)} {device.name}</span>
                   <span className="text-sm text-gray-500">
                     {device.manufacturer} {device.model}
                   </span>
@@ -227,9 +239,28 @@ export default function SdileniPage() {
           </Card>
         )}
 
+        {/* Fotodokumentace */}
+        {report.photos && report.photos.length > 0 && (
+          <Card title="📸 Fotodokumentace" className="mb-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {report.photos.map((photo) => (
+                <div key={photo.id} className="group relative">
+                  <img
+                    src={photo.url}
+                    alt={photo.caption}
+                    className="w-full h-32 object-cover rounded-lg border border-gray-200"
+                    loading="lazy"
+                  />
+                  <div className="mt-1 text-xs text-gray-500 truncate">{photo.caption}</div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
+
         {/* Conclusion */}
         {report.conclusion === 'schopne' && (
-          <div className="rounded-2xl bg-gradient-to-r from-emerald-50 to-emerald-100 border border-emerald-200 p-6 mb-6">
+          <div className="rounded-xl bg-gradient-to-r from-emerald-50 to-emerald-100 border border-emerald-200 p-4 mb-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center">
                 <CheckCircle className="text-white" size={24} />
@@ -243,7 +274,7 @@ export default function SdileniPage() {
           </div>
         )}
         {report.conclusion === 's-vyhradami' && (
-          <div className="rounded-2xl bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-200 p-6 mb-6">
+          <div className="rounded-xl bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-200 p-4 mb-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center">
                 <XCircle className="text-white" size={24} />
@@ -257,7 +288,7 @@ export default function SdileniPage() {
           </div>
         )}
         {report.conclusion === 'neschopne' && (
-          <div className="rounded-2xl bg-gradient-to-r from-red-50 to-red-100 border border-red-200 p-6 mb-6">
+          <div className="rounded-xl bg-gradient-to-r from-red-50 to-red-100 border border-red-200 p-4 mb-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center">
                 <XCircle className="text-white" size={24} />

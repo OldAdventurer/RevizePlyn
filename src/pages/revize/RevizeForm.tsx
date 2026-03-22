@@ -213,14 +213,14 @@ export default function RevizeForm() {
   ]
 
   return (
-    <div className="page-enter p-4 md:p-6 flex flex-col gap-5 max-w-4xl mx-auto">
+    <div className="page-enter p-4 md:p-6 flex flex-col gap-3 max-w-4xl mx-auto">
       {/* Back */}
       <button onClick={() => navigate(`/zakazky/${order.id}`)} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium mb-4 transition-colors cursor-pointer">
         <ArrowLeft size={20} />
         <span>Zpět na zakázku</span>
       </button>
 
-      <div className="mb-6">
+      <div className="mb-4">
         <h1 className="text-2xl font-bold text-[var(--color-text)]">Nová revizní zpráva</h1>
         <p className="text-[var(--color-text-secondary)] mt-1">
           Zákazník: <strong>{customer.name}</strong> — {order.address}

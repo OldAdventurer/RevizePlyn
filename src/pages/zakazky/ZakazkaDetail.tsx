@@ -81,7 +81,7 @@ export default function ZakazkaDetail() {
   const canCreateReport = order.status === 'probiha' || order.status === 'dokoncena'
 
   return (
-    <div className="page-enter p-4 md:p-6 space-y-5">
+    <div className="page-enter p-4 md:p-6 space-y-3">
       {/* Back */}
       <button onClick={() => navigate('/zakazky')} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium mb-4 transition-colors cursor-pointer">
         <ArrowLeft size={20} />
@@ -89,7 +89,7 @@ export default function ZakazkaDetail() {
       </button>
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
         <div>
           <h1 className="text-2xl font-bold text-[var(--color-text)]">{getOrderTypeLabel(order.type)}</h1>
           <p className="text-[var(--color-text-secondary)] mt-1">{order.address}</p>

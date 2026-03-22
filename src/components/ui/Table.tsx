@@ -49,7 +49,7 @@ export default function Table<T>({
     <div>
       {/* Desktop table */}
       <div className="hidden md:block">
-        <div className="bg-white rounded-2xl shadow-[var(--shadow-md)] border border-[var(--color-border)]/60 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-[var(--shadow-md)] border border-[var(--color-border)]/60 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
@@ -57,7 +57,7 @@ export default function Table<T>({
                   {columns.map((col) => (
                     <th
                       key={col.key}
-                      className={`text-left py-3.5 px-5 text-sm font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide ${
+                      className={`text-left py-2 px-3 text-sm font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide ${
                         col.sortable ? 'cursor-pointer hover:bg-gray-100/80 select-none transition-colors' : ''
                       }`}
                       onClick={col.sortable ? () => handleSort(col.key) : undefined}
@@ -84,7 +84,7 @@ export default function Table<T>({
                     onClick={onRowClick ? () => onRowClick(row) : undefined}
                   >
                     {columns.map((col) => (
-                      <td key={col.key} className="py-3.5 px-5 text-base">
+                      <td key={col.key} className="py-2 px-3 text-base">
                         {col.render
                           ? col.render(row)
                           : String((row as Record<string, unknown>)[col.key] ?? '')}
@@ -103,13 +103,13 @@ export default function Table<T>({
         {sortedData.map((row) => (
           <div
             key={keyExtractor(row)}
-            className={`bg-white rounded-2xl border border-[var(--color-border)]/60 p-4 shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] transition-all duration-200 ${
+            className={`bg-white rounded-xl border border-[var(--color-border)]/60 p-3 shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] transition-all duration-200 ${
               onRowClick ? 'cursor-pointer active:bg-gray-50' : ''
             }`}
             onClick={onRowClick ? () => onRowClick(row) : undefined}
           >
             {columns.map((col) => (
-              <div key={col.key} className="flex justify-between items-baseline py-1.5">
+              <div key={col.key} className="flex justify-between items-baseline py-1">
                 <span className="font-medium text-[var(--color-text-secondary)] text-sm">{col.header}</span>
                 <span className="text-base text-[var(--color-text)] text-right ml-2">
                   {col.render

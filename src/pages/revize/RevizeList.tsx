@@ -4,7 +4,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { useNavigate, Link } from 'react-router-dom'
 import { usePageTitle } from '../../hooks/usePageTitle'
 import { ListSkeleton } from '../../components/ui/Skeleton'
-import { formatDate, getRevisionTypeLabel, getConclusionLabel } from '../../utils/format'
+import { formatDate, getRevisionTypeLabel, getConclusionLabel, getConclusionIcon } from '../../utils/format'
 import Card from '../../components/ui/Card'
 import Badge from '../../components/ui/Badge'
 import SearchBar from '../../components/ui/SearchBar'
@@ -105,9 +105,14 @@ export default function RevizeList() {
       key: 'conclusion',
       header: 'Závěr',
       render: (item) => (
-        <Badge variant={conclusionVariant(item.conclusion)}>
-          {getConclusionLabel(item.conclusion)}
-        </Badge>
+        <span className="flex items-center gap-1.5">
+          <span className={item.conclusion === 'schopne' ? 'text-green-500' : item.conclusion === 's-vyhradami' ? 'text-amber-500' : 'text-red-500'}>
+            {getConclusionIcon(item.conclusion)}
+          </span>
+          <Badge variant={conclusionVariant(item.conclusion)}>
+            {getConclusionLabel(item.conclusion)}
+          </Badge>
+        </span>
       ),
     },
     {
@@ -125,9 +130,9 @@ export default function RevizeList() {
   ]
 
   return (
-    <div className="page-enter p-4 md:p-6 flex flex-col gap-5 max-w-6xl mx-auto">
+    <div className="page-enter p-4 md:p-6 flex flex-col gap-3 max-w-6xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
         <div>
           <h1 className="text-2xl font-bold text-[var(--color-text)]">Revizní zprávy</h1>
           <p className="text-[var(--color-text-secondary)] mt-1">Přehled revizních zpráv a protokolů</p>
@@ -159,7 +164,7 @@ export default function RevizeList() {
       </div>
 
       {showFilters && (
-        <div className="bg-white rounded-2xl border border-[var(--color-border)]/60 p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white rounded-xl border border-[var(--color-border)]/60 p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Select
             label="Typ revize"
             placeholder="Všechny"
@@ -282,13 +287,18 @@ export default function RevizeList() {
                     <span className="text-sm text-gray-500">{formatDate(report.date)}</span>
                   </div>
                   <p className="text-base text-gray-600">{customer?.name ?? '—'}</p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 items-center">
                     <Badge variant={typeVariant(report.type)}>
                       {getRevisionTypeLabel(report.type)}
                     </Badge>
-                    <Badge variant={conclusionVariant(report.conclusion)}>
-                      {getConclusionLabel(report.conclusion)}
-                    </Badge>
+                    <span className="flex items-center gap-1.5">
+                      <span className={report.conclusion === 'schopne' ? 'text-green-500' : report.conclusion === 's-vyhradami' ? 'text-amber-500' : 'text-red-500'}>
+                        {getConclusionIcon(report.conclusion)}
+                      </span>
+                      <Badge variant={conclusionVariant(report.conclusion)}>
+                        {getConclusionLabel(report.conclusion)}
+                      </Badge>
+                    </span>
                   </div>
                   {defectCount > 0 && (
                     <p className="text-sm text-red-600 font-medium">

@@ -25,13 +25,13 @@ export default function SearchBar({
 
   return (
     <div className={`relative w-full ${className}`}>
-      <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+      <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
       <input
         type="search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={placeholder}
-        className="w-full min-h-[48px] text-base py-3 pl-12 pr-10 border border-[var(--color-border)] rounded-2xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30 focus:border-[var(--color-primary)] transition-all duration-200 placeholder:text-gray-400"
+        className="w-full min-h-[38px] text-base py-2 pl-10 pr-10 border border-[var(--color-border)] rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30 focus:border-[var(--color-primary)] transition-all duration-200 placeholder:text-gray-400"
       />
       {query && (
         <button

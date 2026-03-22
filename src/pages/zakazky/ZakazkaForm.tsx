@@ -112,19 +112,19 @@ export default function ZakazkaForm() {
   }
 
   return (
-    <div className="page-enter p-4 md:p-6 space-y-5 max-w-2xl">
+    <div className="page-enter p-4 md:p-6 space-y-3 max-w-2xl">
       <button onClick={() => navigate(isEdit ? `/zakazky/${id}` : '/zakazky')} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium mb-4 transition-colors cursor-pointer">
         <ArrowLeft size={20} />
         <span>{isEdit ? 'Zpět na detail' : 'Zpět na zakázky'}</span>
       </button>
 
-      <div className="mb-6">
+      <div className="mb-4">
         <h1 className="text-2xl font-bold text-[var(--color-text)]">{isEdit ? 'Upravit zakázku' : 'Nová zakázka'}</h1>
         <p className="text-[var(--color-text-secondary)] mt-1">{isEdit ? 'Úprava existující zakázky' : 'Vyplňte údaje o nové zakázce'}</p>
       </div>
 
       <Card>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <Select
             label="Zákazník"
             options={customerOptions}

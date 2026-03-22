@@ -13,6 +13,27 @@ import type {
   PaymentMethod,
 } from '../types'
 
+export function getDeviceCategoryIcon(category: DeviceCategory): string {
+  const icons: Record<DeviceCategory, string> = {
+    'kotel': '🔥',
+    'ohrivac': '💧',
+    'sporak': '🍳',
+    'rozvod': '🔧',
+    'regulator': '⚙️',
+    'ostatni': '📦',
+  }
+  return icons[category] || '📦'
+}
+
+export function getConclusionIcon(conclusion: RevisionConclusion): string {
+  const icons: Record<RevisionConclusion, string> = {
+    'schopne': '●',
+    's-vyhradami': '▲',
+    'neschopne': '✕',
+  }
+  return icons[conclusion] || '●'
+}
+
 export function formatDate(dateStr: string): string {
   const [y, m, d] = dateStr.split('-')
   return `${d}.${m}.${y}`

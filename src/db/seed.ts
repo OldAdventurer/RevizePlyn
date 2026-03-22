@@ -849,6 +849,11 @@ const revisionReports: RevisionReport[] = [
     ventilationCheck: 'Nevyhovuje — nedostatečný průřez větrací mřížky',
     conclusion: 's-vyhradami',
     conclusionNote: 'Zařízení schopné provozu s výhradami. Nutno zajistit dostatečné větrání kotelny do 3 měsíců.',
+    photos: [
+      { id: 'ph-01', url: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&h=300&fit=crop', caption: 'Plynový kotel Junkers — celkový pohled' },
+      { id: 'ph-02', url: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=300&fit=crop', caption: 'Plynoměr — odečet stavu' },
+      { id: 'ph-03', url: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop', caption: 'Měření CO analyzátorem Testo 300 — 28 ppm' },
+    ],
     createdAt: '2025-10-15',
   },
   // RZ-2025-0039 — ord-02 — Marie Svobodová, roční kontrola
@@ -867,6 +872,10 @@ const revisionReports: RevisionReport[] = [
     ventilationCheck: 'Vyhovuje',
     conclusion: 'schopne',
     conclusionNote: 'Zařízení schopné bezpečného provozu. Doporučena výměna flexi hadice u karmy (stáří > 10 let).',
+    photos: [
+      { id: 'ph-04', url: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop', caption: 'Plynový sporák — stav hořáků' },
+      { id: 'ph-05', url: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&h=300&fit=crop', caption: 'Koupelna — průtokový ohřívač' },
+    ],
     createdAt: '2025-11-08',
   },
   // RZ-2025-0040 — ord-03 — Petr Veselý, provozní revize
@@ -885,6 +894,11 @@ const revisionReports: RevisionReport[] = [
     ventilationCheck: 'Vyhovuje — turbo kotel, nezávislý na větrání místnosti',
     conclusion: 'schopne',
     conclusionNote: 'Zařízení schopné bezpečného provozu bez závad.',
+    photos: [
+      { id: 'ph-06', url: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&h=300&fit=crop', caption: 'Kondenzační kotel Vaillant — celkový pohled' },
+      { id: 'ph-07', url: 'https://images.unsplash.com/photo-1607400201515-c2c41c07d307?w=400&h=300&fit=crop', caption: 'Rozvod plynu — napojení na hlavní uzávěr' },
+      { id: 'ph-08', url: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop', caption: 'RD Troubsko — exteriér' },
+    ],
     createdAt: '2025-11-22',
   },
   // RZ-2025-0041 — ord-04 — MORAVOSTAV, výchozí revize Kuřim č. 1
@@ -903,6 +917,12 @@ const revisionReports: RevisionReport[] = [
     ventilationCheck: 'Vyhovuje — turbo kotel',
     conclusion: 'schopne',
     conclusionNote: 'Nová instalace schopná bezpečného provozu. Splňuje požadavky NV 191/2022 Sb.',
+    photos: [
+      { id: 'ph-09', url: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&h=300&fit=crop', caption: 'Kotel Protherm — nová instalace' },
+      { id: 'ph-10', url: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop', caption: 'Tlaková zkouška — manometr Keller LEO 2' },
+      { id: 'ph-11', url: 'https://images.unsplash.com/photo-1607400201515-c2c41c07d307?w=400&h=300&fit=crop', caption: 'Rozvod plynu — nové měděné potrubí' },
+      { id: 'ph-12', url: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop', caption: 'Novostavba Kuřim — exteriér' },
+    ],
     createdAt: '2025-12-05',
   },
   // RZ-2026-0001 — ord-05 — MORAVOSTAV, výchozí revize Kuřim č. 2
@@ -921,6 +941,10 @@ const revisionReports: RevisionReport[] = [
     ventilationCheck: 'Vyhovuje — turbo kotel',
     conclusion: 'schopne',
     conclusionNote: 'Nová instalace schopná bezpečného provozu.',
+    photos: [
+      { id: 'ph-13', url: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&h=300&fit=crop', caption: 'Štítek výrobce s typovým označením' },
+      { id: 'ph-14', url: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop', caption: 'Tlaková zkouška — manometr' },
+    ],
     createdAt: '2026-01-10',
   },
   // RZ-2026-0002 — ord-06 — BD Harmonie, Loosova 13
@@ -937,6 +961,11 @@ const revisionReports: RevisionReport[] = [
     ventilationCheck: 'Vyhovuje — větrání schodiště a společných prostor v pořádku',
     conclusion: 's-vyhradami',
     conclusionNote: 'Domovní plynovod schopný provozu s výhradami. Zjištěn zatarasený prostor u spotřebičů v bytech č. 7 a č. 11.',
+    photos: [
+      { id: 'ph-15', url: 'https://images.unsplash.com/photo-1607400201515-c2c41c07d307?w=400&h=300&fit=crop', caption: 'Stoupací vedení — celkový pohled' },
+      { id: 'ph-16', url: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=300&fit=crop', caption: 'Detail regulátoru tlaku' },
+      { id: 'ph-17', url: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&h=300&fit=crop', caption: 'Větrací mřížka kotelny' },
+    ],
     createdAt: '2025-12-12',
   },
   // RZ-2026-0003 — ord-07 — Restaurace U Zlatého lva
@@ -955,6 +984,12 @@ const revisionReports: RevisionReport[] = [
     ventilationCheck: 'Vyhovuje — nucené větrání kuchyně funkční',
     conclusion: 'neschopne',
     conclusionNote: 'Gril Gastro-Line 800 ODSTAVEN z provozu — netěsný přípojný spoj, nebezpečí úniku plynu! Ostatní spotřebiče provozuschopné. Nutná oprava grilu před znovuuvedením do provozu.',
+    photos: [
+      { id: 'ph-18', url: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop', caption: 'Plynový sporák — stav hořáků' },
+      { id: 'ph-19', url: 'https://images.unsplash.com/photo-1526382925646-27b5eb86796e?w=400&h=300&fit=crop', caption: 'Gril — netěsný přípojný spoj (závada)' },
+      { id: 'ph-20', url: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop', caption: 'Měření CO analyzátorem Testo 300' },
+      { id: 'ph-21', url: 'https://images.unsplash.com/photo-1607400201515-c2c41c07d307?w=400&h=300&fit=crop', caption: 'Rozvod plynu — kuchyně restaurace' },
+    ],
     createdAt: '2026-01-20',
   },
   // RZ-2026-0004 — ord-08 — Alena Procházková
@@ -973,6 +1008,11 @@ const revisionReports: RevisionReport[] = [
     ventilationCheck: 'Vyhovuje — turbo kotle',
     conclusion: 'schopne',
     conclusionNote: 'Oba kotle i plynovod schopné bezpečného provozu.',
+    photos: [
+      { id: 'ph-22', url: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&h=300&fit=crop', caption: 'Kotelna — celkový pohled' },
+      { id: 'ph-23', url: 'https://images.unsplash.com/photo-1526382925646-27b5eb86796e?w=400&h=300&fit=crop', caption: 'Kotel Vaillant — hořák v provozu' },
+      { id: 'ph-24', url: 'https://images.unsplash.com/photo-1607400201515-c2c41c07d307?w=400&h=300&fit=crop', caption: 'Plynovod — napojení kaskády' },
+    ],
     createdAt: '2026-01-28',
   },
   // RZ-2026-0005 — ord-09 — Domov seniorů Tišnov
@@ -991,6 +1031,12 @@ const revisionReports: RevisionReport[] = [
     ventilationCheck: 'Vyhovuje — nucené větrání kotelny i kuchyně',
     conclusion: 's-vyhradami',
     conclusionNote: 'Zařízení schopné provozu s výhradami. Zjištěna koroze na úseku potrubí v kotelně — nutno opravit do 6 měsíců. Chybí provozní řád kotelny.',
+    photos: [
+      { id: 'ph-25', url: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&h=300&fit=crop', caption: 'Kotelna — celkový pohled' },
+      { id: 'ph-26', url: 'https://images.unsplash.com/photo-1607400201515-c2c41c07d307?w=400&h=300&fit=crop', caption: 'Koroze na potrubí DN 50 (závada)' },
+      { id: 'ph-27', url: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop', caption: 'Kuchyňský sporák — domov seniorů' },
+      { id: 'ph-28', url: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=300&fit=crop', caption: 'Komínové těleso — napojení' },
+    ],
     createdAt: '2026-02-05',
   },
   // RZ-2026-0006 — ord-10 — Ludmila Marková, roční kontrola
@@ -1009,6 +1055,10 @@ const revisionReports: RevisionReport[] = [
     ventilationCheck: 'Vyhovuje',
     conclusion: 'schopne',
     conclusionNote: 'Zařízení schopné bezpečného provozu.',
+    photos: [
+      { id: 'ph-29', url: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&h=300&fit=crop', caption: 'Plynový kotel — celkový pohled' },
+      { id: 'ph-30', url: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop', caption: 'Plynový sporák — stav hořáků' },
+    ],
     createdAt: '2026-02-12',
   },
   // RZ-2026-0007 — ord-11 — DOMOSTAV, výchozí Modřice A1
@@ -1027,6 +1077,11 @@ const revisionReports: RevisionReport[] = [
     ventilationCheck: 'Vyhovuje — turbo kotel',
     conclusion: 'schopne',
     conclusionNote: 'Nová instalace schopná bezpečného provozu.',
+    photos: [
+      { id: 'ph-31', url: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&h=300&fit=crop', caption: 'Kotel — nová instalace Modřice A1' },
+      { id: 'ph-32', url: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop', caption: 'Tlaková zkouška — manometr' },
+      { id: 'ph-33', url: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop', caption: 'Bytový dům Modřice — exteriér' },
+    ],
     createdAt: '2026-02-20',
   },
   // RZ-2025-0042 — ord-25 — Marie Svobodová, oprava+revize
@@ -1045,6 +1100,10 @@ const revisionReports: RevisionReport[] = [
     ventilationCheck: 'Vyhovuje',
     conclusion: 'schopne',
     conclusionNote: 'Po opravě přípojné hadice je zařízení schopné bezpečného provozu.',
+    photos: [
+      { id: 'ph-34', url: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&h=300&fit=crop', caption: 'Průtokový ohřívač — po opravě' },
+      { id: 'ph-35', url: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop', caption: 'Měření CO — kontrola po opravě' },
+    ],
     createdAt: '2026-02-25',
   },
   // RZ-2025-0043 — historical report for Jiří Černý
@@ -2608,7 +2667,7 @@ const invoices: Invoice[] = [
 
 // ─── Seed Function ──────────────────────────────────────────────────────────
 
-const SEED_VERSION = 2 // bump this to force re-seed on next load
+const SEED_VERSION = 4 // bump this to force re-seed on next load
 
 export async function seedDatabase() {
   const versionEntry = await db.settings.get('seedVersion')
