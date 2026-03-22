@@ -1,24 +1,52 @@
 @import "tailwindcss";
 
 :root {
-  --color-primary: #1E40AF;
+  /* Primary palette — rich blue with depth */
+  --color-primary: #2563EB;
+  --color-primary-dark: #1D4ED8;
   --color-primary-light: #3B82F6;
-  --color-success: #16A34A;
-  --color-warning: #EA580C;
-  --color-error: #DC2626;
-  --color-text: #1F2937;
+  --color-primary-50: #EFF6FF;
+  --color-primary-100: #DBEAFE;
+  
+  /* Accent — warm amber for CTAs and highlights */
+  --color-accent: #F59E0B;
+  --color-accent-dark: #D97706;
+  
+  /* Status colors — vibrant but balanced */
+  --color-success: #10B981;
+  --color-success-light: #D1FAE5;
+  --color-warning: #F97316;
+  --color-warning-light: #FFF7ED;
+  --color-error: #EF4444;
+  --color-error-light: #FEF2F2;
+  
+  /* Neutrals — warm gray tones, not cold */
+  --color-text: #111827;
+  --color-text-secondary: #6B7280;
   --color-bg: #FFFFFF;
-  --color-border: #D1D5DB;
-  --color-surface: #F3F4F6;
+  --color-border: #E5E7EB;
+  --color-surface: #F8FAFC;
+  --color-surface-elevated: #FFFFFF;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.04);
 }
 
 html {
   font-size: 18px;
+  scroll-behavior: smooth;
 }
 
 body {
-  @apply text-[var(--color-text)] bg-[var(--color-bg)] leading-relaxed antialiased;
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: var(--color-text);
+  background: var(--color-surface);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
   min-height: 100dvh;
 }
 
@@ -28,9 +56,25 @@ button, a, input, select, textarea {
 }
 
 input, select, textarea {
-  @apply text-base p-3 border border-[var(--color-border)] rounded-lg;
   font-size: 1rem;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  background: var(--color-bg);
+  transition: all 0.2s ease;
 }
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-50);
+}
+
+/* Modern scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
 
 /* Status colors */
 .status-nova { @apply bg-blue-100 text-blue-800; }
@@ -45,3 +89,19 @@ input, select, textarea {
 .severity-a { @apply bg-red-600 text-white font-bold; }
 .severity-b { @apply bg-orange-500 text-white font-bold; }
 .severity-c { @apply bg-blue-500 text-white; }
+
+/* Print */
+@media print {
+  .no-print { display: none !important; }
+  body { font-size: 12pt; background: white; }
+}
+
+/* Smooth page transitions */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page-enter {
+  animation: fadeIn 0.3s ease-out;
+}
