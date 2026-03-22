@@ -14,6 +14,10 @@ import RevizeList from './pages/revize/RevizeList'
 import RevizeDetail from './pages/revize/RevizeDetail'
 import RevizeForm from './pages/revize/RevizeForm'
 import SdileniPage from './pages/sdileni/SdileniPage'
+import FinanceDashboard from './pages/finance/FinanceDashboard'
+import FakturyList from './pages/finance/FakturyList'
+import FakturaDetail from './pages/finance/FakturaDetail'
+import FakturaForm from './pages/finance/FakturaForm'
 import NastaveniPage from './pages/nastaveni/NastaveniPage'
 import ToastContainer from './components/ui/Toast'
 import NotFound from './pages/NotFound'
@@ -51,6 +55,11 @@ export default function App() {
           <Route path="/zakaznici/:id" element={<ZakaznikDetail />} />
           <Route path="/revizni-zpravy" element={<RevizeList />} />
           <Route path="/revizni-zpravy/:id" element={<RevizeDetail />} />
+          <Route path="/finance" element={<FinanceDashboard />} />
+          <Route path="/finance/faktury" element={<FakturyList />} />
+          <Route path="/finance/faktury/nova" element={<FakturaForm />} />
+          <Route path="/finance/faktury/:id" element={<FakturaDetail />} />
+          <Route path="/finance/faktury/:id/upravit" element={<FakturaForm />} />
           <Route path="/nastaveni" element={<NastaveniPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>

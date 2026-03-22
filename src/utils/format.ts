@@ -9,6 +9,8 @@ import type {
   ObjectType,
   Priority,
   DefectStatus,
+  InvoiceStatus,
+  PaymentMethod,
 } from '../types'
 
 export function formatDate(dateStr: string): string {
@@ -131,4 +133,41 @@ export function getPriorityLabel(priority: Priority): string {
 
 export function getDefectStatusLabel(status: DefectStatus): string {
   return status === 'neodstranena' ? 'Neodstraněna' : 'Odstraněna'
+}
+
+// === Invoice helpers ===
+
+export function getInvoiceStatusLabel(status: InvoiceStatus): string {
+  const labels: Record<InvoiceStatus, string> = {
+    'nova': 'Nová',
+    'odeslana': 'Odeslaná',
+    'zaplacena': 'Zaplacená',
+    'po-splatnosti': 'Po splatnosti',
+    'stornovana': 'Stornovaná',
+  }
+  return labels[status] || status
+}
+
+export function getInvoiceStatusColor(status: InvoiceStatus): string {
+  const colors: Record<InvoiceStatus, string> = {
+    'nova': 'blue',
+    'odeslana': 'yellow',
+    'zaplacena': 'green',
+    'po-splatnosti': 'red',
+    'stornovana': 'gray',
+  }
+  return colors[status] || 'gray'
+}
+
+export function getPaymentMethodLabel(method: PaymentMethod): string {
+  const labels: Record<PaymentMethod, string> = {
+    'prevod': 'Bankovní převod',
+    'hotovost': 'Hotovost',
+    'kartou': 'Platba kartou',
+  }
+  return labels[method] || method
+}
+
+export function formatIBAN(iban: string): string {
+  return iban.replace(/(.{4})/g, '$1 ').trim()
 }

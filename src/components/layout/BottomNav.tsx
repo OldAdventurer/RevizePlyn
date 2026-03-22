@@ -1,12 +1,12 @@
 import { NavLink } from 'react-router-dom'
-import { Home, ClipboardList, Wrench, FileText, Users } from 'lucide-react'
+import { Home, ClipboardList, Wrench, FileText, Banknote } from 'lucide-react'
 
 const tabs = [
   { to: '/', icon: Home, label: 'Domů' },
   { to: '/zakazky', icon: ClipboardList, label: 'Zakázky' },
-  { to: '/zarizeni', icon: Wrench, label: 'Zařízení' },
   { to: '/revizni-zpravy', icon: FileText, label: 'Revize' },
-  { to: '/zakaznici', icon: Users, label: 'Zákazníci' },
+  { to: '/finance', icon: Banknote, label: 'Finance' },
+  { to: '/zarizeni', icon: Wrench, label: 'Zařízení' },
 ]
 
 export default function BottomNav() {

@@ -125,3 +125,37 @@ export interface ShareLink {
   createdAt: string
   lastViewedAt?: string
 }
+
+// === Finance / Invoicing ===
+
+export type InvoiceStatus = 'nova' | 'odeslana' | 'zaplacena' | 'po-splatnosti' | 'stornovana'
+export type PaymentMethod = 'prevod' | 'hotovost' | 'kartou'
+
+export interface InvoiceItem {
+  description: string
+  quantity: number
+  unitPrice: number
+  total: number
+}
+
+export interface Invoice {
+  id: string
+  invoiceNumber: string
+  orderId?: string
+  customerId: string
+  issueDate: string
+  dueDate: string
+  paidDate?: string
+  items: InvoiceItem[]
+  subtotal: number
+  vatRate: number          // 0 for neplátce DPH, 21 for plátce
+  vatAmount: number
+  total: number
+  paymentMethod: PaymentMethod
+  bankAccount: string      // e.g. "CZ65 0800 0000 1923 4567 8901"
+  variableSymbol: string   // = invoice number without prefix
+  status: InvoiceStatus
+  note?: string
+  createdAt: string
+  updatedAt: string
+}

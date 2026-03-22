@@ -4,6 +4,7 @@ import { db } from '../db/schema'
 import { useLiveQuery } from 'dexie-react-hooks'
 import {
   formatDate,
+  formatCurrency,
   getOrderStatusLabel,
   getOrderStatusColor,
   getOrderTypeLabel,
@@ -47,6 +48,7 @@ export default function Dashboard() {
   const orders = useLiveQuery(() => db.orders.toArray())
   const customers = useLiveQuery(() => db.customers.toArray())
   const reports = useLiveQuery(() => db.revisionReports.toArray())
+  const invoices = useLiveQuery(() => db.invoices.toArray())
 
   const customerMap = useMemo(() => {
     const map = new Map<string, Customer>()
@@ -112,7 +114,31 @@ export default function Dashboard() {
     return [...reports].sort((a, b) => (a.date > b.date ? -1 : 1)).slice(0, 5)
   }, [reports])
 
-  if (!orders || !customers || !reports || !stats || !recentReports) {
+  const financeStats = useMemo(() => {
+    if (!invoices) return null
+    const now = new Date()
+    const monthStart = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`
+
+    let unpaid = 0
+    let overdueCount = 0
+    let monthlyIncome = 0
+
+    for (const inv of invoices) {
+      if (inv.status === 'odeslana' || inv.status === 'po-splatnosti') {
+        unpaid += inv.total
+      }
+      if (inv.status === 'po-splatnosti') {
+        overdueCount++
+      }
+      if (inv.status === 'zaplacena' && inv.paidDate && inv.paidDate >= monthStart) {
+        monthlyIncome += inv.total
+      }
+    }
+
+    return { unpaid, overdueCount, monthlyIncome }
+  }, [invoices])
+
+  if (!orders || !customers || !reports || !invoices || !stats || !recentReports || !financeStats) {
     return <DashboardSkeleton />
   }
 
@@ -253,6 +279,37 @@ export default function Dashboard() {
           <p className="text-sm text-[var(--color-text-secondary)] mt-1">Po termínu</p>
         </button>
       </div>
+
+      {/* ── Finance summary ── */}
+      <Card
+        accent="blue"
+        title="💰 Finanční přehled"
+        footer={
+          <button
+            className="text-[var(--color-primary)] font-semibold hover:underline cursor-pointer flex items-center gap-1"
+            onClick={() => navigate('/finance')}
+          >
+            Zobrazit finance <ChevronRight size={18} />
+          </button>
+        }
+      >
+        <div className="grid grid-cols-3 gap-4 text-center">
+          <div>
+            <p className="text-sm text-[var(--color-text-secondary)]">Nezaplaceno</p>
+            <p className="text-lg font-bold text-[var(--color-text)]">{formatCurrency(financeStats.unpaid)}</p>
+          </div>
+          <div>
+            <p className="text-sm text-[var(--color-text-secondary)]">Po splatnosti</p>
+            <p className={`text-lg font-bold ${financeStats.overdueCount > 0 ? 'text-red-600' : 'text-[var(--color-text)]'}`}>
+              {financeStats.overdueCount}
+            </p>
+          </div>
+          <div>
+            <p className="text-sm text-[var(--color-text-secondary)]">Příjmy tento měsíc</p>
+            <p className="text-lg font-bold text-emerald-600">{formatCurrency(financeStats.monthlyIncome)}</p>
+          </div>
+        </div>
+      </Card>
 
       {/* ── Upcoming revisions ── */}
       <Card
