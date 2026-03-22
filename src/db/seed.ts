@@ -2452,7 +2452,7 @@ const invoices: Invoice[] = [
     customerId: 'cust-10',
     issueDate: '2026-03-02',
     dueDate: '2026-03-16',
-    paidDate: undefined,
+    paidDate: '2026-03-14',
     items: [
       { description: 'Provozní revize — BD Loosova 13, bytové jednotky', quantity: 14, unitPrice: 1100, total: 15400 },
       { description: 'Revize společných rozvodů plynu a HUP', quantity: 1, unitPrice: 3200, total: 3200 },
@@ -2462,10 +2462,10 @@ const invoices: Invoice[] = [
     paymentMethod: 'prevod',
     bankAccount: BANK,
     variableSymbol: '2026020',
-    status: 'odeslana',
+    status: 'zaplacena',
     note: 'Dle rámcové smlouvy správce budovy',
     createdAt: '2026-03-02T08:00:00Z',
-    updatedAt: '2026-03-02T08:00:00Z',
+    updatedAt: '2026-03-14T09:00:00Z',
   },
   {
     id: 'inv-54',
@@ -2474,7 +2474,7 @@ const invoices: Invoice[] = [
     customerId: 'cust-14',
     issueDate: '2026-03-04',
     dueDate: '2026-03-18',
-    paidDate: undefined,
+    paidDate: '2026-03-15',
     items: [
       { description: 'Revize průmyslové plynové kotelny — EKOTHERM výrobní hala 2', quantity: 1, unitPrice: 6000, total: 6000 },
       { description: 'Revize průmyslových kotlů Buderus (2 ks)', quantity: 2, unitPrice: 2500, total: 5000 },
@@ -2485,10 +2485,10 @@ const invoices: Invoice[] = [
     paymentMethod: 'prevod',
     bankAccount: BANK,
     variableSymbol: '2026021',
-    status: 'nova',
+    status: 'zaplacena',
     note: '',
     createdAt: '2026-03-04T09:00:00Z',
-    updatedAt: '2026-03-04T09:00:00Z',
+    updatedAt: '2026-03-15T11:00:00Z',
   },
   {
     id: 'inv-55',
@@ -2518,7 +2518,7 @@ const invoices: Invoice[] = [
     customerId: 'cust-09',
     issueDate: '2026-03-06',
     dueDate: '2026-03-20',
-    paidDate: undefined,
+    paidDate: '2026-03-18',
     items: [
       { description: 'Výchozí revize plynové instalace — novostavba BD Tišnov', quantity: 1, unitPrice: 5500, total: 5500 },
       { description: 'Tlaková zkouška plynovodu', quantity: 1, unitPrice: 1200, total: 1200 },
@@ -2529,10 +2529,10 @@ const invoices: Invoice[] = [
     paymentMethod: 'prevod',
     bankAccount: BANK,
     variableSymbol: '2026023',
-    status: 'odeslana',
+    status: 'zaplacena',
     note: '',
     createdAt: '2026-03-06T10:00:00Z',
-    updatedAt: '2026-03-06T10:00:00Z',
+    updatedAt: '2026-03-18T08:00:00Z',
   },
   {
     id: 'inv-57',
@@ -2562,7 +2562,7 @@ const invoices: Invoice[] = [
     customerId: 'cust-12',
     issueDate: '2026-03-11',
     dueDate: '2026-03-25',
-    paidDate: undefined,
+    paidDate: '2026-03-19',
     items: [
       { description: 'Čtvrtletní provozní revize — Restaurace U Zlatého lva, kuchyňská linka', quantity: 1, unitPrice: 4500, total: 4500 },
       { description: 'Revize plynových spotřebičů (sporáky, konvektomat, gril)', quantity: 1, unitPrice: 2200, total: 2200 },
@@ -2572,10 +2572,10 @@ const invoices: Invoice[] = [
     paymentMethod: 'prevod',
     bankAccount: BANK,
     variableSymbol: '2026025',
-    status: 'nova',
+    status: 'zaplacena',
     note: '',
     createdAt: '2026-03-11T08:00:00Z',
-    updatedAt: '2026-03-11T08:00:00Z',
+    updatedAt: '2026-03-19T10:00:00Z',
   },
   {
     id: 'inv-59',
@@ -2667,7 +2667,7 @@ const invoices: Invoice[] = [
 
 // ─── Seed Function ──────────────────────────────────────────────────────────
 
-const SEED_VERSION = 4 // bump this to force re-seed on next load
+const SEED_VERSION = 5 // bump this to force re-seed on next load
 
 export async function seedDatabase() {
   const versionEntry = await db.settings.get('seedVersion')
