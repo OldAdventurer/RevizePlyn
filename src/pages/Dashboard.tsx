@@ -282,7 +282,7 @@ export default function Dashboard() {
               variant="outline"
               size="sm"
               icon={<Receipt size={15} />}
-              onClick={() => navigate('/finance/nova-faktura')}
+              onClick={() => navigate('/finance/faktury/nova')}
             >
               Vystavit fakturu
             </Button>
