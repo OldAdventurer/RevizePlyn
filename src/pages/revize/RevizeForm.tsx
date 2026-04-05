@@ -46,6 +46,7 @@ export default function RevizeForm() {
   const [selectedOrderId, setSelectedOrderId] = useState(orderId ?? '')
   const [selectedCustomerId, setSelectedCustomerId] = useState('')
   const [customerQuery, setCustomerQuery] = useState('')
+  const [orderQuery, setOrderQuery] = useState('')
   const currentOrderId = orderId ?? selectedOrderId
   const selectableOrders = useMemo(
     () =>
@@ -74,6 +75,17 @@ export default function RevizeForm() {
         (c.ico ?? '').toLowerCase().includes(q)
     )
   }, [customers, customerQuery])
+  const filteredOrders = useMemo(() => {
+    const list = selectableOrders.filter((o) => !selectedCustomerId || o.customerId === selectedCustomerId)
+    const q = orderQuery.trim().toLowerCase()
+    if (!q) return list
+    return list.filter(
+      (o) =>
+        getOrderTypeLabel(o.type).toLowerCase().includes(q) ||
+        o.address.toLowerCase().includes(q) ||
+        (o.description ?? '').toLowerCase().includes(q),
+    )
+  }, [selectableOrders, selectedCustomerId, orderQuery])
 
   const [reportNumber, setReportNumber] = useState('')
   const [revisionType, setRevisionType] = useState<RevisionType>('provozni')
@@ -290,20 +302,41 @@ export default function RevizeForm() {
           </div>
         </Card>
         <Card title="Volitelně zakázka">
-          <Select
-            value={selectedOrderId}
-            onChange={(e) => setSelectedOrderId(e.target.value)}
-            options={[
-              { value: '', label: 'Bez zakázky' },
-              ...selectableOrders
-                .filter((o) => !selectedCustomerId || o.customerId === selectedCustomerId)
-                .map((o) => ({
-                  value: o.id,
-                  label: `${getOrderTypeLabel(o.type)} — ${o.address}`,
-                })),
-            ]}
-            disabled={selectableOrders.length === 0 || !selectedCustomerId}
+          <Input
+            label="Hledat zakázku"
+            value={orderQuery}
+            onChange={(e) => setOrderQuery(e.target.value)}
+            placeholder="Typ, adresa nebo popis"
+            disabled={!selectedCustomerId}
           />
+          <div className="mt-3 max-h-56 overflow-auto rounded-lg border border-border divide-y divide-border">
+            <button
+              type="button"
+              onClick={() => setSelectedOrderId('')}
+              className={`w-full text-left px-3 py-2.5 cursor-pointer transition-colors ${
+                selectedOrderId === '' ? 'bg-primary/10 text-foreground' : 'hover:bg-muted/50'
+              }`}
+            >
+              <div className="text-sm font-medium">Bez zakázky</div>
+            </button>
+            {selectedCustomerId && filteredOrders.length === 0 ? (
+              <p className="text-sm text-muted-foreground p-3">Žádná zakázka neodpovídá hledání</p>
+            ) : (
+              filteredOrders.map((o) => (
+                <button
+                  key={o.id}
+                  type="button"
+                  onClick={() => setSelectedOrderId(o.id)}
+                  className={`w-full text-left px-3 py-2.5 cursor-pointer transition-colors ${
+                    selectedOrderId === o.id ? 'bg-primary/10 text-foreground' : 'hover:bg-muted/50'
+                  }`}
+                >
+                  <div className="text-sm font-medium">{getOrderTypeLabel(o.type)}</div>
+                  <div className="text-xs text-muted-foreground">{o.address}</div>
+                </button>
+              ))
+            )}
+          </div>
           {selectableOrders.length === 0 && (
             <div className="mt-4">
               <Link to="/zakazky/nova" className="text-sm text-primary hover:underline">
@@ -373,20 +406,41 @@ export default function RevizeForm() {
             </div>
           </Card>
           <Card title="Zakázka (volitelné)">
-            <Select
-              value={selectedOrderId}
-              onChange={(e) => setSelectedOrderId(e.target.value)}
-              options={[
-                { value: '', label: 'Bez zakázky' },
-                ...selectableOrders
-                  .filter((o) => !selectedCustomerId || o.customerId === selectedCustomerId)
-                  .map((o) => ({
-                    value: o.id,
-                    label: `${getOrderTypeLabel(o.type)} — ${o.address}`,
-                  })),
-              ]}
+            <Input
+              label="Hledat zakázku"
+              value={orderQuery}
+              onChange={(e) => setOrderQuery(e.target.value)}
+              placeholder="Typ, adresa nebo popis"
               disabled={!selectedCustomerId}
             />
+            <div className="mt-3 max-h-56 overflow-auto rounded-lg border border-border divide-y divide-border">
+              <button
+                type="button"
+                onClick={() => setSelectedOrderId('')}
+                className={`w-full text-left px-3 py-2.5 cursor-pointer transition-colors ${
+                  selectedOrderId === '' ? 'bg-primary/10 text-foreground' : 'hover:bg-muted/50'
+                }`}
+              >
+                <div className="text-sm font-medium">Bez zakázky</div>
+              </button>
+              {selectedCustomerId && filteredOrders.length === 0 ? (
+                <p className="text-sm text-muted-foreground p-3">Žádná zakázka neodpovídá hledání</p>
+              ) : (
+                filteredOrders.map((o) => (
+                  <button
+                    key={o.id}
+                    type="button"
+                    onClick={() => setSelectedOrderId(o.id)}
+                    className={`w-full text-left px-3 py-2.5 cursor-pointer transition-colors ${
+                      selectedOrderId === o.id ? 'bg-primary/10 text-foreground' : 'hover:bg-muted/50'
+                    }`}
+                  >
+                    <div className="text-sm font-medium">{getOrderTypeLabel(o.type)}</div>
+                    <div className="text-xs text-muted-foreground">{o.address}</div>
+                  </button>
+                ))
+              )}
+            </div>
           </Card>
         </div>
       )}
