@@ -9,6 +9,7 @@ import type {
   ShareLink,
   Technician,
   Invoice,
+  RevisionSchedule,
 } from '../types'
 
 // ─── Technician ─────────────────────────────────────────────────────────────
@@ -2755,9 +2756,134 @@ const invoices: Invoice[] = [
   },
 ]
 
+// ─── Revision Schedules (Harmonogramy) ──────────────────────────────────────
+
+const revisionSchedules: RevisionSchedule[] = [
+  // Harmonogram 1: MORAVOSTAV s.r.o. — novostavby Kuřim
+  {
+    id: 'sched-01',
+    customerId: 'cust-09',
+    year: 2026,
+    name: 'Harmonogram revizí PZ — Novostavby Kuřim 2026',
+    items: [
+      {
+        id: 'si-01', deviceId: 'dev-22', objectId: 'obj-12', type: 'pravidelna-revize',
+        plannedStart: '2026-02-10', plannedEnd: '2026-02-14', status: 'dokonceno', note: 'Výchozí revize kotle hotova'
+      },
+      {
+        id: 'si-02', deviceId: 'dev-23', objectId: 'obj-12', type: 'pravidelna-revize',
+        plannedStart: '2026-02-10', plannedEnd: '2026-02-14', status: 'dokonceno', note: 'Revize rozvodu dokončena'
+      },
+      {
+        id: 'si-03', deviceId: 'dev-24', objectId: 'obj-13', type: 'nova-stavba',
+        plannedStart: '2026-03-17', plannedEnd: '2026-03-21', status: 'dokonceno'
+      },
+      {
+        id: 'si-04', deviceId: 'dev-25', objectId: 'obj-13', type: 'nova-stavba',
+        plannedStart: '2026-03-17', plannedEnd: '2026-03-21', status: 'dokonceno'
+      },
+      {
+        id: 'si-05', deviceId: 'dev-26', objectId: 'obj-14', type: 'nova-stavba',
+        plannedStart: '2026-05-05', plannedEnd: '2026-05-09', status: 'planovano', note: 'Čeká na kolaudaci'
+      },
+      {
+        id: 'si-06', deviceId: 'dev-27', objectId: 'obj-14', type: 'nova-stavba',
+        plannedStart: '2026-05-05', plannedEnd: '2026-05-09', status: 'planovano'
+      },
+      {
+        id: 'si-07', deviceId: 'dev-22', objectId: 'obj-12', type: 'pravidelna-kontrola',
+        plannedStart: '2026-08-18', plannedEnd: '2026-08-22', status: 'planovano', note: 'Roční kontrola'
+      },
+      {
+        id: 'si-08', deviceId: 'dev-24', objectId: 'obj-13', type: 'pravidelna-kontrola',
+        plannedStart: '2026-09-15', plannedEnd: '2026-09-19', status: 'planovano'
+      },
+    ],
+    note: 'Etapy I a II — celkem 3 RD, 6 zařízení',
+    createdAt: '2026-01-15T09:00:00.000Z',
+    updatedAt: '2026-03-22T14:30:00.000Z',
+  },
+  // Harmonogram 2: SB Správa budov a.s. — bytové domy
+  {
+    id: 'sched-02',
+    customerId: 'cust-11',
+    year: 2026,
+    name: 'Harmonogram revizí PZ — BD Kounicova + Pellicova 2026',
+    items: [
+      {
+        id: 'si-09', deviceId: 'dev-28', objectId: 'obj-15', type: 'pravidelna-revize',
+        plannedStart: '2026-01-20', plannedEnd: '2026-01-31', status: 'dokonceno', note: 'Revize NTL rozvodů BD Kounicova'
+      },
+      {
+        id: 'si-10', deviceId: 'dev-29', objectId: 'obj-16', type: 'pravidelna-revize',
+        plannedStart: '2026-04-07', plannedEnd: '2026-04-11', status: 'planovano', note: 'Revize NTL rozvodů BD Pellicova'
+      },
+      {
+        id: 'si-11', deviceId: 'dev-28', objectId: 'obj-15', type: 'pravidelna-kontrola',
+        plannedStart: '2026-07-14', plannedEnd: '2026-07-18', status: 'planovano', note: 'Roční kontrola BD Kounicova'
+      },
+      {
+        id: 'si-12', deviceId: 'dev-29', objectId: 'obj-16', type: 'pravidelna-kontrola',
+        plannedStart: '2026-10-13', plannedEnd: '2026-10-17', status: 'planovano'
+      },
+    ],
+    note: 'Správce: p. Horáček, 2 bytové domy, celkem 36 BJ',
+    createdAt: '2026-01-05T10:00:00.000Z',
+    updatedAt: '2026-02-01T08:00:00.000Z',
+  },
+  // Harmonogram 3: DOMOSTAV Group a.s. — řadové domy Modřice
+  {
+    id: 'sched-03',
+    customerId: 'cust-13',
+    year: 2026,
+    name: 'Harmonogram revizí PZ — Řadové domy Modřice 2026',
+    items: [
+      {
+        id: 'si-13', deviceId: 'dev-34', objectId: 'obj-18', type: 'pravidelna-revize',
+        plannedStart: '2026-01-13', plannedEnd: '2026-01-17', status: 'dokonceno'
+      },
+      {
+        id: 'si-14', deviceId: 'dev-35', objectId: 'obj-18', type: 'pravidelna-revize',
+        plannedStart: '2026-01-13', plannedEnd: '2026-01-17', status: 'dokonceno'
+      },
+      {
+        id: 'si-15', deviceId: 'dev-36', objectId: 'obj-19', type: 'pravidelna-revize',
+        plannedStart: '2026-02-24', plannedEnd: '2026-02-28', status: 'dokonceno'
+      },
+      {
+        id: 'si-16', deviceId: 'dev-37', objectId: 'obj-19', type: 'pravidelna-revize',
+        plannedStart: '2026-02-24', plannedEnd: '2026-02-28', status: 'dokonceno'
+      },
+      {
+        id: 'si-17', deviceId: 'dev-38', objectId: 'obj-20', type: 'pravidelna-revize',
+        plannedStart: '2026-04-14', plannedEnd: '2026-04-18', status: 'planovano'
+      },
+      {
+        id: 'si-18', deviceId: 'dev-39', objectId: 'obj-20', type: 'pravidelna-revize',
+        plannedStart: '2026-04-14', plannedEnd: '2026-04-18', status: 'planovano'
+      },
+      {
+        id: 'si-19', deviceId: 'dev-34', objectId: 'obj-18', type: 'pravidelna-kontrola',
+        plannedStart: '2026-07-07', plannedEnd: '2026-07-11', status: 'planovano', note: 'Roční kontrola A1'
+      },
+      {
+        id: 'si-20', deviceId: 'dev-36', objectId: 'obj-19', type: 'pravidelna-kontrola',
+        plannedStart: '2026-08-25', plannedEnd: '2026-08-29', status: 'planovano', note: 'Roční kontrola A2'
+      },
+      {
+        id: 'si-21', deviceId: 'dev-38', objectId: 'obj-20', type: 'pravidelna-kontrola',
+        plannedStart: '2026-10-20', plannedEnd: '2026-10-24', status: 'planovano', note: 'Roční kontrola A3'
+      },
+    ],
+    note: 'Etapa 1 — 3 řadové domy, 6 zařízení, revize + kontroly',
+    createdAt: '2025-12-20T11:00:00.000Z',
+    updatedAt: '2026-03-01T09:15:00.000Z',
+  },
+]
+
 // ─── Seed Function ──────────────────────────────────────────────────────────
 
-const SEED_VERSION = 5 // bump this to force re-seed on next load
+const SEED_VERSION = 6 // bump this to force re-seed on next load
 
 export async function seedDatabase() {
   const versionEntry = await db.settings.get('seedVersion')
@@ -2775,7 +2901,7 @@ export async function seedDatabase() {
 
   await db.transaction(
     'rw',
-    [db.customers, db.objects, db.devices, db.orders, db.revisionReports, db.defects, db.shareLinks, db.invoices, db.settings],
+    [db.customers, db.objects, db.devices, db.orders, db.revisionReports, db.defects, db.shareLinks, db.invoices, db.revisionSchedules, db.settings],
     async () => {
       await db.settings.put({ key: 'technician', value: technician })
       await db.customers.bulkPut(customers)
@@ -2785,7 +2911,8 @@ export async function seedDatabase() {
       await db.revisionReports.bulkPut(revisionReports)
       await db.defects.bulkPut(defects)
       await db.shareLinks.bulkPut(shareLinks)
-            await db.invoices.bulkPut(invoices)
+      await db.invoices.bulkPut(invoices)
+      await db.revisionSchedules.bulkPut(revisionSchedules)
       await db.settings.put({ key: 'seedVersion', value: SEED_VERSION })
     }
   )

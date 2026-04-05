@@ -143,6 +143,33 @@ export interface ShareLink {
   lastViewedAt?: string
 }
 
+// === Harmonogram (Revision Schedule) ===
+
+export type ScheduleItemStatus = 'planovano' | 'dokonceno' | 'zruseno'
+
+export interface ScheduleItem {
+  id: string
+  deviceId: string
+  objectId: string
+  type: OrderType
+  plannedStart: string   // ISO date
+  plannedEnd: string     // ISO date
+  status: ScheduleItemStatus
+  orderId?: string       // link to generated Order
+  note?: string
+}
+
+export interface RevisionSchedule {
+  id: string
+  customerId: string
+  year: number
+  name: string
+  items: ScheduleItem[]
+  note?: string
+  createdAt: string
+  updatedAt: string
+}
+
 // === Finance / Invoicing ===
 
 export type InvoiceStatus = 'nova' | 'odeslana' | 'zaplacena' | 'po-splatnosti' | 'stornovana'

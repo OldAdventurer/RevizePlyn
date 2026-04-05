@@ -1,5 +1,5 @@
 import Dexie, { type Table } from 'dexie'
-import type { Customer, ObjectRecord, Device, Order, RevisionReport, Defect, ShareLink, Invoice } from '../types'
+import type { Customer, ObjectRecord, Device, Order, RevisionReport, Defect, ShareLink, Invoice, RevisionSchedule } from '../types'
 
 export class RevizeDB extends Dexie {
   customers!: Table<Customer>
@@ -10,6 +10,7 @@ export class RevizeDB extends Dexie {
   defects!: Table<Defect>
   shareLinks!: Table<ShareLink>
   invoices!: Table<Invoice, string>
+  revisionSchedules!: Table<RevisionSchedule, string>
   settings!: Table<{ key: string; value: unknown }>
 
   constructor() {
@@ -33,6 +34,18 @@ export class RevizeDB extends Dexie {
       defects: 'id, revisionReportId, severity, status',
       shareLinks: 'id, token, revisionReportId',
       invoices: 'id, invoiceNumber, orderId, customerId, status, issueDate, dueDate',
+      settings: 'key'
+    })
+    this.version(3).stores({
+      customers: 'id, name, type, phone',
+      objects: 'id, customerId, type, address',
+      devices: 'id, objectId, customerId, category, manufacturer, pressureCategory, medium',
+      orders: 'id, customerId, objectId, type, status, plannedDate, createdAt',
+      revisionReports: 'id, reportNumber, orderId, customerId, type, date, conclusion',
+      defects: 'id, revisionReportId, severity, status',
+      shareLinks: 'id, token, revisionReportId',
+      invoices: 'id, invoiceNumber, orderId, customerId, status, issueDate, dueDate',
+      revisionSchedules: 'id, customerId, year',
       settings: 'key'
     })
   }

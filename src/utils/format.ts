@@ -13,6 +13,7 @@ import type {
   DefectStatus,
   InvoiceStatus,
   PaymentMethod,
+  ScheduleItemStatus,
 } from '../types'
 
 export function getDeviceCategoryIcon(category: DeviceCategory): string {
@@ -227,4 +228,24 @@ export function getPaymentMethodLabel(method: PaymentMethod): string {
 
 export function formatIBAN(iban: string): string {
   return iban.replace(/(.{4})/g, '$1 ').trim()
+}
+
+// === Schedule helpers ===
+
+export function getScheduleItemStatusLabel(status: ScheduleItemStatus): string {
+  const labels: Record<ScheduleItemStatus, string> = {
+    planovano: 'Plánováno',
+    dokonceno: 'Dokončeno',
+    zruseno: 'Zrušeno',
+  }
+  return labels[status] || status
+}
+
+export function getScheduleItemStatusColor(status: ScheduleItemStatus): string {
+  const colors: Record<ScheduleItemStatus, string> = {
+    planovano: 'blue',
+    dokonceno: 'green',
+    zruseno: 'gray',
+  }
+  return colors[status] || 'gray'
 }
