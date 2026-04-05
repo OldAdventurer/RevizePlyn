@@ -112,9 +112,18 @@ export default function RevizeDetail() {
     return allDevices.filter((d) => report.deviceIds.includes(d.id))
   }, [report, allDevices])
 
-  if (!report || !customer || !defects || !allDevices) {
-    return <DetailSkeleton />
+  if (report === undefined || !allDevices) return <DetailSkeleton />
+  if (report === null) {
+    return (
+      <div className="page-enter space-y-6">
+        <Link to="/revizni-zpravy" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <ArrowLeft size={16} /> Zpět na revizní zprávy
+        </Link>
+        <div className="py-12 text-center text-muted-foreground">Revizní zpráva nenalezena</div>
+      </div>
+    )
   }
+  if (!customer || !defects) return <DetailSkeleton />
 
   const handleDownloadPDF = () => {
     const tech = technicianSetting?.value as Technician | undefined
