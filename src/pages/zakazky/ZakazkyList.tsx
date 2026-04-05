@@ -127,7 +127,7 @@ export default function ZakazkyList() {
         o.priority === 'specha' ? (
           <Badge variant="red">Spěchá</Badge>
         ) : (
-          <span className="text-gray-500">Normální</span>
+          <span className="text-muted-foreground">Normální</span>
         ),
     },
   ]
@@ -137,8 +137,8 @@ export default function ZakazkyList() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text)]">Zakázky</h1>
-          <p className="text-[var(--color-text-secondary)] mt-1">Přehled všech zakázek</p>
+          <h1 className="text-2xl font-bold text-foreground">Zakázky</h1>
+          <p className="text-muted-foreground mt-1">Přehled všech zakázek</p>
         </div>
         <Link to="/zakazky/nova">
           <Button icon={<Plus size={20} />}>Nová zakázka</Button>
@@ -163,7 +163,7 @@ export default function ZakazkyList() {
       </div>
 
       {/* Filters */}
-      <div className={`bg-white rounded-xl border border-[var(--color-border)]/60 p-4 grid grid-cols-1 sm:grid-cols-3 gap-3 ${showFilters ? '' : 'hidden sm:grid'}`}>
+      <div className={`bg-card rounded-lg border border-border/60 p-4 grid grid-cols-1 sm:grid-cols-3 gap-3 ${showFilters ? '' : 'hidden sm:grid'}`}>
         <Select
           options={statusOptions}
           value={statusFilter}
@@ -198,7 +198,7 @@ export default function ZakazkyList() {
           {filteredOrders.length === 0 ? (
             <div className="text-center py-12">
               <FileText className="mx-auto text-gray-300 mb-3" size={48} />
-              <p className="text-lg text-[var(--color-text-secondary)]">Žádné zakázky odpovídající vašim filtrům</p>
+              <p className="text-lg text-muted-foreground">Žádné zakázky odpovídající vašim filtrům</p>
             </div>
           ) : (
             <Table<OrderWithCustomer>

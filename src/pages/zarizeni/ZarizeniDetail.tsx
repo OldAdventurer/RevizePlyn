@@ -138,14 +138,14 @@ export default function ZarizeniDetail() {
     return <DetailSkeleton />
   }
   if (device === null) {
-    return <div className="p-6 text-center text-gray-500">Zařízení nenalezeno</div>
+    return <div className="p-6 text-center text-muted-foreground">Zařízení nenalezeno</div>
   }
 
   const InfoRow = ({ label, value }: { label: string; value?: string | number | null }) =>
     value ? (
-      <div className="flex flex-col sm:flex-row sm:items-baseline py-2 border-b border-[var(--color-border)]/40">
-        <span className="font-medium text-[var(--color-text-secondary)] sm:w-52 shrink-0">{label}</span>
-        <span className="text-[var(--color-text)]">{value}</span>
+      <div className="flex flex-col sm:flex-row sm:items-baseline py-2 border-b border-border/40">
+        <span className="font-medium text-muted-foreground sm:w-52 shrink-0">{label}</span>
+        <span className="text-foreground">{value}</span>
       </div>
     ) : null
 
@@ -154,7 +154,7 @@ export default function ZarizeniDetail() {
   return (
     <div className="page-enter p-4 md:p-4 space-y-4">
       {/* Back */}
-      <button onClick={() => navigate('/zarizeni')} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium mb-4 transition-colors cursor-pointer">
+      <button onClick={() => navigate('/zarizeni')} className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground font-medium mb-4 transition-colors cursor-pointer">
         <ArrowLeft size={20} />
         <span>Zpět na zařízení</span>
       </button>
@@ -162,7 +162,7 @@ export default function ZarizeniDetail() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
         <div className="flex items-center gap-3 flex-wrap">
-          <h1 className="text-2xl font-bold text-[var(--color-text)]">{getDeviceCategoryIcon(device.category)} {device.name}</h1>
+          <h1 className="text-2xl font-bold text-foreground">{getDeviceCategoryIcon(device.category)} {device.name}</h1>
           <Badge variant={categoryBadge[device.category]}>{getDeviceCategoryLabel(device.category)}</Badge>
         </div>
         <div className="flex flex-wrap gap-3">
@@ -196,14 +196,14 @@ export default function ZarizeniDetail() {
           <InfoRow label="Technické parametry" value={device.technicalParams} />
           <InfoRow label="Perioda revize" value={`${device.revisionPeriodMonths} měsíců (${(device.revisionPeriodMonths / 12).toFixed(device.revisionPeriodMonths % 12 === 0 ? 0 : 1)} let)`} />
           <InfoRow label="Upozornění předem" value={`${device.alertBeforeMonths} měsíce`} />
-          <div className="flex flex-col sm:flex-row sm:items-baseline py-2 border-b border-[var(--color-border)]/40">
-            <span className="font-medium text-[var(--color-text-secondary)] sm:w-52 shrink-0">Zákazník</span>
+          <div className="flex flex-col sm:flex-row sm:items-baseline py-2 border-b border-border/40">
+            <span className="font-medium text-muted-foreground sm:w-52 shrink-0">Zákazník</span>
             {customer ? (
-              <Link to={`/zakaznici/${customer.id}`} className="text-[var(--color-primary)] hover:underline">
+              <Link to={`/zakaznici/${customer.id}`} className="text-primary hover:underline">
                 {customer.name}
               </Link>
             ) : (
-              <span className="text-gray-400">—</span>
+              <span className="text-muted-foreground">—</span>
             )}
           </div>
           <InfoRow label="Objekt" value={object ? `${object.name} — ${object.address}` : undefined} />
@@ -214,7 +214,7 @@ export default function ZarizeniDetail() {
         <Card title="QR kód" accent="green">
           <div className="flex flex-col items-center gap-4">
             <QRCodeSVG value={qrUrl} size={200} />
-            <p className="text-sm text-gray-500 text-center">Naskenujte pro zobrazení detailu zařízení</p>
+            <p className="text-sm text-muted-foreground text-center">Naskenujte pro zobrazení detailu zařízení</p>
             <Button variant="secondary" icon={<QrCode size={20} />} size="sm" onClick={() => navigate(`/zarizeni/${device.id}/qr`)}>
               Tisknout QR
             </Button>
@@ -225,18 +225,18 @@ export default function ZarizeniDetail() {
       {/* Revision history */}
       <Card title="Historie revizí" accent="yellow">
         {deviceReports.length === 0 ? (
-          <div className="text-center py-8"><p className="text-[var(--color-text-secondary)]">Zatím žádné revize pro toto zařízení</p></div>
+          <div className="text-center py-8"><p className="text-muted-foreground">Zatím žádné revize pro toto zařízení</p></div>
         ) : (
           <div className="space-y-3">
             {deviceReports.map((r) => (
               <div
                 key={r.id}
-                className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-4 border border-[var(--color-border)] rounded-xl cursor-pointer hover:bg-blue-50/50 hover:border-blue-200 transition-all"
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-4 border border-border rounded-lg cursor-pointer hover:bg-blue-50/50 hover:border-blue-200 transition-all"
                 onClick={() => navigate(`/revizni-zpravy/${r.id}`)}
               >
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                   <span className="font-semibold">{r.reportNumber}</span>
-                  <span className="text-gray-500">{formatDate(r.date)}</span>
+                  <span className="text-muted-foreground">{formatDate(r.date)}</span>
                   <Badge variant="blue">{getRevisionTypeLabel(r.type)}</Badge>
                 </div>
                 <Badge variant={conclusionBadge[r.conclusion]}>{getConclusionLabel(r.conclusion)}</Badge>

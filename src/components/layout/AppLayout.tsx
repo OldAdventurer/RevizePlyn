@@ -25,7 +25,7 @@ export default function AppLayout() {
             </span>
           </header>
           <main className="flex-1 pb-16 md:pb-0">
-            <div key={location.pathname} className="max-w-5xl mx-auto px-4 py-6 md:px-6 page-enter">
+            <div key={location.pathname} className="px-4 py-6 md:px-8 page-enter">
               <Outlet />
             </div>
           </main>

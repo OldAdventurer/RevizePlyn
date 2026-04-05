@@ -141,7 +141,7 @@ export default function FinanceDashboard() {
   return (
     <div className="space-y-4">
       {/* Demo disclaimer */}
-      <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-amber-800 text-sm flex items-center gap-2">
+      <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-amber-800 text-sm flex items-center gap-2">
         <span className="text-lg">⚠️</span>
         <span><strong>Demo režim</strong> — Všechny faktury a finanční údaje jsou fiktivní a slouží pouze pro demonstrační účely.</span>
       </div>
@@ -149,8 +149,8 @@ export default function FinanceDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text)]">Finance</h1>
-          <p className="text-gray-500 mt-1">Přehled příjmů a faktur</p>
+          <h1 className="text-2xl font-bold text-foreground">Finance</h1>
+          <p className="text-muted-foreground mt-1">Přehled příjmů a faktur</p>
         </div>
         <Button
           variant="primary"
@@ -197,16 +197,16 @@ export default function FinanceDashboard() {
         <div className="space-y-3">
           {monthlyRevenue.map((m) => (
             <div key={m.label} className="flex items-center gap-3">
-              <span className="text-sm text-gray-600 w-36 shrink-0 truncate">{m.label}</span>
-              <div className="flex-1 h-7 bg-gray-100 rounded-lg overflow-hidden">
+              <span className="text-sm text-muted-foreground w-36 shrink-0 truncate">{m.label}</span>
+              <div className="flex-1 h-7 bg-muted rounded-lg overflow-hidden">
                 {m.amount > 0 && (
                   <div
-                    className="h-full bg-gradient-to-r from-[var(--color-primary)] to-blue-400 rounded-lg transition-all duration-500"
+                    className="h-full bg-primary rounded-lg transition-all duration-500"
                     style={{ width: `${(m.amount / maxMonthly) * 100}%`, minWidth: '2px' }}
                   />
                 )}
               </div>
-              <span className="text-sm font-semibold text-gray-700 w-28 text-right shrink-0">
+              <span className="text-sm font-semibold text-foreground w-28 text-right shrink-0">
                 {formatCurrency(m.amount)}
               </span>
             </div>
@@ -229,7 +229,7 @@ export default function FinanceDashboard() {
         <div className="mt-4 pt-4 border-t border-gray-100">
           <button
             onClick={() => navigate('/finance/faktury')}
-            className="text-[var(--color-primary)] hover:underline text-sm font-medium inline-flex items-center gap-1"
+            className="text-primary hover:underline text-sm font-medium inline-flex items-center gap-1"
           >
             Zobrazit všechny faktury <ArrowRight className="w-4 h-4" />
           </button>
@@ -259,13 +259,13 @@ function StatCard({
   return (
     <Card className={highlight ? '!border-red-200 !bg-red-50/50' : undefined}>
       <div className="flex items-start gap-3">
-        <div className={`p-2.5 rounded-xl ${iconBg}`}>{icon}</div>
+        <div className={`p-2.5 rounded-lg ${iconBg}`}>{icon}</div>
         <div className="min-w-0">
-          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{label}</p>
-          <p className={`text-xl font-bold mt-0.5 ${highlight ? 'text-red-600' : 'text-[var(--color-text)]'}`}>
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</p>
+          <p className={`text-xl font-bold mt-0.5 ${highlight ? 'text-red-600' : 'text-foreground'}`}>
             {value}
           </p>
-          {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
+          {sub && <p className="text-xs text-muted-foreground mt-0.5">{sub}</p>}
         </div>
       </div>
     </Card>
@@ -284,16 +284,16 @@ function RecentInvoiceRow({
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center justify-between gap-3 py-3 px-1 hover:bg-gray-50 rounded-lg transition-colors text-left cursor-pointer"
+      className="w-full flex items-center justify-between gap-3 py-3 px-1 hover:bg-muted rounded-lg transition-colors text-left cursor-pointer"
     >
       <div className="min-w-0">
-        <p className="font-semibold text-[var(--color-text)] truncate">
+        <p className="font-semibold text-foreground truncate">
           {invoice.invoiceNumber} — {customerName}
         </p>
-        <p className="text-sm text-gray-500">{formatDate(invoice.issueDate)}</p>
+        <p className="text-sm text-muted-foreground">{formatDate(invoice.issueDate)}</p>
       </div>
       <div className="flex items-center gap-3 shrink-0">
-        <span className="font-semibold text-[var(--color-text)]">
+        <span className="font-semibold text-foreground">
           {formatCurrency(invoice.total)}
         </span>
         <Badge variant={getInvoiceStatusColor(invoice.status) as 'blue' | 'green' | 'yellow' | 'red' | 'gray'} size="sm">

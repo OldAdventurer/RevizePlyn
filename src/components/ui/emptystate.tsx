@@ -18,11 +18,11 @@ export default function EmptyState({ icon, title, description, actionLabel, acti
 
   return (
     <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
-      <div className="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center mb-3 text-gray-400">
+      <div className="w-14 h-14 rounded-lg bg-muted flex items-center justify-center mb-3 text-muted-foreground">
         {icon}
       </div>
-      <h3 className="text-lg font-bold text-[var(--color-text)] mb-2">{title}</h3>
-      <p className="text-[var(--color-text-secondary)] mb-4 max-w-md">{description}</p>
+      <h3 className="text-lg font-bold text-foreground mb-2">{title}</h3>
+      <p className="text-muted-foreground mb-4 max-w-md">{description}</p>
       <div className="flex flex-col sm:flex-row gap-3">
         {actionLabel && (
           <Button

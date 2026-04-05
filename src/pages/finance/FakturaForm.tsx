@@ -240,12 +240,12 @@ export default function FakturaForm() {
       {/* Back link */}
       <Link
         to={isEdit ? `/finance/faktury/${id}` : '/finance/faktury'}
-        className="inline-flex items-center gap-1 text-[var(--color-primary)] hover:underline text-sm font-medium"
+        className="inline-flex items-center gap-1 text-primary hover:underline text-sm font-medium"
       >
         <ArrowLeft className="w-4 h-4" /> {isEdit ? 'Zpět na detail' : 'Zpět na faktury'}
       </Link>
 
-      <h1 className="text-2xl font-bold text-[var(--color-text)]">
+      <h1 className="text-2xl font-bold text-foreground">
         {isEdit ? 'Upravit fakturu' : 'Nová faktura'}
       </h1>
 
@@ -298,7 +298,7 @@ export default function FakturaForm() {
         <Card title="Položky faktury">
           <div className="space-y-3">
             {/* Header (desktop) */}
-            <div className="hidden md:grid grid-cols-[1fr_80px_120px_120px_40px] gap-3 text-xs font-semibold uppercase tracking-wide text-gray-500 px-1">
+            <div className="hidden md:grid grid-cols-[1fr_80px_120px_120px_40px] gap-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground px-1">
               <span>Popis</span>
               <span className="text-right">Množství</span>
               <span className="text-right">Cena/ks</span>
@@ -309,7 +309,7 @@ export default function FakturaForm() {
             {items.map((item, index) => (
               <div
                 key={index}
-                className="grid grid-cols-1 md:grid-cols-[1fr_80px_120px_120px_40px] gap-3 items-end p-3 bg-gray-50 rounded-xl"
+                className="grid grid-cols-1 md:grid-cols-[1fr_80px_120px_120px_40px] gap-3 items-end p-3 bg-muted rounded-lg"
               >
                 <Input
                   placeholder="Popis položky"
@@ -334,13 +334,13 @@ export default function FakturaForm() {
                   onChange={(e) => updateItem(index, 'unitPrice', e.target.value)}
                   className="text-right"
                 />
-                <div className="flex items-center justify-end h-12 px-3 bg-white rounded-xl border border-gray-200 text-sm font-semibold text-[var(--color-text)]">
+                <div className="flex items-center justify-end h-12 px-3 bg-card rounded-lg border border-border text-sm font-semibold text-foreground">
                   {formatCurrency(item.total)}
                 </div>
                 <button
                   type="button"
                   onClick={() => removeItem(index)}
-                  className="flex items-center justify-center h-12 w-10 text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
+                  className="flex items-center justify-center h-12 w-10 text-muted-foreground hover:text-red-500 transition-colors cursor-pointer"
                   title="Odebrat položku"
                 >
                   <X className="w-4 h-4" />
@@ -360,20 +360,20 @@ export default function FakturaForm() {
           </div>
 
           {/* Totals */}
-          <div className="mt-6 pt-4 border-t border-gray-200 space-y-2 max-w-xs ml-auto">
+          <div className="mt-6 pt-4 border-t border-border space-y-2 max-w-xs ml-auto">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-500">Mezisoučet</span>
+              <span className="text-muted-foreground">Mezisoučet</span>
               <span className="font-medium">{formatCurrency(subtotal)}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-500">
-                DPH (0%) <span className="text-xs text-gray-400">— Neplátce DPH</span>
+              <span className="text-muted-foreground">
+                DPH (0%) <span className="text-xs text-muted-foreground">— Neplátce DPH</span>
               </span>
               <span className="font-medium">{formatCurrency(0)}</span>
             </div>
-            <div className="flex justify-between text-lg font-bold pt-2 border-t border-gray-200">
+            <div className="flex justify-between text-lg font-bold pt-2 border-t border-border">
               <span>Celkem</span>
-              <span className="text-[var(--color-primary)]">{formatCurrency(total)}</span>
+              <span className="text-primary">{formatCurrency(total)}</span>
             </div>
           </div>
         </Card>
@@ -385,7 +385,7 @@ export default function FakturaForm() {
             onChange={(e) => setNote(e.target.value)}
             placeholder="Volitelná poznámka k faktuře..."
             rows={3}
-            className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-white text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30 focus:border-[var(--color-primary)] transition-all resize-y"
+            className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground focus:outline-none focus:ring-1 focus:ring-ring focus:border-primary transition-all resize-y"
           />
         </Card>
 

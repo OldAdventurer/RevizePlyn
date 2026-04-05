@@ -55,7 +55,7 @@ export default function ZakazkaDetail() {
 
   if (!order) {
     return (
-      <div className="p-6 text-center text-gray-500 text-lg">
+      <div className="p-6 text-center text-muted-foreground text-lg">
         Zakázka nenalezena
       </div>
     )
@@ -83,7 +83,7 @@ export default function ZakazkaDetail() {
   return (
     <div className="page-enter p-4 md:p-6 space-y-3">
       {/* Back */}
-      <button onClick={() => navigate('/zakazky')} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium mb-4 transition-colors cursor-pointer">
+      <button onClick={() => navigate('/zakazky')} className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground font-medium mb-4 transition-colors cursor-pointer">
         <ArrowLeft size={20} />
         <span>Zpět na zakázky</span>
       </button>
@@ -91,8 +91,8 @@ export default function ZakazkaDetail() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text)]">{getOrderTypeLabel(order.type)}</h1>
-          <p className="text-[var(--color-text-secondary)] mt-1">{order.address}</p>
+          <h1 className="text-2xl font-bold text-foreground">{getOrderTypeLabel(order.type)}</h1>
+          <p className="text-muted-foreground mt-1">{order.address}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Badge variant={getOrderStatusColor(order.status) as 'blue' | 'green' | 'yellow' | 'red' | 'gray' | 'indigo' | 'emerald' | 'orange'}>
@@ -106,12 +106,12 @@ export default function ZakazkaDetail() {
       <Card title="Informace o zakázce" accent="blue">
         <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
           <div>
-            <dt className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-1">Zákazník</dt>
+            <dt className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-1">Zákazník</dt>
             <dd className="mt-0.5 font-medium">
               {customer ? (
                 <Link
                   to={`/zakaznici/${customer.id}`}
-                  className="text-[var(--color-primary)] hover:underline font-medium"
+                  className="text-primary hover:underline font-medium"
                 >
                   {customer.name}
                 </Link>
@@ -121,30 +121,30 @@ export default function ZakazkaDetail() {
             </dd>
           </div>
           <div>
-            <dt className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-1">Adresa</dt>
+            <dt className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-1">Adresa</dt>
             <dd className="mt-0.5 font-medium">{order.address}</dd>
           </div>
           <div>
-            <dt className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-1">Plánované datum</dt>
+            <dt className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-1">Plánované datum</dt>
             <dd className="mt-0.5 font-medium">
               {order.plannedDate ? formatDate(order.plannedDate) : '—'}
             </dd>
           </div>
           <div>
-            <dt className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-1">Datum dokončení</dt>
+            <dt className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-1">Datum dokončení</dt>
             <dd className="mt-0.5 font-medium">
               {order.completedDate ? formatDate(order.completedDate) : '—'}
             </dd>
           </div>
           {order.description && (
             <div className="sm:col-span-2">
-              <dt className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-1">Popis</dt>
+              <dt className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-1">Popis</dt>
               <dd className="mt-0.5 font-medium whitespace-pre-wrap">{order.description}</dd>
             </div>
           )}
           {order.note && (
             <div className="sm:col-span-2">
-              <dt className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-1">Poznámka</dt>
+              <dt className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-1">Poznámka</dt>
               <dd className="mt-0.5 font-medium whitespace-pre-wrap">{order.note}</dd>
             </div>
           )}
@@ -176,18 +176,18 @@ export default function ZakazkaDetail() {
               <Link
                 key={r.id}
                 to={`/revizni-zpravy/${r.id}`}
-                className="flex items-center justify-between p-3 rounded-xl border border-[var(--color-border)] hover:bg-blue-50/50 hover:border-blue-200 transition-all"
+                className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-blue-50/50 hover:border-blue-200 transition-all"
               >
                 <div className="flex items-center gap-3">
-                  <FileText size={20} className="text-gray-400 shrink-0" />
+                  <FileText size={20} className="text-muted-foreground shrink-0" />
                   <div>
                     <span className="font-medium">{r.reportNumber}</span>
-                    <span className="text-gray-500 ml-2">
+                    <span className="text-muted-foreground ml-2">
                       {formatDate(r.date)}
                     </span>
                   </div>
                 </div>
-                <ChevronRight size={18} className="text-gray-400" />
+                <ChevronRight size={18} className="text-muted-foreground" />
               </Link>
             ))}
           </div>

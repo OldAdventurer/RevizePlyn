@@ -56,7 +56,7 @@ export default function SdileniPage() {
   // Loading state
   if (shareLink === undefined) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-card flex items-center justify-center">
         <Skeleton className="h-10 w-10 rounded-full" />
       </div>
     )
@@ -65,11 +65,11 @@ export default function SdileniPage() {
   // Invalid token
   if (shareLink === null) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-card flex items-center justify-center">
         <div className="text-center p-8">
           <Shield size={48} className="mx-auto mb-4 text-gray-300" />
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">Odkaz nenalezen</h1>
-          <p className="text-base text-gray-500">
+          <h1 className="text-2xl font-bold text-foreground mb-2">Odkaz nenalezen</h1>
+          <p className="text-base text-muted-foreground">
             Tento sdílecí odkaz je neplatný nebo již vypršel.
           </p>
         </div>
@@ -80,7 +80,7 @@ export default function SdileniPage() {
   // Still loading related data
   if (!report) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-card flex items-center justify-center">
         <Skeleton className="h-10 w-10 rounded-full" />
       </div>
     )
@@ -98,7 +98,7 @@ export default function SdileniPage() {
     const isFail = value === 'Nevyhovuje' || value.startsWith('Nevyhovuje')
     return (
       <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
-        <span className="text-base text-gray-600">{label}</span>
+        <span className="text-base text-muted-foreground">{label}</span>
         <span className="flex items-center gap-2 text-base font-medium">
           {isPass ? (
             <span>✅</span>
@@ -106,7 +106,7 @@ export default function SdileniPage() {
             <span>❌</span>
           ) : null}
           {value}
-          {instrument && <span className="text-sm text-gray-400">({instrument})</span>}
+          {instrument && <span className="text-sm text-muted-foreground">({instrument})</span>}
         </span>
       </div>
     )
@@ -129,20 +129,20 @@ export default function SdileniPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-card">
       <div className="page-enter max-w-[800px] mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-800">RevizePlyn</h1>
-          <p className="text-base text-gray-500 mt-1">Sdílená revizní zpráva</p>
+          <h1 className="text-2xl font-bold text-foreground">RevizePlyn</h1>
+          <p className="text-base text-muted-foreground mt-1">Sdílená revizní zpráva</p>
         </div>
 
         {/* Report header */}
         <Card className="mb-4" accent="blue">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
-              <h2 className="text-xl font-bold text-gray-800">{report.reportNumber}</h2>
-              <p className="text-base text-gray-500">{formatDate(report.date)}</p>
+              <h2 className="text-xl font-bold text-foreground">{report.reportNumber}</h2>
+              <p className="text-base text-muted-foreground">{formatDate(report.date)}</p>
             </div>
             <div className="flex items-center gap-2 flex-wrap">
               <Badge variant={typeVariant}>{getRevisionTypeLabel(report.type)}</Badge>
@@ -165,10 +165,10 @@ export default function SdileniPage() {
         {customer && (
           <Card title="Provozovatel" className="mb-4" accent="blue">
             <div className="flex flex-col gap-1">
-              <span className="text-base font-medium text-gray-800">{customer.name}</span>
-              <span className="text-base text-gray-600">{customer.address}</span>
+              <span className="text-base font-medium text-foreground">{customer.name}</span>
+              <span className="text-base text-muted-foreground">{customer.address}</span>
               {customer.ico && (
-                <span className="text-base text-gray-500">IČ: {customer.ico}</span>
+                <span className="text-base text-muted-foreground">IČ: {customer.ico}</span>
               )}
             </div>
           </Card>
@@ -177,8 +177,8 @@ export default function SdileniPage() {
         {/* Technician */}
         <Card title="Revizní technik" className="mb-4" accent="blue">
           <div className="flex flex-col gap-1">
-            <span className="text-base font-medium text-gray-800">{report.technicianName}</span>
-            <span className="text-base text-gray-500">Č. oprávnění: {report.technicianLicense}</span>
+            <span className="text-base font-medium text-foreground">{report.technicianName}</span>
+            <span className="text-base text-muted-foreground">Č. oprávnění: {report.technicianLicense}</span>
           </div>
         </Card>
 
@@ -188,8 +188,8 @@ export default function SdileniPage() {
             <div className="flex flex-col gap-2">
               {reportDevices.map((device) => (
                 <div key={device.id} className="flex flex-col py-2 border-b border-gray-100 last:border-0">
-                  <span className="text-base font-medium text-gray-800">{getDeviceCategoryIcon(device.category)} {device.name}</span>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-base font-medium text-foreground">{getDeviceCategoryIcon(device.category)} {device.name}</span>
+                  <span className="text-sm text-muted-foreground">
                     {device.manufacturer} {device.model}
                   </span>
                 </div>
@@ -229,9 +229,9 @@ export default function SdileniPage() {
                       {defect.status === 'odstranena' ? 'Odstraněna' : 'Neodstraněna'}
                     </Badge>
                   </div>
-                  <p className="text-base text-gray-800">{defect.description}</p>
+                  <p className="text-base text-foreground">{defect.description}</p>
                   {defect.deadline && (
-                    <p className="text-sm text-gray-500">Termín: {formatDate(defect.deadline)}</p>
+                    <p className="text-sm text-muted-foreground">Termín: {formatDate(defect.deadline)}</p>
                   )}
                 </div>
               ))}
@@ -248,10 +248,10 @@ export default function SdileniPage() {
                   <img
                     src={photo.url}
                     alt={photo.caption}
-                    className="w-full h-32 object-cover rounded-lg border border-gray-200"
+                    className="w-full h-32 object-cover rounded-lg border border-border"
                     loading="lazy"
                   />
-                  <div className="mt-1 text-xs text-gray-500 truncate">{photo.caption}</div>
+                  <div className="mt-1 text-xs text-muted-foreground truncate">{photo.caption}</div>
                 </div>
               ))}
             </div>
@@ -260,7 +260,7 @@ export default function SdileniPage() {
 
         {/* Conclusion */}
         {report.conclusion === 'schopne' && (
-          <div className="rounded-xl bg-gradient-to-r from-emerald-50 to-emerald-100 border border-emerald-200 p-4 mb-4">
+          <div className="rounded-lg bg-gradient-to-r from-emerald-50 to-emerald-100 border border-emerald-200 p-4 mb-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center">
                 <CheckCircle className="text-white" size={24} />
@@ -274,7 +274,7 @@ export default function SdileniPage() {
           </div>
         )}
         {report.conclusion === 's-vyhradami' && (
-          <div className="rounded-xl bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-200 p-4 mb-4">
+          <div className="rounded-lg bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-200 p-4 mb-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center">
                 <XCircle className="text-white" size={24} />
@@ -288,7 +288,7 @@ export default function SdileniPage() {
           </div>
         )}
         {report.conclusion === 'neschopne' && (
-          <div className="rounded-xl bg-gradient-to-r from-red-50 to-red-100 border border-red-200 p-4 mb-4">
+          <div className="rounded-lg bg-gradient-to-r from-red-50 to-red-100 border border-red-200 p-4 mb-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center">
                 <XCircle className="text-white" size={24} />
@@ -312,7 +312,7 @@ export default function SdileniPage() {
         )}
 
         {/* Footer */}
-        <div className="text-center text-sm text-gray-400 border-t border-gray-100 pt-6">
+        <div className="text-center text-sm text-muted-foreground border-t border-gray-100 pt-6">
           <p>Dokument vygenerován aplikací RevizePlyn</p>
           <p className="mt-1">
             Tato zpráva byla sdílena revizním technikem {report.technicianName}

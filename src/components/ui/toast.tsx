@@ -26,7 +26,7 @@ export default function ToastContainer() {
         return (
           <div
             key={t.id}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl border shadow-lg animate-[fadeIn_0.2s_ease-out] ${styles[t.type]}`}
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg border animate-[fadeIn_0.2s_ease-out] ${styles[t.type]}`}
           >
             <Icon size={20} className={`shrink-0 ${iconStyles[t.type]}`} />
             <p className="flex-1 text-sm font-medium">{t.message}</p>

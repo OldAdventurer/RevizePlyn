@@ -123,7 +123,7 @@ export default function RevizeList() {
         return count > 0 ? (
           <Badge variant="red">{count}</Badge>
         ) : (
-          <span className="text-gray-400">0</span>
+          <span className="text-muted-foreground">0</span>
         )
       },
     },
@@ -134,12 +134,12 @@ export default function RevizeList() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text)]">Revizní zprávy</h1>
-          <p className="text-[var(--color-text-secondary)] mt-1">Přehled revizních zpráv a protokolů</p>
+          <h1 className="text-2xl font-bold text-foreground">Revizní zprávy</h1>
+          <p className="text-muted-foreground mt-1">Přehled revizních zpráv a protokolů</p>
         </div>
         <Link
           to="/zakazky"
-          className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2 text-base rounded-xl font-medium bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-light)] text-white hover:shadow-lg transition-all"
+          className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2 text-base rounded-lg font-medium bg-gradient-to-r from-primary to-primary/80 text-white hover: transition-all"
         >
           <Plus size={20} />
           Nová revize
@@ -156,7 +156,7 @@ export default function RevizeList() {
       <div>
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className="inline-flex items-center gap-2 text-base text-[var(--color-primary)] font-medium cursor-pointer hover:underline"
+          className="inline-flex items-center gap-2 text-base text-primary font-medium cursor-pointer hover:underline"
         >
           <Filter size={18} />
           {showFilters ? 'Skrýt filtry' : 'Zobrazit filtry'}
@@ -164,7 +164,7 @@ export default function RevizeList() {
       </div>
 
       {showFilters && (
-        <div className="bg-white rounded-xl border border-[var(--color-border)]/60 p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-card rounded-lg border border-border/60 p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Select
             label="Typ revize"
             placeholder="Všechny"
@@ -188,25 +188,25 @@ export default function RevizeList() {
             ]}
           />
           <div className="w-full">
-            <label className="block text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-2">
+            <label className="block text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
               Datum od
             </label>
             <input
               type="date"
               value={dateFrom}
               onChange={(e) => setDateFrom(e.target.value)}
-              className="w-full min-h-[44px] text-base p-3 border border-[var(--color-border)] rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+              className="w-full min-h-[44px] text-base p-3 border border-border rounded-lg  focus:outline-none focus:ring-2 focus:ring-ring"
             />
           </div>
           <div className="w-full">
-            <label className="block text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-2">
+            <label className="block text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
               Datum do
             </label>
             <input
               type="date"
               value={dateTo}
               onChange={(e) => setDateTo(e.target.value)}
-              className="w-full min-h-[44px] text-base p-3 border border-[var(--color-border)] rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+              className="w-full min-h-[44px] text-base p-3 border border-border rounded-lg  focus:outline-none focus:ring-2 focus:ring-ring"
             />
           </div>
         </div>
@@ -214,15 +214,15 @@ export default function RevizeList() {
 
       {/* View toggle + count */}
       <div className="flex items-center justify-between">
-        <p className="text-base text-gray-500">
+        <p className="text-base text-muted-foreground">
           {filtered.length}{' '}
           {filtered.length === 1 ? 'zpráva' : filtered.length < 5 ? 'zprávy' : 'zpráv'}
         </p>
-        <div className="flex gap-1 border border-[var(--color-border)] rounded-xl overflow-hidden">
+        <div className="flex gap-1 border border-border rounded-lg overflow-hidden">
           <button
             onClick={() => setViewMode('table')}
             className={`p-2 cursor-pointer transition-colors ${
-              viewMode === 'table' ? 'bg-[var(--color-primary)] text-white' : 'bg-white text-gray-500 hover:bg-gray-50'
+              viewMode === 'table' ? 'bg-primary text-white' : 'bg-card text-muted-foreground hover:bg-muted'
             }`}
             aria-label="Tabulka"
           >
@@ -231,7 +231,7 @@ export default function RevizeList() {
           <button
             onClick={() => setViewMode('card')}
             className={`p-2 cursor-pointer transition-colors ${
-              viewMode === 'card' ? 'bg-[var(--color-primary)] text-white' : 'bg-white text-gray-500 hover:bg-gray-50'
+              viewMode === 'card' ? 'bg-primary text-white' : 'bg-card text-muted-foreground hover:bg-muted'
             }`}
             aria-label="Karty"
           >
@@ -257,7 +257,7 @@ export default function RevizeList() {
       ) : filtered.length === 0 ? (
         <div className="text-center py-12">
           <FileText size={48} className="mx-auto text-gray-300 mb-3" />
-          <p className="text-lg text-[var(--color-text-secondary)]">Žádné revizní zprávy odpovídající vašim filtrům</p>
+          <p className="text-lg text-muted-foreground">Žádné revizní zprávy odpovídající vašim filtrům</p>
         </div>
       ) : viewMode === 'table' ? (
         <Table<RevisionReport>
@@ -281,12 +281,12 @@ export default function RevizeList() {
                   className="flex flex-col gap-2"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-[var(--color-text)]">
+                    <span className="font-bold text-foreground">
                       {report.reportNumber}
                     </span>
-                    <span className="text-sm text-gray-500">{formatDate(report.date)}</span>
+                    <span className="text-sm text-muted-foreground">{formatDate(report.date)}</span>
                   </div>
-                  <p className="text-base text-gray-600">{customer?.name ?? '—'}</p>
+                  <p className="text-base text-muted-foreground">{customer?.name ?? '—'}</p>
                   <div className="flex flex-wrap gap-2 items-center">
                     <Badge variant={typeVariant(report.type)}>
                       {getRevisionTypeLabel(report.type)}

@@ -35,14 +35,14 @@ export default function ZarizeniQR() {
   }
 
   if (devices.length === 0) {
-    return <div className="p-6 text-center text-gray-500">Žádná zařízení k zobrazení</div>
+    return <div className="p-6 text-center text-muted-foreground">Žádná zařízení k zobrazení</div>
   }
 
   return (
     <div className="page-enter p-4">
       {/* Action buttons — hidden in print */}
       <div className="no-print flex flex-wrap gap-3 mb-4">
-        <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium transition-colors cursor-pointer">
+        <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground font-medium transition-colors cursor-pointer">
           <ArrowLeft size={20} />
           <span>Zpět</span>
         </button>
@@ -58,17 +58,17 @@ export default function ZarizeniQR() {
           return (
             <div
               key={device.id}
-              className="flex flex-col items-center border border-[var(--color-border)] shadow-[var(--shadow-sm)] rounded-xl p-4 print:border-gray-400 print:rounded-none print:p-3 break-inside-avoid"
+              className="flex flex-col items-center border border-border shadow-[var(--)] rounded-lg p-4 print:border-gray-400 print:rounded-none print:p-3 break-inside-avoid"
             >
               <QRCodeSVG value={qrUrl} size={200} />
               <h2 className="text-lg font-bold mt-4 text-center">{device.name}</h2>
-              <p className="text-base text-gray-600 text-center">
+              <p className="text-base text-muted-foreground text-center">
                 {[device.manufacturer, device.model].filter(Boolean).join(' — ')}
               </p>
               {customerMap.get(device.customerId) && (
-                <p className="text-sm text-gray-500 mt-1">{customerMap.get(device.customerId)}</p>
+                <p className="text-sm text-muted-foreground mt-1">{customerMap.get(device.customerId)}</p>
               )}
-              <p className="text-xs text-gray-400 mt-3 text-center">
+              <p className="text-xs text-muted-foreground mt-3 text-center">
                 Naskenujte pro zobrazení detailu zařízení
               </p>
             </div>

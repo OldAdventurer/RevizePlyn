@@ -187,7 +187,7 @@ export default function LhutnikPage() {
       render: (r) => (
         <div>
           <span className="font-medium">{getDeviceCategoryIcon(r.device.category)} {r.device.name}</span>
-          <div className="text-xs text-gray-500 mt-0.5">{r.device.manufacturer} {r.device.model}</div>
+          <div className="text-xs text-muted-foreground mt-0.5">{r.device.manufacturer} {r.device.model}</div>
         </div>
       ),
     },
@@ -202,7 +202,7 @@ export default function LhutnikPage() {
       render: (r) => (
         <div>
           <span>{r.objectName}</span>
-          {r.objectAddress && <div className="text-xs text-gray-500">{r.objectAddress}</div>}
+          {r.objectAddress && <div className="text-xs text-muted-foreground">{r.objectAddress}</div>}
         </div>
       ),
     },
@@ -210,7 +210,7 @@ export default function LhutnikPage() {
       key: 'lastRevisionDate',
       header: 'Poslední revize',
       sortable: true,
-      render: (r) => r.lastRevisionDate ? formatDate(r.lastRevisionDate) : <span className="text-gray-400">—</span>,
+      render: (r) => r.lastRevisionDate ? formatDate(r.lastRevisionDate) : <span className="text-muted-foreground">—</span>,
     },
     {
       key: 'nextRevisionDate',
@@ -220,14 +220,14 @@ export default function LhutnikPage() {
         <span className={r.status === 'po-terminu' ? 'text-red-600 font-semibold' : r.status === 'blizi-se' ? 'text-amber-600 font-medium' : ''}>
           {formatDate(r.nextRevisionDate)}
         </span>
-      ) : <span className="text-gray-400">—</span>,
+      ) : <span className="text-muted-foreground">—</span>,
     },
     {
       key: 'daysUntilNext',
       header: 'Zbývá',
       sortable: true,
       render: (r) => {
-        if (r.daysUntilNext === null) return <span className="text-gray-400">—</span>
+        if (r.daysUntilNext === null) return <span className="text-muted-foreground">—</span>
         if (r.daysUntilNext < 0) return <span className="text-red-600 font-semibold">{Math.abs(r.daysUntilNext)} dní po</span>
         return <span>{r.daysUntilNext} dní</span>
       },
@@ -244,11 +244,11 @@ export default function LhutnikPage() {
     <div className="page-enter p-4 md:p-4 space-y-3">
       {/* Header */}
       <div>
-        <h1 className="text-2xl md:text-3xl font-bold text-[var(--color-text)]">
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground">
           <Clock size={28} className="inline mr-2 -mt-1" />
           Lhůtník — Termíny revizí
         </h1>
-        <p className="text-[var(--color-text-secondary)] mt-1">
+        <p className="text-muted-foreground mt-1">
           Přehled všech zařízení a jejich termínů revizí
         </p>
       </div>
@@ -323,7 +323,7 @@ export default function LhutnikPage() {
         </Card>
       ) : (
         <Card>
-          <div className="text-sm text-[var(--color-text-secondary)] mb-2">
+          <div className="text-sm text-muted-foreground mb-2">
             Zobrazeno {filtered.length} z {stats.total} zařízení
           </div>
           <Table
@@ -357,13 +357,13 @@ function StatCard({
   return (
     <button
       onClick={onClick}
-      className={`bg-white/60 backdrop-blur-sm border border-white/40 rounded-xl shadow-sm p-3 text-left transition-all hover:shadow-md cursor-pointer ${borderClass} ${active ? 'bg-white/80' : ''}`}
+      className={`bg-card border border-border rounded-lg p-3 text-left transition-all  cursor-pointer ${borderClass} ${active ? 'bg-card/80' : ''}`}
     >
       <div className="flex items-center gap-2">
         <span className="text-xl">{icon}</span>
-        <span className="text-2xl font-bold text-[var(--color-text)]">{value}</span>
+        <span className="text-2xl font-bold text-foreground">{value}</span>
       </div>
-      <div className="text-xs text-[var(--color-text-secondary)] mt-0.5">{label}</div>
+      <div className="text-xs text-muted-foreground mt-0.5">{label}</div>
     </button>
   )
 }

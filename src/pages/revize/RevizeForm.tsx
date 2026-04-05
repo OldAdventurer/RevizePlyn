@@ -215,14 +215,14 @@ export default function RevizeForm() {
   return (
     <div className="page-enter p-4 md:p-6 flex flex-col gap-3 max-w-4xl mx-auto">
       {/* Back */}
-      <button onClick={() => navigate(`/zakazky/${order.id}`)} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium mb-4 transition-colors cursor-pointer">
+      <button onClick={() => navigate(`/zakazky/${order.id}`)} className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground font-medium mb-4 transition-colors cursor-pointer">
         <ArrowLeft size={20} />
         <span>Zpět na zakázku</span>
       </button>
 
       <div className="mb-4">
-        <h1 className="text-2xl font-bold text-[var(--color-text)]">Nová revizní zpráva</h1>
-        <p className="text-[var(--color-text-secondary)] mt-1">
+        <h1 className="text-2xl font-bold text-foreground">Nová revizní zpráva</h1>
+        <p className="text-muted-foreground mt-1">
           Zákazník: <strong>{customer.name}</strong> — {order.address}
         </p>
       </div>
@@ -248,23 +248,23 @@ export default function RevizeForm() {
       {/* Devices */}
       <Card title="Revidovaná zařízení" accent="blue">
         {availableDevices.length === 0 ? (
-          <p className="text-gray-400">Žádná zařízení zákazníka</p>
+          <p className="text-muted-foreground">Žádná zařízení zákazníka</p>
         ) : (
           <div className="flex flex-col gap-2">
             {availableDevices.map((d) => (
               <label
                 key={d.id}
-                className="flex items-center gap-3 p-3 rounded-lg border border-[var(--color-border)] cursor-pointer hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-3 p-3 rounded-lg border border-border cursor-pointer hover:bg-muted transition-colors"
               >
                 <input
                   type="checkbox"
                   checked={selectedDeviceIds.includes(d.id)}
                   onChange={() => toggleDevice(d.id)}
-                  className="w-5 h-5 accent-[var(--color-primary)]"
+                  className="w-5 h-5 accent-primary"
                 />
                 <span className="text-base">
                   {d.name} — {d.manufacturer} {d.model}
-                  {d.serialNumber && <span className="text-gray-400 ml-1">(v.č. {d.serialNumber})</span>}
+                  {d.serialNumber && <span className="text-muted-foreground ml-1">(v.č. {d.serialNumber})</span>}
                 </span>
               </label>
             ))}
@@ -351,18 +351,18 @@ export default function RevizeForm() {
           {defectDrafts.map((draft) => (
             <div
               key={draft.tempId}
-              className="border border-[var(--color-border)] rounded-xl p-4 flex flex-col gap-3"
+              className="border border-border rounded-lg p-4 flex flex-col gap-3"
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1">
-                  <label className="block text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-2">
+                  <label className="block text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
                     Popis závady
                   </label>
                   <textarea
                     value={draft.description}
                     onChange={(e) => updateDefect(draft.tempId, 'description', e.target.value)}
                     rows={2}
-                    className="w-full min-h-[44px] text-base p-3 border border-[var(--color-border)] rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+                    className="w-full min-h-[44px] text-base p-3 border border-border rounded-lg  focus:outline-none focus:ring-2 focus:ring-ring"
                   />
                 </div>
                 <button
@@ -422,14 +422,14 @@ export default function RevizeForm() {
             ]}
           />
           <div className="w-full">
-            <label className="block text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-2">
+            <label className="block text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
               Poznámka k závěru
             </label>
             <textarea
               value={conclusionNote}
               onChange={(e) => setConclusionNote(e.target.value)}
               rows={3}
-              className="w-full min-h-[44px] text-base p-3 border border-[var(--color-border)] rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+              className="w-full min-h-[44px] text-base p-3 border border-border rounded-lg  focus:outline-none focus:ring-2 focus:ring-ring"
               placeholder="Volitelná poznámka…"
             />
           </div>

@@ -79,26 +79,26 @@ export default function FakturyList() {
       key: 'invoiceNumber',
       header: 'Číslo faktury',
       render: (inv) => (
-        <span className="font-semibold text-[var(--color-text)]">{inv.invoiceNumber}</span>
+        <span className="font-semibold text-foreground">{inv.invoiceNumber}</span>
       ),
     },
     {
       key: 'customerName',
       header: 'Zákazník',
-      render: (inv) => <span className="text-gray-700">{inv.customerName}</span>,
+      render: (inv) => <span className="text-foreground">{inv.customerName}</span>,
     },
     {
       key: 'issueDate',
       header: 'Datum vystavení',
       sortable: true,
-      render: (inv) => <span className="text-gray-600">{formatDate(inv.issueDate)}</span>,
+      render: (inv) => <span className="text-muted-foreground">{formatDate(inv.issueDate)}</span>,
     },
     {
       key: 'dueDate',
       header: 'Splatnost',
       sortable: true,
       render: (inv) => (
-        <span className={inv.status === 'po-splatnosti' ? 'text-red-600 font-semibold' : 'text-gray-600'}>
+        <span className={inv.status === 'po-splatnosti' ? 'text-red-600 font-semibold' : 'text-muted-foreground'}>
           {formatDate(inv.dueDate)}
         </span>
       ),
@@ -108,7 +108,7 @@ export default function FakturyList() {
       header: 'Částka',
       sortable: true,
       render: (inv) => (
-        <span className="font-semibold text-[var(--color-text)]">{formatCurrency(inv.total)}</span>
+        <span className="font-semibold text-foreground">{formatCurrency(inv.total)}</span>
       ),
     },
     {
@@ -129,7 +129,7 @@ export default function FakturyList() {
   return (
     <div className="space-y-4">
       {/* Demo disclaimer */}
-      <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-amber-800 text-sm flex items-center gap-2">
+      <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-amber-800 text-sm flex items-center gap-2">
         <span className="text-lg">⚠️</span>
         <span><strong>Demo režim</strong> — Všechny faktury jsou fiktivní a slouží pouze pro demonstrační účely.</span>
       </div>
@@ -137,8 +137,8 @@ export default function FakturyList() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text)]">Faktury</h1>
-          <p className="text-gray-500 mt-1">
+          <h1 className="text-2xl font-bold text-foreground">Faktury</h1>
+          <p className="text-muted-foreground mt-1">
             {filteredInvoices.length} z {enrichedInvoices.length} faktur
           </p>
         </div>
@@ -162,8 +162,8 @@ export default function FakturyList() {
               onClick={() => setStatusFilter(f.value)}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
                 statusFilter === f.value
-                  ? 'bg-[var(--color-primary)] text-white shadow-sm'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  ? 'bg-primary text-white '
+                  : 'bg-muted text-muted-foreground hover:bg-muted'
               }`}
             >
               {f.label}

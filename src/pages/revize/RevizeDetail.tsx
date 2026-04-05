@@ -115,7 +115,7 @@ export default function RevizeDetail() {
     const isFail = value === 'Nevyhovuje' || value.startsWith('Nevyhovuje')
     return (
       <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
-        <span className="text-base text-gray-600">{label}</span>
+        <span className="text-base text-muted-foreground">{label}</span>
         <span className="flex items-center gap-2 text-base font-medium">
           {isPass ? (
             <span>✅</span>
@@ -123,7 +123,7 @@ export default function RevizeDetail() {
             <span>❌</span>
           ) : null}
           {value}
-          {instrument && <span className="text-sm text-gray-400">({instrument})</span>}
+          {instrument && <span className="text-sm text-muted-foreground">({instrument})</span>}
         </span>
       </div>
     )
@@ -159,7 +159,7 @@ export default function RevizeDetail() {
   return (
     <div className="page-enter p-4 md:p-6 flex flex-col gap-3 max-w-4xl mx-auto">
       {/* Back */}
-      <button onClick={() => navigate('/revizni-zpravy')} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium mb-4 transition-colors cursor-pointer">
+      <button onClick={() => navigate('/revizni-zpravy')} className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground font-medium mb-4 transition-colors cursor-pointer">
         <ArrowLeft size={20} />
         <span>Zpět na revizní zprávy</span>
       </button>
@@ -167,8 +167,8 @@ export default function RevizeDetail() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text)]">{report.reportNumber}</h1>
-          <p className="text-[var(--color-text-secondary)] mt-1">{formatDate(report.date)}</p>
+          <h1 className="text-2xl font-bold text-foreground">{report.reportNumber}</h1>
+          <p className="text-muted-foreground mt-1">{formatDate(report.date)}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Badge variant={typeVariant(report.type)}>{getRevisionTypeLabel(report.type)}</Badge>
@@ -192,24 +192,24 @@ export default function RevizeDetail() {
       <Card title="Informace" accent="blue">
         <div className="flex flex-col gap-3">
           <div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
-            <span className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] w-48 shrink-0">Zákazník:</span>
+            <span className="text-sm font-semibold uppercase tracking-wider text-muted-foreground w-48 shrink-0">Zákazník:</span>
             <span>
               <Link
                 to={`/zakaznici/${customer.id}`}
-                className="text-[var(--color-primary)] hover:underline font-medium"
+                className="text-primary hover:underline font-medium"
               >
                 {customer.name}
               </Link>
-              <span className="text-gray-500 ml-2">{customer.address}</span>
+              <span className="text-muted-foreground ml-2">{customer.address}</span>
             </span>
           </div>
 
           {order && (
             <div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
-              <span className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] w-48 shrink-0">Zakázka:</span>
+              <span className="text-sm font-semibold uppercase tracking-wider text-muted-foreground w-48 shrink-0">Zakázka:</span>
               <Link
                 to={`/zakazky/${order.id}`}
-                className="text-[var(--color-primary)] hover:underline font-medium"
+                className="text-primary hover:underline font-medium"
               >
                 {order.description || order.address}
               </Link>
@@ -217,26 +217,26 @@ export default function RevizeDetail() {
           )}
 
           <div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
-            <span className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] w-48 shrink-0">Revidovaná zařízení:</span>
+            <span className="text-sm font-semibold uppercase tracking-wider text-muted-foreground w-48 shrink-0">Revidovaná zařízení:</span>
             <div className="flex flex-col gap-1">
               {devices.length > 0 ? (
                 devices.map((d) => (
                   <Link
                     key={d.id}
                     to={`/zarizeni/${d.id}`}
-                    className="text-[var(--color-primary)] hover:underline"
+                    className="text-primary hover:underline"
                   >
                     {getDeviceCategoryIcon(d.category)} {d.name} — {d.manufacturer} {d.model}
                   </Link>
                 ))
               ) : (
-                <span className="text-gray-400">—</span>
+                <span className="text-muted-foreground">—</span>
               )}
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
-            <span className="text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] w-48 shrink-0">Revizní technik:</span>
+            <span className="text-sm font-semibold uppercase tracking-wider text-muted-foreground w-48 shrink-0">Revizní technik:</span>
             <span>
               {report.technicianName}, oprávnění č. {report.technicianLicense}
             </span>
@@ -262,7 +262,7 @@ export default function RevizeDetail() {
             !report.fluegasTest &&
             !report.coMeasurement &&
             !report.ventilationCheck && (
-              <p className="text-gray-400 py-2">Žádné zkoušky nebyly zaznamenány</p>
+              <p className="text-muted-foreground py-2">Žádné zkoušky nebyly zaznamenány</p>
             )}
         </div>
       </Card>
@@ -292,10 +292,10 @@ export default function RevizeDetail() {
                 <img
                   src={photo.url}
                   alt={photo.caption}
-                  className="w-full h-32 object-cover rounded-lg border border-gray-200"
+                  className="w-full h-32 object-cover rounded-lg border border-border"
                   loading="lazy"
                 />
-                <div className="mt-1 text-xs text-gray-500 truncate">{photo.caption}</div>
+                <div className="mt-1 text-xs text-muted-foreground truncate">{photo.caption}</div>
               </div>
             ))}
           </div>
@@ -304,7 +304,7 @@ export default function RevizeDetail() {
 
       {/* Conclusion */}
       {report.conclusion === 'schopne' && (
-        <div className="rounded-xl bg-gradient-to-r from-emerald-50 to-emerald-100 border border-emerald-200 p-4">
+        <div className="rounded-lg bg-gradient-to-r from-emerald-50 to-emerald-100 border border-emerald-200 p-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center">
               <CheckCircle className="text-white" size={24} />
@@ -317,7 +317,7 @@ export default function RevizeDetail() {
         </div>
       )}
       {report.conclusion === 's-vyhradami' && (
-        <div className="rounded-xl bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-200 p-4">
+        <div className="rounded-lg bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-200 p-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center">
               <AlertTriangle className="text-white" size={24} />
@@ -330,7 +330,7 @@ export default function RevizeDetail() {
         </div>
       )}
       {report.conclusion === 'neschopne' && (
-        <div className="rounded-xl bg-gradient-to-r from-red-50 to-red-100 border border-red-200 p-4">
+        <div className="rounded-lg bg-gradient-to-r from-red-50 to-red-100 border border-red-200 p-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center">
               <XCircle className="text-white" size={24} />

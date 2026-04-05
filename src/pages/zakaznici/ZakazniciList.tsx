@@ -141,8 +141,8 @@ export default function ZakazniciList() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text)]">Zákazníci</h1>
-          <p className="text-[var(--color-text-secondary)] mt-1">Evidence zákazníků a firem</p>
+          <h1 className="text-2xl font-bold text-foreground">Zákazníci</h1>
+          <p className="text-muted-foreground mt-1">Evidence zákazníků a firem</p>
         </div>
         <Button icon={<Plus size={20} />} onClick={() => setModalOpen(true)}>
           Nový zákazník
@@ -180,7 +180,7 @@ export default function ZakazniciList() {
       ) : filtered.length === 0 ? (
         <div className="text-center py-12">
           <User className="mx-auto text-gray-300 mb-3" size={48} />
-          <p className="text-lg text-[var(--color-text-secondary)]">
+          <p className="text-lg text-muted-foreground">
             Žádní zákazníci neodpovídají hledání
           </p>
         </div>

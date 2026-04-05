@@ -11,8 +11,23 @@ import {
 import { DashboardSkeleton } from '@/components/ui/skeleton'
 import Badge from '@/components/ui/badge'
 import EmptyState from '@/components/ui/emptystate'
+import Button from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
-import { ClipboardList, ChevronRight } from 'lucide-react'
+import {
+  ClipboardList,
+  ChevronRight,
+  Plus,
+  FileText,
+  Receipt,
+  AlertTriangle,
+  Calendar,
+  CheckCircle2,
+  Wallet,
+  Layers,
+  Loader,
+  CircleCheck,
+  FileOutput,
+} from 'lucide-react'
 import type { Order, Customer, Invoice } from '../types'
 
 // ── Helpers ──
@@ -54,27 +69,6 @@ function daysBetween(dateStr: string, today: string): number {
 function formatShortDate(dateStr: string): string {
   const [y, m, d] = dateStr.split('-')
   return `${d}.${m}.${y}`
-}
-
-// ── Progress Ring ──
-
-function ProgressRing({ percent, size = 56 }: { percent: number; size?: number }) {
-  const radius = (size - 8) / 2
-  const circumference = 2 * Math.PI * radius
-  const offset = circumference - (percent / 100) * circumference
-  return (
-    <div className="relative" style={{ width: size, height: size }}>
-      <svg width={size} height={size} className="transform -rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={radius} stroke="#e5e7eb" strokeWidth={6} fill="none" />
-        <circle cx={size / 2} cy={size / 2} r={radius} stroke="#2563eb" strokeWidth={6} fill="none"
-          strokeDasharray={circumference} strokeDashoffset={offset}
-          strokeLinecap="round" className="transition-all duration-1000 ease-out" />
-      </svg>
-      <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-[var(--color-primary)]">
-        {percent}%
-      </div>
-    </div>
-  )
 }
 
 // ── Main Component ──
@@ -191,8 +185,8 @@ export default function Dashboard() {
     return (
       <div className="page-enter flex flex-col gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-[var(--color-text)]">Nástěnka</h1>
-          <p className="text-[var(--color-text-secondary)] mt-1">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Nástěnka</h1>
+          <p className="text-muted-foreground mt-1">
             Přehled vašich zakázek a revizí
           </p>
         </div>
@@ -215,13 +209,12 @@ export default function Dashboard() {
     : ''
 
   // Attention items: overdue orders + overdue invoices
-  const attentionItems: { id: string; icon: string; text: string; href: string }[] = []
+  const attentionItems: { id: string; text: string; href: string }[] = []
   for (const o of stats.overdueOrders) {
     const c = customerMap.get(o.customerId)
     const days = daysBetween(o.plannedDate!, today)
     attentionItems.push({
       id: o.id,
-      icon: '⏰',
       text: `Zakázka #${o.id.slice(0, 6)} — ${c?.name ?? 'Neznámý'} — ${days} dní po termínu`,
       href: `/zakazky/${o.id}`,
     })
@@ -230,7 +223,6 @@ export default function Dashboard() {
     const c = customerMap.get(inv.customerId)
     attentionItems.push({
       id: inv.id,
-      icon: '💰',
       text: `Faktura ${inv.invoiceNumber} — ${c?.name ?? 'Neznámý'} — po splatnosti ${formatCurrency(inv.total)}`,
       href: `/finance`,
     })
@@ -249,103 +241,88 @@ export default function Dashboard() {
   function getDotClass(dateStr: string): string {
     const tomorrow = toDateStr(new Date(Date.now() + 86400000))
     const weekEnd = toDateStr(new Date(Date.now() + 7 * 86400000))
-    if (dateStr === today) return 'bg-blue-500'
+    if (dateStr === today) return 'bg-primary'
     if (dateStr === tomorrow) return 'bg-amber-500'
-    if (dateStr <= weekEnd) return 'bg-gray-400'
-    return 'border-2 border-gray-300 bg-white'
-  }
-
-  function isDotFilled(dateStr: string): boolean {
-    const weekEnd = toDateStr(new Date(Date.now() + 7 * 86400000))
-    return dateStr <= weekEnd
+    if (dateStr <= weekEnd) return 'bg-muted-foreground/50'
+    return 'border-2 border-border bg-card'
   }
 
   return (
-    <div className="page-enter flex flex-col gap-4">
+    <div className="page-enter flex flex-col gap-5">
 
-      {/* ── Section 1: Greeting Hero ── */}
-      <div>
+      {/* ── Header ── */}
+      <div className="flex flex-col gap-3">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-          <h1 className="text-xl md:text-2xl font-bold text-[var(--color-text)]">
-            {getGreeting()}{techName ? `, ${techName}` : ''} 👋
-          </h1>
-          <span className="text-sm text-[var(--color-text-secondary)]">
-            Dnes: {getCzechDate(now)}
-          </span>
-        </div>
-        <p className="text-sm text-[var(--color-text-secondary)] mt-1">
-          Máte {stats.inProgress} aktivních zakázek a {stats.toInvoice} čeká na fakturaci.
-        </p>
-        <div className="flex flex-wrap gap-2 mt-3">
-          <button
-            onClick={() => navigate('/zakazky/nova')}
-            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors cursor-pointer"
-          >
-            + Nová zakázka
-          </button>
-          <button
-            onClick={() => navigate('/revizni-zpravy/nova')}
-            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors cursor-pointer"
-          >
-            + Nová revize
-          </button>
-          <button
-            onClick={() => navigate('/finance/nova-faktura')}
-            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium bg-amber-50 text-amber-700 hover:bg-amber-100 transition-colors cursor-pointer"
-          >
-            Vystavit fakturu
-          </button>
-        </div>
-      </div>
-
-      {/* ── Section 2: Stats Strip ── */}
-      <div className="bg-white/60 backdrop-blur-sm border border-white/40 rounded-xl shadow-sm p-4">
-        <div className="flex flex-wrap items-center gap-4">
-          <ProgressRing percent={stats.completionPercent} />
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 flex-1 min-w-0">
-            <StatItem label="zakázek celkem" value={stats.total} />
-            <StatDivider />
-            <StatItem label="rozpracovaných" value={stats.inProgress} />
-            <StatDivider />
-            <StatItem label="dokončených" value={stats.done} />
-            <StatDivider />
-            <StatItem label="k fakturaci" value={stats.toInvoice} />
-            <StatDivider />
-            <div className="flex items-center gap-1.5">
-              <span className="text-sm">💰</span>
-              <span className="text-sm font-semibold text-[var(--color-text)]">{formatCurrency(financeStats.monthlyIncome)}</span>
-              <span className="text-xs text-[var(--color-text-secondary)]">tento měsíc</span>
-            </div>
+          <div>
+            <h1 className="text-xl md:text-2xl font-semibold text-foreground tracking-tight">
+              {getGreeting()}{techName ? `, ${techName}` : ''}
+            </h1>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              {getCzechDate(now)} · {stats.inProgress} aktivních zakázek, {stats.toInvoice} k fakturaci
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="default"
+              size="sm"
+              icon={<Plus size={15} />}
+              onClick={() => navigate('/zakazky/nova')}
+            >
+              Nová zakázka
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              icon={<FileText size={15} />}
+              onClick={() => navigate('/revizni-zpravy/nova')}
+            >
+              Nová revize
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              icon={<Receipt size={15} />}
+              onClick={() => navigate('/finance/nova-faktura')}
+            >
+              Vystavit fakturu
+            </Button>
           </div>
         </div>
       </div>
 
-      {/* ── Section 3: Attention (only if items exist) ── */}
+      {/* ── Stat Cards ── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <StatCard icon={<Layers size={16} />} label="Celkem zakázek" value={stats.total} />
+        <StatCard icon={<Loader size={16} />} label="Rozpracovaných" value={stats.inProgress} />
+        <StatCard icon={<CircleCheck size={16} />} label="Dokončených" value={stats.done} />
+        <StatCard icon={<FileOutput size={16} />} label="K fakturaci" value={stats.toInvoice} />
+      </div>
+
+      {/* ── Attention ── */}
       {attentionItems.length > 0 && (
-        <div className="bg-red-50/50 border border-red-100 rounded-xl p-4">
-          <h2 className="text-sm font-bold text-red-700 mb-2">
-            🔴 Vyžaduje pozornost ({attentionItems.length})
-          </h2>
-          <div className="space-y-1.5">
+        <div className="bg-destructive/5 border border-destructive/20 rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <AlertTriangle size={15} className="text-destructive shrink-0" />
+            <h2 className="text-sm font-semibold text-destructive">
+              Vyžaduje pozornost ({attentionItems.length})
+            </h2>
+          </div>
+          <div className="space-y-1">
             {visibleAttention.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center gap-2 text-sm cursor-pointer hover:bg-red-100/50 rounded-lg px-2 py-1.5 -mx-2 transition-colors"
+                className="flex items-center gap-2.5 text-sm cursor-pointer hover:bg-destructive/5 rounded-lg px-2 py-1.5 -mx-2 transition-colors"
                 onClick={() => navigate(item.href)}
               >
-                <span className="relative flex h-2.5 w-2.5 shrink-0">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500" />
-                </span>
-                <span className="mr-1">{item.icon}</span>
-                <span className="text-[var(--color-text)] truncate">{item.text}</span>
+                <span className="h-1.5 w-1.5 rounded-lg bg-destructive shrink-0" />
+                <span className="text-foreground truncate">{item.text}</span>
               </div>
             ))}
           </div>
           {attentionItems.length > 5 && (
             <button
               onClick={() => setAttentionExpanded(!attentionExpanded)}
-              className="text-xs text-red-600 font-medium mt-2 hover:underline cursor-pointer"
+              className="text-xs text-destructive font-medium mt-2 hover:underline cursor-pointer"
             >
               {attentionExpanded ? 'Skrýt' : `Zobrazit vše (${attentionItems.length})`}
             </button>
@@ -353,78 +330,79 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* ── Section 4: Main 2-column content ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+      {/* ── Main 3-column grid ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
-        {/* Left column: Timeline */}
-        <div className="lg:col-span-3">
-          <div className="bg-white/60 backdrop-blur-sm border border-white/40 rounded-xl shadow-sm p-4">
-            <h2 className="text-sm font-bold text-[var(--color-text)] mb-3">📅 Nadcházející práce</h2>
-            {stats.upcomingOrders.length === 0 ? (
-              <p className="text-sm text-gray-400 py-4 text-center">Žádné naplánované zakázky 🎉</p>
-            ) : (
-              <div className="relative">
-                {stats.upcomingOrders.map((order, i) => {
-                  const customer = customerMap.get(order.customerId)
-                  const customerName = customer?.name ?? 'Neznámý zákazník'
-                  const dateStr = order.plannedDate!
-                  const dotColor = getDotClass(dateStr)
-                  const filled = isDotFilled(dateStr)
-                  return (
-                    <div
-                      key={order.id}
-                      className="relative pl-8 pb-4 last:pb-0 cursor-pointer hover:bg-gray-50/80 rounded-lg -ml-2 px-2 py-2 transition-colors"
-                      onClick={() => navigate(`/zakazky/${order.id}`)}
-                    >
-                      {/* Vertical line */}
-                      {i < stats.upcomingOrders.length - 1 && (
-                        <div className="absolute left-[11px] top-6 bottom-0 w-0.5 bg-gray-200" />
-                      )}
-                      {/* Dot */}
-                      <div className={`absolute left-0 top-3 w-5 h-5 rounded-full flex items-center justify-center ${dotColor}`}>
-                        {filled && <div className="w-2 h-2 rounded-full bg-white" />}
+        {/* Column 1: Upcoming timeline */}
+        <div className="lg:col-span-2 bg-card border border-border rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Calendar size={15} className="text-muted-foreground" />
+            <h2 className="text-sm font-semibold text-foreground">Nadcházející práce</h2>
+          </div>
+          {stats.upcomingOrders.length === 0 ? (
+            <p className="text-sm text-muted-foreground py-6 text-center">Žádné naplánované zakázky</p>
+          ) : (
+            <div className="relative">
+              {stats.upcomingOrders.map((order, i) => {
+                const customer = customerMap.get(order.customerId)
+                const customerName = customer?.name ?? 'Neznámý zákazník'
+                const dateStr = order.plannedDate!
+                const dotColor = getDotClass(dateStr)
+                return (
+                  <div
+                    key={order.id}
+                    className="relative pl-7 pb-3 last:pb-0 cursor-pointer hover:bg-muted/50 rounded-lg -ml-1.5 px-1.5 py-1.5 transition-colors"
+                    onClick={() => navigate(`/zakazky/${order.id}`)}
+                  >
+                    {/* Vertical line */}
+                    {i < stats.upcomingOrders.length - 1 && (
+                      <div className="absolute left-[9px] top-5 bottom-0 w-px bg-border" />
+                    )}
+                    {/* Dot */}
+                    <div className={`absolute left-[5px] top-[11px] w-[9px] h-[9px] rounded-lg ${dotColor}`} />
+                    {/* Content */}
+                    <div>
+                      <div className="text-xs text-muted-foreground font-medium">{getDateLabel(dateStr)}</div>
+                      <div className="text-sm font-medium text-foreground">
+                        {order.description || getOrderTypeLabel(order.type)}
                       </div>
-                      {/* Content */}
-                      <div>
-                        <div className="text-xs text-gray-400 font-medium">{getDateLabel(dateStr)}</div>
-                        <div className="text-sm font-medium text-[var(--color-text)]">
-                          {order.description || getOrderTypeLabel(order.type)}
-                        </div>
-                        <div className="flex flex-wrap items-center gap-2 mt-0.5">
-                          <span className="text-xs text-gray-500">{customerName}{order.address ? ` • ${order.address}` : ''}</span>
-                          <Badge variant={getOrderStatusColor(order.status) as any} size="sm">
-                            {getOrderStatusLabel(order.status)}
-                          </Badge>
-                        </div>
+                      <div className="flex flex-wrap items-center gap-2 mt-0.5">
+                        <span className="text-xs text-muted-foreground">{customerName}{order.address ? ` · ${order.address}` : ''}</span>
+                        <Badge variant={getOrderStatusColor(order.status) as any} size="sm">
+                          {getOrderStatusLabel(order.status)}
+                        </Badge>
                       </div>
                     </div>
-                  )
-                })}
-              </div>
-            )}
-            {stats.upcomingOrders.length > 0 && (
-              <button
-                className="text-xs text-[var(--color-primary)] font-medium mt-2 hover:underline cursor-pointer flex items-center gap-0.5"
-                onClick={() => navigate('/zakazky')}
-              >
-                Zobrazit vše <ChevronRight size={14} />
-              </button>
-            )}
-          </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+          {stats.upcomingOrders.length > 0 && (
+            <button
+              className="text-xs text-primary font-medium mt-2 hover:underline cursor-pointer flex items-center gap-0.5"
+              onClick={() => navigate('/zakazky')}
+            >
+              Zobrazit vše <ChevronRight size={14} />
+            </button>
+          )}
         </div>
 
-        {/* Right column: Completed + Finance */}
-        <div className="lg:col-span-2 flex flex-col gap-4">
+        {/* Column 2: Completed + Finance stacked */}
+        <div className="flex flex-col gap-4">
 
           {/* Recently completed */}
-          <div className="bg-white/60 backdrop-blur-sm border border-white/40 rounded-xl shadow-sm p-4">
-            <h2 className="text-sm font-bold text-[var(--color-text)] mb-3">
-              ✅ Dokončené zakázky ({stats.done}) 🎉
-            </h2>
+          <div className="bg-card border border-border rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <CheckCircle2 size={15} className="text-muted-foreground" />
+              <h2 className="text-sm font-semibold text-foreground">
+                Dokončené ({stats.done})
+              </h2>
+            </div>
             {stats.completedOrders.length === 0 ? (
-              <p className="text-sm text-gray-400 py-2 text-center">Zatím žádné dokončené zakázky</p>
+              <p className="text-sm text-muted-foreground py-4 text-center">Zatím žádné dokončené zakázky</p>
             ) : (
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {stats.completedOrders.map((order) => {
                   const customer = customerMap.get(order.customerId)
                   const customerName = customer?.name ?? 'Neznámý'
@@ -432,14 +410,14 @@ export default function Dashboard() {
                   return (
                     <div
                       key={order.id}
-                      className="flex items-center gap-2 text-sm cursor-pointer hover:bg-gray-50/80 rounded-lg px-2 py-1.5 -mx-2 transition-colors"
+                      className="flex items-center gap-2 text-sm cursor-pointer hover:bg-muted/50 rounded-lg px-2 py-1.5 -mx-2 transition-colors"
                       onClick={() => navigate(`/zakazky/${order.id}`)}
                     >
-                      <span className="text-emerald-500 shrink-0">✓</span>
-                      <span className="truncate flex-1 text-[var(--color-text)]">
+                      <CheckCircle2 size={14} className="text-emerald-500 shrink-0" />
+                      <span className="truncate flex-1 text-foreground">
                         {order.description || getOrderTypeLabel(order.type)} — {customerName}
                       </span>
-                      <span className="text-xs text-gray-400 shrink-0 tabular-nums">
+                      <span className="text-xs text-muted-foreground shrink-0 tabular-nums">
                         {dateStr ? formatShortDate(dateStr) : '—'}
                       </span>
                     </div>
@@ -450,22 +428,25 @@ export default function Dashboard() {
           </div>
 
           {/* Financial mini-summary */}
-          <div className="bg-white/60 backdrop-blur-sm border border-white/40 rounded-xl shadow-sm p-4">
-            <h2 className="text-sm font-bold text-[var(--color-text)] mb-2">💰 Finance tento měsíc</h2>
-            <div className="space-y-1 text-sm">
-              <div className="flex justify-between">
-                <span className="text-[var(--color-text-secondary)]">Příjmy:</span>
-                <span className="font-semibold text-emerald-600">{formatCurrency(financeStats.monthlyIncome)}</span>
+          <div className="bg-card border border-border rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <Wallet size={15} className="text-muted-foreground" />
+              <h2 className="text-sm font-semibold text-foreground">Finance tento měsíc</h2>
+            </div>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Příjmy</span>
+                <span className="font-semibold text-foreground">{formatCurrency(financeStats.monthlyIncome)}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-[var(--color-text-secondary)]">Nezaplaceno:</span>
-                <span className="font-semibold text-[var(--color-text)]">
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Nezaplaceno</span>
+                <span className="font-semibold text-foreground">
                   {formatCurrency(financeStats.unpaid)}{financeStats.unpaidCount > 0 ? ` (${financeStats.unpaidCount} faktur${financeStats.unpaidCount === 1 ? 'a' : financeStats.unpaidCount < 5 ? 'y' : ''})` : ''}
                 </span>
               </div>
             </div>
             <button
-              className="text-xs text-[var(--color-primary)] font-medium mt-3 hover:underline cursor-pointer flex items-center gap-0.5"
+              className="text-xs text-primary font-medium mt-3 hover:underline cursor-pointer flex items-center gap-0.5"
               onClick={() => navigate('/finance')}
             >
               Zobrazit finance <ChevronRight size={14} />
@@ -477,17 +458,16 @@ export default function Dashboard() {
   )
 }
 
-// ── Stat strip helpers ──
+// ── Stat Card ──
 
-function StatItem({ label, value }: { label: string; value: number }) {
+function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: number }) {
   return (
-    <div className="flex items-center gap-1.5">
-      <span className="text-sm font-semibold text-[var(--color-text)]">{value}</span>
-      <span className="text-xs text-[var(--color-text-secondary)]">{label}</span>
+    <div className="bg-card border border-border rounded-lg p-4">
+      <div className="flex items-center gap-1.5 text-muted-foreground mb-1">
+        {icon}
+        <span className="text-xs font-medium">{label}</span>
+      </div>
+      <div className="text-2xl font-semibold text-foreground tabular-nums">{value}</div>
     </div>
   )
-}
-
-function StatDivider() {
-  return <div className="hidden sm:block w-px h-4 bg-white/20 border-r border-gray-200" />
 }

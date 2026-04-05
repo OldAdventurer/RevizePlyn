@@ -138,7 +138,7 @@ export default function ZarizeniList() {
           checked={selectedIds.has(d.id)}
           onChange={() => {}}
           onClick={(e) => toggleSelect(d.id, e)}
-          className="w-5 h-5 cursor-pointer accent-[var(--color-primary)]"
+          className="w-5 h-5 cursor-pointer accent-primary"
         />
       ),
     },
@@ -200,8 +200,8 @@ export default function ZarizeniList() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text)]">Zařízení</h1>
-          <p className="text-[var(--color-text-secondary)] mt-1">Evidence plynových zařízení</p>
+          <h1 className="text-2xl font-bold text-foreground">Zařízení</h1>
+          <p className="text-muted-foreground mt-1">Evidence plynových zařízení</p>
         </div>
         <div className="flex flex-wrap gap-3">
           {selectedIds.size > 0 && (
@@ -253,7 +253,7 @@ export default function ZarizeniList() {
         <Card>
           {filtered.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-lg text-[var(--color-text-secondary)]">Žádná zařízení odpovídající vašim filtrům</p>
+              <p className="text-lg text-muted-foreground">Žádná zařízení odpovídající vašim filtrům</p>
             </div>
           ) : (
             <Table

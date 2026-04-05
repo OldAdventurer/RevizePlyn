@@ -19,16 +19,16 @@ function emptyInstrument(): Instrument {
 
 function calibrationColor(dateStr: string): string {
   const diff = (new Date(dateStr).getTime() - Date.now()) / 86_400_000
-  if (diff < 0) return 'text-[var(--color-error)]'
-  if (diff < 30) return 'text-[var(--color-warning)]'
-  return 'text-[var(--color-success)]'
+  if (diff < 0) return 'text-destructive'
+  if (diff < 30) return 'text-orange-500'
+  return 'text-emerald-600'
 }
 
 function calibrationBadge(dateStr: string): string {
   const diff = (new Date(dateStr).getTime() - Date.now()) / 86_400_000
-  if (diff < 0) return 'bg-red-100 text-[var(--color-error)]'
-  if (diff < 30) return 'bg-orange-100 text-[var(--color-warning)]'
-  return 'bg-green-100 text-[var(--color-success)]'
+  if (diff < 0) return 'bg-red-100 text-destructive'
+  if (diff < 30) return 'bg-orange-100 text-orange-500'
+  return 'bg-green-100 text-emerald-600'
 }
 
 // ── Main component ─────────────────────────────────────────────────
@@ -136,13 +136,13 @@ export default function NastaveniPage() {
   return (
     <div className="page-enter p-4 md:p-6 max-w-3xl mx-auto space-y-4">
       <div className="mb-4">
-        <h1 className="text-2xl font-bold text-[var(--color-text)]">Nastavení</h1>
-        <p className="text-[var(--color-text-secondary)] mt-1">Konfigurace aplikace a údajů technika</p>
+        <h1 className="text-2xl font-bold text-foreground">Nastavení</h1>
+        <p className="text-muted-foreground mt-1">Konfigurace aplikace a údajů technika</p>
       </div>
 
       {/* ── Section 1: Technician ─────────────────────────────── */}
       <Card title="Údaje revizního technika" accent="blue">
-        <div className="flex items-center gap-2 mb-4 text-[var(--color-text-secondary)]">
+        <div className="flex items-center gap-2 mb-4 text-muted-foreground">
           <User size={20} />
           <span className="text-sm">Tyto údaje se přenášejí do revizních zpráv</span>
         </div>
@@ -209,20 +209,20 @@ export default function NastaveniPage() {
                 Uložit změny
               </Button>
               {saveMsg && (
-                <span className="text-[var(--color-success)] font-medium animate-pulse">
+                <span className="text-emerald-600 font-medium animate-pulse">
                   Uloženo ✓
                 </span>
               )}
             </div>
           </div>
         ) : (
-          <p className="text-[var(--color-text-secondary)]">Načítání…</p>
+          <p className="text-muted-foreground">Načítání…</p>
         )}
       </Card>
 
       {/* ── Section 2: Instruments ────────────────────────────── */}
       <Card title="Měřicí přístroje" accent="green">
-        <div className="flex items-center gap-2 mb-4 text-[var(--color-text-secondary)]">
+        <div className="flex items-center gap-2 mb-4 text-muted-foreground">
           <Wrench size={20} />
           <span className="text-sm">Přístroje používané při revizích</span>
         </div>
@@ -232,11 +232,11 @@ export default function NastaveniPage() {
             {form.instruments.map((instr) => (
               <div
                 key={instr.id}
-                className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]"
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-lg border border-border bg-background"
               >
                 <div className="min-w-0">
                   <p className="font-semibold">{instr.name}</p>
-                  <p className="text-sm text-[var(--color-text-secondary)]">{instr.model}</p>
+                  <p className="text-sm text-muted-foreground">{instr.model}</p>
                   <p className="text-sm mt-1">
                     Kalibrace do:{' '}
                     <span className={`font-medium ${calibrationColor(instr.calibrationValidUntil)}`}>
@@ -273,7 +273,7 @@ export default function NastaveniPage() {
             ))}
           </div>
         ) : (
-          <p className="text-[var(--color-text-secondary)]">Zatím žádné přístroje.</p>
+          <p className="text-muted-foreground">Zatím žádné přístroje.</p>
         )}
 
         <div className="mt-4">
@@ -294,10 +294,10 @@ export default function NastaveniPage() {
           ].map((s) => (
             <div
               key={s.label}
-              className="text-center p-3 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)]"
+              className="text-center p-3 rounded-lg bg-background border border-border"
             >
-              <p className="text-2xl font-bold text-[var(--color-primary)]">{s.value}</p>
-              <p className="text-sm text-[var(--color-text-secondary)]">{s.label}</p>
+              <p className="text-2xl font-bold text-primary">{s.value}</p>
+              <p className="text-sm text-muted-foreground">{s.label}</p>
             </div>
           ))}
         </div>
@@ -326,9 +326,9 @@ export default function NastaveniPage() {
           <p>
             <strong>RevizePlyn</strong> — Demo aplikace pro evidenci revizí plynových zařízení
           </p>
-          <p className="text-sm text-[var(--color-text-secondary)]">Verze: 1.0.0</p>
-          <p className="text-sm text-[var(--color-text-secondary)]">Legislativa: NV č. 191/2022 Sb.</p>
-          <p className="text-sm mt-3 p-3 rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text-secondary)]">
+          <p className="text-sm text-muted-foreground">Verze: 1.0.0</p>
+          <p className="text-sm text-muted-foreground">Legislativa: NV č. 191/2022 Sb.</p>
+          <p className="text-sm mt-3 p-3 rounded-lg bg-background border border-border text-muted-foreground">
             Tato aplikace je určena pouze pro demonstrační účely. Data jsou uložena lokálně ve vašem
             prohlížeči.
           </p>
@@ -390,7 +390,7 @@ export default function NastaveniPage() {
         }
       >
         <div className="flex items-start gap-3">
-          <AlertTriangle size={24} className="text-[var(--color-warning)] shrink-0 mt-0.5" />
+          <AlertTriangle size={24} className="text-orange-500 shrink-0 mt-0.5" />
           <p>Opravdu chcete odebrat tento měřicí přístroj?</p>
         </div>
       </Modal>
@@ -412,7 +412,7 @@ export default function NastaveniPage() {
         }
       >
         <div className="flex items-start gap-3">
-          <AlertTriangle size={24} className="text-[var(--color-warning)] shrink-0 mt-0.5" />
+          <AlertTriangle size={24} className="text-orange-500 shrink-0 mt-0.5" />
           <p>
             Opravdu chcete obnovit výchozí demo data? Všechna vaše data budou smazána a nahrazena
             ukázkovými daty.
@@ -437,7 +437,7 @@ export default function NastaveniPage() {
         }
       >
         <div className="flex items-start gap-3">
-          <AlertTriangle size={24} className="text-[var(--color-error)] shrink-0 mt-0.5" />
+          <AlertTriangle size={24} className="text-destructive shrink-0 mt-0.5" />
           <p className="font-medium">Všechna data budou nenávratně smazána!</p>
         </div>
       </Modal>

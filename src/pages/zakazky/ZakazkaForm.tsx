@@ -113,14 +113,14 @@ export default function ZakazkaForm() {
 
   return (
     <div className="page-enter p-4 md:p-6 space-y-3 max-w-2xl">
-      <button onClick={() => navigate(isEdit ? `/zakazky/${id}` : '/zakazky')} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium mb-4 transition-colors cursor-pointer">
+      <button onClick={() => navigate(isEdit ? `/zakazky/${id}` : '/zakazky')} className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground font-medium mb-4 transition-colors cursor-pointer">
         <ArrowLeft size={20} />
         <span>{isEdit ? 'Zpět na detail' : 'Zpět na zakázky'}</span>
       </button>
 
       <div className="mb-4">
-        <h1 className="text-2xl font-bold text-[var(--color-text)]">{isEdit ? 'Upravit zakázku' : 'Nová zakázka'}</h1>
-        <p className="text-[var(--color-text-secondary)] mt-1">{isEdit ? 'Úprava existující zakázky' : 'Vyplňte údaje o nové zakázce'}</p>
+        <h1 className="text-2xl font-bold text-foreground">{isEdit ? 'Upravit zakázku' : 'Nová zakázka'}</h1>
+        <p className="text-muted-foreground mt-1">{isEdit ? 'Úprava existující zakázky' : 'Vyplňte údaje o nové zakázce'}</p>
       </div>
 
       <Card>
@@ -163,26 +163,26 @@ export default function ZakazkaForm() {
           />
 
           <div className="w-full">
-            <label className="block text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-2">
+            <label className="block text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
               Popis
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="w-full min-h-[44px] text-base p-3 border border-[var(--color-border)] rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]"
+              className="w-full min-h-[44px] text-base p-3 border border-border rounded-lg  focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary"
             />
           </div>
 
           <div className="w-full">
-            <label className="block text-sm font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] mb-2">
+            <label className="block text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
               Poznámka
             </label>
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
               rows={3}
-              className="w-full min-h-[44px] text-base p-3 border border-[var(--color-border)] rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]"
+              className="w-full min-h-[44px] text-base p-3 border border-border rounded-lg  focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary"
             />
           </div>
 

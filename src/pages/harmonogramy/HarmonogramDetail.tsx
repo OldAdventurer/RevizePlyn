@@ -154,9 +154,9 @@ export default function HarmonogramDetail() {
 
   if (!schedule) {
     return (
-      <div className="text-center py-16 text-gray-400">
+      <div className="text-center py-16 text-muted-foreground">
         <p className="text-lg">Harmonogram nenalezen</p>
-        <Link to="/harmonogramy" className="text-[var(--color-primary)] mt-2 inline-block">← Zpět na seznam</Link>
+        <Link to="/harmonogramy" className="text-primary mt-2 inline-block">← Zpět na seznam</Link>
       </div>
     )
   }
@@ -173,12 +173,12 @@ export default function HarmonogramDetail() {
     <div>
       {/* Header */}
       <div className="flex items-center gap-3 mb-2">
-        <Link to="/harmonogramy" className="p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors">
+        <Link to="/harmonogramy" className="p-2 rounded-lg hover:bg-muted text-muted-foreground transition-colors">
           <ArrowLeft size={20} />
         </Link>
         <div className="flex-1 min-w-0">
-          <h1 className="text-2xl font-bold text-gray-900 truncate">{schedule.name}</h1>
-          <div className="flex items-center gap-3 text-sm text-gray-500 mt-0.5">
+          <h1 className="text-2xl font-bold text-foreground truncate">{schedule.name}</h1>
+          <div className="flex items-center gap-3 text-sm text-muted-foreground mt-0.5">
             <span className="flex items-center gap-1"><Building2 size={14} /> {customer?.name ?? '—'}</span>
             <span className="flex items-center gap-1"><Calendar size={14} /> {schedule.year}</span>
           </div>
@@ -193,7 +193,7 @@ export default function HarmonogramDetail() {
       </div>
 
       {schedule.note && (
-        <p className="text-sm text-gray-400 mb-4 ml-11">{schedule.note}</p>
+        <p className="text-sm text-muted-foreground mb-4 ml-11">{schedule.note}</p>
       )}
 
       {/* Progress strip */}
@@ -207,20 +207,20 @@ export default function HarmonogramDetail() {
       {/* Progress bar */}
       <div className="mb-6">
         <div className="flex items-center justify-between text-sm mb-1">
-          <span className="text-gray-500">Celkový postup</span>
-          <span className="font-semibold text-gray-700">{progress}%</span>
+          <span className="text-muted-foreground">Celkový postup</span>
+          <span className="font-semibold text-foreground">{progress}%</span>
         </div>
-        <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+        <div className="h-3 bg-muted rounded-full overflow-hidden">
           <div className="h-full bg-green-500 rounded-full transition-all" style={{ width: `${progress}%` }} />
         </div>
       </div>
 
       {/* Gantt Chart */}
       {ganttTasks.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm mb-6 overflow-hidden">
-          <div className="px-5 py-3 border-b border-gray-100 flex items-center justify-between">
-            <h2 className="font-semibold text-gray-800">Ganttův diagram</h2>
-            <div className="flex items-center gap-4 text-xs text-gray-500">
+        <div className="bg-card rounded-lg border border-border  mb-6 overflow-hidden">
+          <div className="px-5 py-3 border-b border-border flex items-center justify-between">
+            <h2 className="font-semibold text-foreground">Ganttův diagram</h2>
+            <div className="flex items-center gap-4 text-xs text-muted-foreground">
               <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-green-500 inline-block" /> Dokončeno</span>
               <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-blue-500 inline-block" /> Plánováno</span>
               <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-gray-400 inline-block" /> Zrušeno</span>
@@ -246,12 +246,12 @@ export default function HarmonogramDetail() {
       )}
 
       {/* Items table */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm">
-        <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100">
-          <h2 className="font-semibold text-gray-800">Plánované revize ({stats.total})</h2>
+      <div className="bg-card rounded-lg border border-border ">
+        <div className="flex items-center justify-between px-5 py-3 border-b border-border">
+          <h2 className="font-semibold text-foreground">Plánované revize ({stats.total})</h2>
           <button
             onClick={() => setShowAddItem(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[var(--color-primary)] text-white text-sm rounded-lg hover:bg-[var(--color-primary-hover)] cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white text-sm rounded-lg hover:bg-primary/90 cursor-pointer"
           >
             <Plus size={16} />
             Přidat
@@ -259,7 +259,7 @@ export default function HarmonogramDetail() {
         </div>
 
         {schedule.items.length === 0 ? (
-          <div className="text-center py-10 text-gray-400">
+          <div className="text-center py-10 text-muted-foreground">
             <Calendar size={36} className="mx-auto mb-2 opacity-40" />
             <p>Zatím žádné položky</p>
           </div>
@@ -267,7 +267,7 @@ export default function HarmonogramDetail() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100 text-left text-xs text-gray-500 uppercase">
+                <tr className="border-b border-border text-left text-xs text-muted-foreground uppercase">
                   <th className="px-4 py-2.5">Zařízení</th>
                   <th className="px-4 py-2.5">Objekt</th>
                   <th className="px-4 py-2.5">Typ</th>
@@ -281,11 +281,11 @@ export default function HarmonogramDetail() {
                   const device = deviceMap.get(item.deviceId)
                   const obj = objectMap.get(item.objectId)
                   return (
-                    <tr key={item.id} className="border-b border-gray-50 hover:bg-gray-50/50">
-                      <td className="px-4 py-2.5 font-medium text-gray-900">{device?.name ?? item.deviceId}</td>
-                      <td className="px-4 py-2.5 text-gray-600">{obj?.name ?? item.objectId}</td>
-                      <td className="px-4 py-2.5 text-gray-600">{getOrderTypeLabel(item.type)}</td>
-                      <td className="px-4 py-2.5 text-gray-600 whitespace-nowrap">
+                    <tr key={item.id} className="border-b border-gray-50 hover:bg-muted/50">
+                      <td className="px-4 py-2.5 font-medium text-foreground">{device?.name ?? item.deviceId}</td>
+                      <td className="px-4 py-2.5 text-muted-foreground">{obj?.name ?? item.objectId}</td>
+                      <td className="px-4 py-2.5 text-muted-foreground">{getOrderTypeLabel(item.type)}</td>
+                      <td className="px-4 py-2.5 text-muted-foreground whitespace-nowrap">
                         {new Date(item.plannedStart).toLocaleDateString('cs-CZ')} – {new Date(item.plannedEnd).toLocaleDateString('cs-CZ')}
                       </td>
                       <td className="px-4 py-2.5">
@@ -294,7 +294,7 @@ export default function HarmonogramDetail() {
                           onChange={e => handleStatusChange(item.id, e.target.value as ScheduleItemStatus)}
                           className={`text-xs font-semibold px-2 py-1 rounded-full border-0 cursor-pointer ${
                             item.status === 'dokonceno' ? 'bg-green-50 text-green-700'
-                            : item.status === 'zruseno' ? 'bg-gray-100 text-gray-500'
+                            : item.status === 'zruseno' ? 'bg-muted text-muted-foreground'
                             : 'bg-blue-50 text-blue-700'
                           }`}
                         >
@@ -306,7 +306,7 @@ export default function HarmonogramDetail() {
                       <td className="px-4 py-2.5">
                         <button
                           onClick={() => handleDeleteItem(item.id)}
-                          className="p-1 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 cursor-pointer"
+                          className="p-1 rounded text-muted-foreground hover:text-red-500 hover:bg-red-50 cursor-pointer"
                           title="Smazat položku"
                         >
                           <Trash2 size={14} />
@@ -324,19 +324,19 @@ export default function HarmonogramDetail() {
       {/* Add item modal */}
       {showAddItem && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={() => setShowAddItem(false)}>
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6" onClick={e => e.stopPropagation()}>
-            <h2 className="text-xl font-bold text-gray-900 mb-4">
+          <div className="bg-card rounded-lg border border-border w-full max-w-lg p-6" onClick={e => e.stopPropagation()}>
+            <h2 className="text-xl font-bold text-foreground mb-4">
               <Pencil size={18} className="inline mr-2" />
               Přidat položku do harmonogramu
             </h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Zařízení *</label>
+                <label className="block text-sm font-medium text-foreground mb-1">Zařízení *</label>
                 <select
                   value={itemDeviceId}
                   onChange={e => setItemDeviceId(e.target.value)}
-                  className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-base"
+                  className="w-full px-3 py-2.5 border border-border rounded-lg text-base"
                 >
                   <option value="">Vyberte zařízení...</option>
                   {allDevicesForCustomer.map(d => {
@@ -351,11 +351,11 @@ export default function HarmonogramDetail() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Typ revize *</label>
+                <label className="block text-sm font-medium text-foreground mb-1">Typ revize *</label>
                 <select
                   value={itemType}
                   onChange={e => setItemType(e.target.value as OrderType)}
-                  className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-base"
+                  className="w-full px-3 py-2.5 border border-border rounded-lg text-base"
                 >
                   <option value="pravidelna-revize">Pravidelná revize</option>
                   <option value="pravidelna-kontrola">Pravidelná kontrola</option>
@@ -368,32 +368,32 @@ export default function HarmonogramDetail() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Začátek *</label>
+                  <label className="block text-sm font-medium text-foreground mb-1">Začátek *</label>
                   <input
                     type="date"
                     value={itemStart}
                     onChange={e => setItemStart(e.target.value)}
-                    className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-base"
+                    className="w-full px-3 py-2.5 border border-border rounded-lg text-base"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Konec *</label>
+                  <label className="block text-sm font-medium text-foreground mb-1">Konec *</label>
                   <input
                     type="date"
                     value={itemEnd}
                     onChange={e => setItemEnd(e.target.value)}
-                    className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-base"
+                    className="w-full px-3 py-2.5 border border-border rounded-lg text-base"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Poznámka</label>
+                <label className="block text-sm font-medium text-foreground mb-1">Poznámka</label>
                 <input
                   type="text"
                   value={itemNote}
                   onChange={e => setItemNote(e.target.value)}
-                  className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-base"
+                  className="w-full px-3 py-2.5 border border-border rounded-lg text-base"
                 />
               </div>
             </div>
@@ -401,14 +401,14 @@ export default function HarmonogramDetail() {
             <div className="flex gap-3 mt-6">
               <button
                 onClick={() => setShowAddItem(false)}
-                className="flex-1 px-4 py-2.5 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 cursor-pointer"
+                className="flex-1 px-4 py-2.5 border border-border rounded-lg text-foreground hover:bg-muted cursor-pointer"
               >
                 Zrušit
               </button>
               <button
                 onClick={handleAddItem}
                 disabled={!itemDeviceId || !itemStart || !itemEnd}
-                className="flex-1 px-4 py-2.5 bg-[var(--color-primary)] text-white rounded-lg font-semibold hover:bg-[var(--color-primary-hover)] disabled:opacity-40 cursor-pointer"
+                className="flex-1 px-4 py-2.5 bg-primary text-white rounded-lg font-semibold hover:bg-primary/90 disabled:opacity-40 cursor-pointer"
               >
                 Přidat
               </button>
@@ -424,16 +424,16 @@ function StatCard({ label, value, color, icon }: { label: string; value: number;
   const colorMap: Record<string, string> = {
     green: 'text-green-600',
     blue: 'text-blue-600',
-    gray: 'text-gray-700',
+    gray: 'text-foreground',
     red: 'text-red-600',
   }
   return (
-    <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
-      <div className={`text-2xl font-bold ${colorMap[color] ?? 'text-gray-700'} flex items-center gap-2`}>
+    <div className="bg-card rounded-lg p-4 border border-border ">
+      <div className={`text-2xl font-bold ${colorMap[color] ?? 'text-foreground'} flex items-center gap-2`}>
         {icon}
         {value}
       </div>
-      <div className="text-xs text-gray-500 mt-0.5">{label}</div>
+      <div className="text-xs text-muted-foreground mt-0.5">{label}</div>
     </div>
   )
 }

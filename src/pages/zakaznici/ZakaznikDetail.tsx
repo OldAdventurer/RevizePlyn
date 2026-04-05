@@ -124,8 +124,8 @@ export default function ZakaznikDetail() {
   if (customer === null || !customer) {
     return (
       <div className="p-6 text-center">
-        <p className="text-lg text-gray-500">Zákazník nebyl nalezen.</p>
-        <Link to="/zakaznici" className="text-[var(--color-primary)] font-medium hover:underline mt-2 inline-block">
+        <p className="text-lg text-muted-foreground">Zákazník nebyl nalezen.</p>
+        <Link to="/zakaznici" className="text-primary font-medium hover:underline mt-2 inline-block">
           ← Zpět na zákazníky
         </Link>
       </div>
@@ -139,7 +139,7 @@ export default function ZakaznikDetail() {
   return (
     <div className="p-4 md:p-6 flex flex-col gap-3 max-w-4xl mx-auto page-enter">
       {/* Back */}
-      <button onClick={() => navigate('/zakaznici')} className="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] font-medium mb-4 transition-colors cursor-pointer">
+      <button onClick={() => navigate('/zakaznici')} className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground font-medium mb-4 transition-colors cursor-pointer">
         <ArrowLeft size={20} />
         <span>Zpět na zákazníky</span>
       </button>
@@ -154,7 +154,7 @@ export default function ZakaznikDetail() {
               ) : (
                 <User className="text-blue-500 shrink-0" size={28} />
               )}
-              <h1 className="text-2xl font-bold text-[var(--color-text)]">{customer.name}</h1>
+              <h1 className="text-2xl font-bold text-foreground">{customer.name}</h1>
               <Badge variant={customer.type === 'fyzicka-osoba' ? 'blue' : 'indigo'}>
                 {customer.type === 'fyzicka-osoba' ? 'Fyzická osoba' : 'Firma'}
               </Badge>
@@ -162,38 +162,38 @@ export default function ZakaznikDetail() {
 
             <div className="flex flex-col gap-2 text-base">
               {customer.type === 'firma' && customer.ico && (
-                <p className="text-gray-600">
+                <p className="text-muted-foreground">
                   <span className="font-medium">IČ:</span> {customer.ico}
                 </p>
               )}
               {customer.type === 'firma' && customer.dic && (
-                <p className="text-gray-600">
+                <p className="text-muted-foreground">
                   <span className="font-medium">DIČ:</span> {customer.dic}
                 </p>
               )}
               {customer.type === 'firma' && customer.contactPerson && (
-                <p className="flex items-center gap-2 text-gray-600">
-                  <User size={16} className="shrink-0 text-gray-400" />
+                <p className="flex items-center gap-2 text-muted-foreground">
+                  <User size={16} className="shrink-0 text-muted-foreground" />
                   <span className="font-medium">Kontaktní osoba:</span> {customer.contactPerson}
                 </p>
               )}
-              <p className="flex items-center gap-2 text-gray-600">
-                <Phone size={16} className="shrink-0 text-gray-400" />
+              <p className="flex items-center gap-2 text-muted-foreground">
+                <Phone size={16} className="shrink-0 text-muted-foreground" />
                 {formatPhone(customer.phone)}
               </p>
               {customer.email && (
-                <p className="flex items-center gap-2 text-gray-600">
-                  <Mail size={16} className="shrink-0 text-gray-400" />
+                <p className="flex items-center gap-2 text-muted-foreground">
+                  <Mail size={16} className="shrink-0 text-muted-foreground" />
                   {customer.email}
                 </p>
               )}
-              <p className="flex items-center gap-2 text-gray-600">
-                <MapPin size={16} className="shrink-0 text-gray-400" />
+              <p className="flex items-center gap-2 text-muted-foreground">
+                <MapPin size={16} className="shrink-0 text-muted-foreground" />
                 {customer.address}
               </p>
               {customer.note && (
-                <p className="flex items-center gap-2 text-gray-600">
-                  <FileText size={16} className="shrink-0 text-gray-400" />
+                <p className="flex items-center gap-2 text-muted-foreground">
+                  <FileText size={16} className="shrink-0 text-muted-foreground" />
                   {customer.note}
                 </p>
               )}
@@ -209,7 +209,7 @@ export default function ZakaznikDetail() {
       {/* Objects */}
       <Card title="Objekty zákazníka" accent="green">
         {!objects || objects.length === 0 ? (
-          <div className="text-center py-8"><p className="text-[var(--color-text-secondary)]">Žádné objekty</p></div>
+          <div className="text-center py-8"><p className="text-muted-foreground">Žádné objekty</p></div>
         ) : (
           <div className="flex flex-col divide-y divide-gray-100 -my-1">
             {objects.map((obj) => (
@@ -217,9 +217,9 @@ export default function ZakaznikDetail() {
                 key={obj.id}
                 className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 py-3"
               >
-                <span className="font-semibold text-[var(--color-text)]">{obj.name}</span>
+                <span className="font-semibold text-foreground">{obj.name}</span>
                 <Badge variant="gray">{getObjectTypeLabel(obj.type)}</Badge>
-                <span className="text-gray-500 text-sm sm:ml-auto">{obj.address}</span>
+                <span className="text-muted-foreground text-sm sm:ml-auto">{obj.address}</span>
               </div>
             ))}
           </div>
@@ -229,7 +229,7 @@ export default function ZakaznikDetail() {
       {/* Devices */}
       <Card title="Zařízení zákazníka" accent="blue">
         {!devices || devices.length === 0 ? (
-          <div className="text-center py-8"><p className="text-[var(--color-text-secondary)]">Žádná zařízení</p></div>
+          <div className="text-center py-8"><p className="text-muted-foreground">Žádná zařízení</p></div>
         ) : (
           <div className="flex flex-col divide-y divide-gray-100 -my-1">
             {devices.map((dev) => (
@@ -238,9 +238,9 @@ export default function ZakaznikDetail() {
                 className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 py-3 cursor-pointer hover:bg-blue-50/50 -mx-4 px-4 transition-colors"
                 onClick={() => navigate(`/zarizeni/${dev.id}`)}
               >
-                <span className="font-semibold text-[var(--color-text)]">{dev.name}</span>
+                <span className="font-semibold text-foreground">{dev.name}</span>
                 <Badge variant="blue">{getDeviceCategoryLabel(dev.category)}</Badge>
-                <span className="text-gray-500 text-sm">
+                <span className="text-muted-foreground text-sm">
                   {dev.manufacturer} {dev.model}
                 </span>
               </div>
@@ -261,7 +261,7 @@ export default function ZakaznikDetail() {
           </Button>
         </div>
         {sortedOrders.length === 0 ? (
-          <div className="text-center py-8"><p className="text-[var(--color-text-secondary)]">Žádné zakázky</p></div>
+          <div className="text-center py-8"><p className="text-muted-foreground">Žádné zakázky</p></div>
         ) : (
           <div className="flex flex-col divide-y divide-gray-100 -my-1">
             {sortedOrders.map((order) => (
@@ -270,14 +270,14 @@ export default function ZakaznikDetail() {
                 className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 py-3 cursor-pointer hover:bg-blue-50/50 -mx-4 px-4 transition-colors"
                 onClick={() => navigate(`/zakazky/${order.id}`)}
               >
-                <span className="font-semibold text-[var(--color-text)] shrink-0">
+                <span className="font-semibold text-foreground shrink-0">
                   {order.plannedDate ? formatDate(order.plannedDate) : formatDate(order.createdAt)}
                 </span>
                 <Badge variant={getOrderStatusColor(order.status) as any}>
                   {getOrderStatusLabel(order.status)}
                 </Badge>
-                <span className="text-gray-500 text-sm">{getOrderTypeLabel(order.type)}</span>
-                <span className="text-gray-500 text-sm sm:ml-auto truncate">{order.address}</span>
+                <span className="text-muted-foreground text-sm">{getOrderTypeLabel(order.type)}</span>
+                <span className="text-muted-foreground text-sm sm:ml-auto truncate">{order.address}</span>
               </div>
             ))}
           </div>
@@ -387,7 +387,7 @@ export default function ZakaznikDetail() {
           </>
         }
       >
-        <p className="text-base text-[var(--color-text)]">
+        <p className="text-base text-foreground">
           Opravdu chcete smazat zákazníka <strong>{customer.name}</strong>? Tato akce je nevratná.
         </p>
       </Modal>
