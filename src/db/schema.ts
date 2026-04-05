@@ -27,7 +27,7 @@ export class RevizeDB extends Dexie {
     this.version(2).stores({
       customers: 'id, name, type, phone',
       objects: 'id, customerId, type, address',
-      devices: 'id, objectId, customerId, category, manufacturer',
+      devices: 'id, objectId, customerId, category, manufacturer, pressureCategory, medium',
       orders: 'id, customerId, objectId, type, status, plannedDate, createdAt',
       revisionReports: 'id, reportNumber, orderId, customerId, type, date, conclusion',
       defects: 'id, revisionReportId, severity, status',

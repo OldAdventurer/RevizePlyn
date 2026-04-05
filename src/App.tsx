@@ -19,6 +19,7 @@ import FakturyList from './pages/finance/FakturyList'
 import FakturaDetail from './pages/finance/FakturaDetail'
 import FakturaForm from './pages/finance/FakturaForm'
 import NastaveniPage from './pages/nastaveni/NastaveniPage'
+import LhutnikPage from './pages/lhutnik/LhutnikPage'
 import ToastContainer from './components/ui/Toast'
 import NotFound from './pages/NotFound'
 
@@ -55,6 +56,7 @@ export default function App() {
           <Route path="/zakaznici/:id" element={<ZakaznikDetail />} />
           <Route path="/revizni-zpravy" element={<RevizeList />} />
           <Route path="/revizni-zpravy/:id" element={<RevizeDetail />} />
+          <Route path="/lhutnik" element={<LhutnikPage />} />
           <Route path="/finance" element={<FinanceDashboard />} />
           <Route path="/finance/faktury" element={<FakturyList />} />
           <Route path="/finance/faktury/nova" element={<FakturaForm />} />

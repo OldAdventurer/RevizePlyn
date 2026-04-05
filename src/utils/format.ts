@@ -3,6 +3,8 @@ import type {
   OrderType,
   RevisionType,
   DeviceCategory,
+  PressureCategory,
+  Medium,
   RevisionConclusion,
   DefectSeverity,
   CustomerType,
@@ -20,6 +22,14 @@ export function getDeviceCategoryIcon(category: DeviceCategory): string {
     'sporak': '🍳',
     'rozvod': '🔧',
     'regulator': '⚙️',
+    'kompresor': '🏭',
+    'vzduchojimac': '🛢️',
+    'susicka': '💨',
+    'vtl-potrubi': '🔴',
+    'stl-potrubi': '🟠',
+    'kotelna': '🏗️',
+    'prumyslovy-horak': '🔥',
+    'filtr': '🧹',
     'ostatni': '📦',
   }
   return icons[category] || '📦'
@@ -98,6 +108,7 @@ export function getRevisionTypeLabel(type: RevisionType): string {
     vychozi: 'Výchozí revize',
     provozni: 'Provozní revize',
     mimoradna: 'Mimořádná revize',
+    znovuuvedeni: 'Znovuuvedení do provozu',
   }
   return map[type]
 }
@@ -109,9 +120,34 @@ export function getDeviceCategoryLabel(category: DeviceCategory): string {
     sporak: 'Sporák',
     rozvod: 'Plynový rozvod',
     regulator: 'Regulátor',
+    kompresor: 'Kompresor',
+    vzduchojimac: 'Vzduchojímač',
+    susicka: 'Sušička vzduchu',
+    'vtl-potrubi': 'VTL potrubí',
+    'stl-potrubi': 'STL potrubí',
+    kotelna: 'Kotelna',
+    'prumyslovy-horak': 'Průmyslový hořák',
+    filtr: 'Filtr',
     ostatni: 'Ostatní',
   }
   return map[category]
+}
+
+export function getPressureCategoryLabel(pc: PressureCategory): string {
+  const map: Record<PressureCategory, string> = {
+    NTL: 'NTL — Nízkotlaké',
+    STL: 'STL — Středotlaké',
+    VTL: 'VTL — Vysokotlaké',
+  }
+  return map[pc]
+}
+
+export function getMediumLabel(m: Medium): string {
+  const map: Record<Medium, string> = {
+    plyn: 'Plyn',
+    'tlakovy-vzduch': 'Tlakový vzduch',
+  }
+  return map[m]
 }
 
 export function getConclusionLabel(conclusion: RevisionConclusion): string {

@@ -1,10 +1,12 @@
 export type OrderStatus = 'nova' | 'naplanovana' | 'probiha' | 'dokoncena' | 'fakturovano' | 'odlozena' | 'zrusena'
 export type OrderType = 'nova-stavba' | 'rekonstrukce' | 'pravidelna-revize' | 'pravidelna-kontrola' | 'mimoradna-revize' | 'oprava-revize'
-export type RevisionType = 'vychozi' | 'provozni' | 'mimoradna'
+export type RevisionType = 'vychozi' | 'provozni' | 'mimoradna' | 'znovuuvedeni'
 export type DefectSeverity = 'A' | 'B' | 'C'
 export type DefectStatus = 'neodstranena' | 'odstranena'
 export type RevisionConclusion = 'schopne' | 's-vyhradami' | 'neschopne'
-export type DeviceCategory = 'kotel' | 'ohrivac' | 'sporak' | 'rozvod' | 'regulator' | 'ostatni'
+export type DeviceCategory = 'kotel' | 'ohrivac' | 'sporak' | 'rozvod' | 'regulator' | 'kompresor' | 'vzduchojimac' | 'susicka' | 'vtl-potrubi' | 'stl-potrubi' | 'kotelna' | 'prumyslovy-horak' | 'filtr' | 'ostatni'
+export type PressureCategory = 'NTL' | 'STL' | 'VTL'
+export type Medium = 'plyn' | 'tlakovy-vzduch'
 export type CustomerType = 'fyzicka-osoba' | 'firma'
 export type ObjectType = 'rodinny-dum' | 'bytovy-dum' | 'byt' | 'provozovna' | 'vyrobni-hala' | 'ostatni'
 export type Priority = 'normalni' | 'specha'
@@ -56,6 +58,8 @@ export interface Device {
   objectId: string
   customerId: string
   category: DeviceCategory
+  pressureCategory: PressureCategory
+  medium: Medium
   name: string
   manufacturer: string
   model: string
@@ -65,6 +69,11 @@ export interface Device {
   location?: string
   technicalParams?: string
   power?: string
+  volume?: string
+  maxPressure?: string
+  maxTemperature?: string
+  revisionPeriodMonths: number
+  alertBeforeMonths: number
   note?: string
 }
 

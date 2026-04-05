@@ -15,7 +15,7 @@ import { ListSkeleton } from '../../components/ui/Skeleton'
 import Modal from '../../components/ui/Modal'
 import { Plus, QrCode, Wrench } from 'lucide-react'
 import EmptyState from '../../components/ui/EmptyState'
-import type { Device, DeviceCategory } from '../../types'
+import type { Device, DeviceCategory, PressureCategory, Medium } from '../../types'
 import { toast } from '../../stores/toastStore'
 
 const categoryOptions = [
@@ -25,6 +25,14 @@ const categoryOptions = [
   { value: 'sporak', label: 'Sporák' },
   { value: 'rozvod', label: 'Rozvod' },
   { value: 'regulator', label: 'Regulátor' },
+  { value: 'kompresor', label: 'Kompresor' },
+  { value: 'vzduchojimac', label: 'Vzduchojímač' },
+  { value: 'susicka', label: 'Sušička vzduchu' },
+  { value: 'vtl-potrubi', label: 'VTL potrubí' },
+  { value: 'stl-potrubi', label: 'STL potrubí' },
+  { value: 'kotelna', label: 'Kotelna' },
+  { value: 'prumyslovy-horak', label: 'Průmyslový hořák' },
+  { value: 'filtr', label: 'Filtr' },
   { value: 'ostatni', label: 'Ostatní' },
 ]
 
@@ -34,18 +42,33 @@ const categoryBadgeColor: Record<DeviceCategory, 'blue' | 'green' | 'yellow' | '
   sporak: 'orange',
   rozvod: 'indigo',
   regulator: 'emerald',
+  kompresor: 'yellow',
+  vzduchojimac: 'yellow',
+  susicka: 'blue',
+  'vtl-potrubi': 'red',
+  'stl-potrubi': 'orange',
+  kotelna: 'red',
+  'prumyslovy-horak': 'red',
+  filtr: 'green',
   ostatni: 'gray',
 }
 
 const emptyForm = {
   name: '',
   category: 'kotel' as DeviceCategory,
+  pressureCategory: 'NTL' as PressureCategory,
+  medium: 'plyn' as Medium,
   manufacturer: '',
   model: '',
   serialNumber: '',
   yearOfManufacture: '',
   yearOfInstallation: '',
   power: '',
+  volume: '',
+  maxPressure: '',
+  maxTemperature: '',
+  revisionPeriodMonths: '36',
+  alertBeforeMonths: '2',
   location: '',
   technicalParams: '',
   customerId: '',
@@ -144,6 +167,8 @@ export default function ZarizeniList() {
       objectId: form.objectId,
       customerId: form.customerId,
       category: form.category,
+      pressureCategory: form.pressureCategory,
+      medium: form.medium,
       name: form.name,
       manufacturer: form.manufacturer,
       model: form.model,
@@ -151,6 +176,11 @@ export default function ZarizeniList() {
       yearOfManufacture: form.yearOfManufacture ? Number(form.yearOfManufacture) : undefined,
       yearOfInstallation: form.yearOfInstallation ? Number(form.yearOfInstallation) : undefined,
       power: form.power || undefined,
+      volume: form.volume || undefined,
+      maxPressure: form.maxPressure || undefined,
+      maxTemperature: form.maxTemperature || undefined,
+      revisionPeriodMonths: Number(form.revisionPeriodMonths) || 36,
+      alertBeforeMonths: Number(form.alertBeforeMonths) || 2,
       location: form.location || undefined,
       technicalParams: form.technicalParams || undefined,
       note: form.note || undefined,
@@ -252,17 +282,31 @@ export default function ZarizeniList() {
           <Input label="Název *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
           <Select
             label="Kategorie"
-            options={[
-              { value: 'kotel', label: 'Kotel' },
-              { value: 'ohrivac', label: 'Průtokový ohřívač' },
-              { value: 'sporak', label: 'Sporák' },
-              { value: 'rozvod', label: 'Plynový rozvod' },
-              { value: 'regulator', label: 'Regulátor' },
-              { value: 'ostatni', label: 'Ostatní' },
-            ]}
+            options={categoryOptions.filter(o => o.value !== '')}
             value={form.category}
             onChange={(e) => setForm({ ...form, category: e.target.value as DeviceCategory })}
           />
+          <div className="grid grid-cols-2 gap-4">
+            <Select
+              label="Tlaková kategorie"
+              options={[
+                { value: 'NTL', label: 'NTL — Nízkotlaké' },
+                { value: 'STL', label: 'STL — Středotlaké' },
+                { value: 'VTL', label: 'VTL — Vysokotlaké' },
+              ]}
+              value={form.pressureCategory}
+              onChange={(e) => setForm({ ...form, pressureCategory: e.target.value as PressureCategory })}
+            />
+            <Select
+              label="Médium"
+              options={[
+                { value: 'plyn', label: 'Plyn' },
+                { value: 'tlakovy-vzduch', label: 'Tlakový vzduch' },
+              ]}
+              value={form.medium}
+              onChange={(e) => setForm({ ...form, medium: e.target.value as Medium })}
+            />
+          </div>
           <Input label="Výrobce" value={form.manufacturer} onChange={(e) => setForm({ ...form, manufacturer: e.target.value })} />
           <Input label="Model" value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} />
           <Input label="Sériové číslo" value={form.serialNumber} onChange={(e) => setForm({ ...form, serialNumber: e.target.value })} />
@@ -271,8 +315,17 @@ export default function ZarizeniList() {
             <Input label="Rok instalace" type="number" value={form.yearOfInstallation} onChange={(e) => setForm({ ...form, yearOfInstallation: e.target.value })} />
           </div>
           <Input label="Výkon" value={form.power} onChange={(e) => setForm({ ...form, power: e.target.value })} />
+          <div className="grid grid-cols-3 gap-4">
+            <Input label="Objem" placeholder="např. 300 L" value={form.volume} onChange={(e) => setForm({ ...form, volume: e.target.value })} />
+            <Input label="Max. tlak" placeholder="např. 10 bar" value={form.maxPressure} onChange={(e) => setForm({ ...form, maxPressure: e.target.value })} />
+            <Input label="Max. teplota" placeholder="např. 100 °C" value={form.maxTemperature} onChange={(e) => setForm({ ...form, maxTemperature: e.target.value })} />
+          </div>
           <Input label="Umístění" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
           <Input label="Technické parametry" value={form.technicalParams} onChange={(e) => setForm({ ...form, technicalParams: e.target.value })} />
+          <div className="grid grid-cols-2 gap-4">
+            <Input label="Perioda revize (měsíce)" type="number" value={form.revisionPeriodMonths} onChange={(e) => setForm({ ...form, revisionPeriodMonths: e.target.value })} />
+            <Input label="Upozornit předem (měsíce)" type="number" value={form.alertBeforeMonths} onChange={(e) => setForm({ ...form, alertBeforeMonths: e.target.value })} />
+          </div>
           <Select
             label="Zákazník *"
             options={(customers ?? []).map((c) => ({ value: c.id, label: c.name }))}

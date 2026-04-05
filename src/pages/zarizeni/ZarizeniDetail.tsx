@@ -4,7 +4,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { DetailSkeleton } from '../../components/ui/Skeleton'
 import { usePageTitle } from '../../hooks/usePageTitle'
-import { formatDate, getDeviceCategoryLabel, getConclusionLabel, getRevisionTypeLabel, getDeviceCategoryIcon } from '../../utils/format'
+import { formatDate, getDeviceCategoryLabel, getConclusionLabel, getRevisionTypeLabel, getDeviceCategoryIcon, getPressureCategoryLabel, getMediumLabel } from '../../utils/format'
 import Card from '../../components/ui/Card'
 import Badge from '../../components/ui/Badge'
 import Button from '../../components/ui/Button'
@@ -13,7 +13,7 @@ import Select from '../../components/ui/Select'
 import Modal from '../../components/ui/Modal'
 import { QRCodeSVG } from 'qrcode.react'
 import { ArrowLeft, QrCode, Edit, Trash2 } from 'lucide-react'
-import type { DeviceCategory, RevisionConclusion } from '../../types'
+import type { DeviceCategory, PressureCategory, Medium, RevisionConclusion } from '../../types'
 import { toast } from '../../stores/toastStore'
 
 const conclusionBadge: Record<RevisionConclusion, 'green' | 'yellow' | 'red'> = {
@@ -28,6 +28,14 @@ const categoryBadge: Record<DeviceCategory, 'blue' | 'green' | 'yellow' | 'red' 
   sporak: 'orange',
   rozvod: 'indigo',
   regulator: 'emerald',
+  kompresor: 'yellow',
+  vzduchojimac: 'yellow',
+  susicka: 'blue',
+  'vtl-potrubi': 'red',
+  'stl-potrubi': 'orange',
+  kotelna: 'red',
+  'prumyslovy-horak': 'red',
+  filtr: 'green',
   ostatni: 'gray',
 }
 
@@ -45,9 +53,12 @@ export default function ZarizeniDetail() {
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [form, setForm] = useState({
-    name: '', category: 'kotel' as DeviceCategory, manufacturer: '', model: '',
+    name: '', category: 'kotel' as DeviceCategory, pressureCategory: 'NTL' as PressureCategory,
+    medium: 'plyn' as Medium, manufacturer: '', model: '',
     serialNumber: '', yearOfManufacture: '', yearOfInstallation: '',
-    power: '', location: '', technicalParams: '', customerId: '', objectId: '', note: '',
+    power: '', volume: '', maxPressure: '', maxTemperature: '',
+    revisionPeriodMonths: '36', alertBeforeMonths: '2',
+    location: '', technicalParams: '', customerId: '', objectId: '', note: '',
   })
 
   const deviceReports = useMemo(
@@ -65,12 +76,19 @@ export default function ZarizeniDetail() {
     setForm({
       name: device.name,
       category: device.category,
+      pressureCategory: device.pressureCategory,
+      medium: device.medium,
       manufacturer: device.manufacturer,
       model: device.model,
       serialNumber: device.serialNumber ?? '',
       yearOfManufacture: device.yearOfManufacture?.toString() ?? '',
       yearOfInstallation: device.yearOfInstallation?.toString() ?? '',
       power: device.power ?? '',
+      volume: device.volume ?? '',
+      maxPressure: device.maxPressure ?? '',
+      maxTemperature: device.maxTemperature ?? '',
+      revisionPeriodMonths: device.revisionPeriodMonths.toString(),
+      alertBeforeMonths: device.alertBeforeMonths.toString(),
       location: device.location ?? '',
       technicalParams: device.technicalParams ?? '',
       customerId: device.customerId,
@@ -86,12 +104,19 @@ export default function ZarizeniDetail() {
       ...device,
       name: form.name,
       category: form.category,
+      pressureCategory: form.pressureCategory,
+      medium: form.medium,
       manufacturer: form.manufacturer,
       model: form.model,
       serialNumber: form.serialNumber || undefined,
       yearOfManufacture: form.yearOfManufacture ? Number(form.yearOfManufacture) : undefined,
       yearOfInstallation: form.yearOfInstallation ? Number(form.yearOfInstallation) : undefined,
       power: form.power || undefined,
+      volume: form.volume || undefined,
+      maxPressure: form.maxPressure || undefined,
+      maxTemperature: form.maxTemperature || undefined,
+      revisionPeriodMonths: Number(form.revisionPeriodMonths) || 36,
+      alertBeforeMonths: Number(form.alertBeforeMonths) || 2,
       location: form.location || undefined,
       technicalParams: form.technicalParams || undefined,
       customerId: form.customerId,
@@ -156,14 +181,21 @@ export default function ZarizeniDetail() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Device info */}
         <Card title="Informace o zařízení" accent="blue" className="lg:col-span-2">
+          <InfoRow label="Tlaková kategorie" value={getPressureCategoryLabel(device.pressureCategory)} />
+          <InfoRow label="Médium" value={getMediumLabel(device.medium)} />
           <InfoRow label="Výrobce" value={device.manufacturer} />
           <InfoRow label="Model" value={device.model} />
           <InfoRow label="Sériové číslo" value={device.serialNumber} />
           <InfoRow label="Rok výroby" value={device.yearOfManufacture} />
           <InfoRow label="Rok instalace" value={device.yearOfInstallation} />
           <InfoRow label="Výkon" value={device.power} />
+          {device.volume && <InfoRow label="Objem" value={device.volume} />}
+          {device.maxPressure && <InfoRow label="Max. tlak" value={device.maxPressure} />}
+          {device.maxTemperature && <InfoRow label="Max. teplota" value={device.maxTemperature} />}
           <InfoRow label="Umístění" value={device.location} />
           <InfoRow label="Technické parametry" value={device.technicalParams} />
+          <InfoRow label="Perioda revize" value={`${device.revisionPeriodMonths} měsíců (${(device.revisionPeriodMonths / 12).toFixed(device.revisionPeriodMonths % 12 === 0 ? 0 : 1)} let)`} />
+          <InfoRow label="Upozornění předem" value={`${device.alertBeforeMonths} měsíce`} />
           <div className="flex flex-col sm:flex-row sm:items-baseline py-2 border-b border-[var(--color-border)]/40">
             <span className="font-medium text-[var(--color-text-secondary)] sm:w-52 shrink-0">Zákazník</span>
             {customer ? (
@@ -236,11 +268,40 @@ export default function ZarizeniDetail() {
               { value: 'sporak', label: 'Sporák' },
               { value: 'rozvod', label: 'Plynový rozvod' },
               { value: 'regulator', label: 'Regulátor' },
+              { value: 'kompresor', label: 'Kompresor' },
+              { value: 'vzduchojimac', label: 'Vzduchojímač' },
+              { value: 'susicka', label: 'Sušička vzduchu' },
+              { value: 'vtl-potrubi', label: 'VTL potrubí' },
+              { value: 'stl-potrubi', label: 'STL potrubí' },
+              { value: 'kotelna', label: 'Kotelna' },
+              { value: 'prumyslovy-horak', label: 'Průmyslový hořák' },
+              { value: 'filtr', label: 'Filtr' },
               { value: 'ostatni', label: 'Ostatní' },
             ]}
             value={form.category}
             onChange={(e) => setForm({ ...form, category: e.target.value as DeviceCategory })}
           />
+          <div className="grid grid-cols-2 gap-4">
+            <Select
+              label="Tlaková kategorie"
+              options={[
+                { value: 'NTL', label: 'NTL — Nízkotlaké' },
+                { value: 'STL', label: 'STL — Středotlaké' },
+                { value: 'VTL', label: 'VTL — Vysokotlaké' },
+              ]}
+              value={form.pressureCategory}
+              onChange={(e) => setForm({ ...form, pressureCategory: e.target.value as PressureCategory })}
+            />
+            <Select
+              label="Médium"
+              options={[
+                { value: 'plyn', label: 'Plyn' },
+                { value: 'tlakovy-vzduch', label: 'Tlakový vzduch' },
+              ]}
+              value={form.medium}
+              onChange={(e) => setForm({ ...form, medium: e.target.value as Medium })}
+            />
+          </div>
           <Input label="Výrobce" value={form.manufacturer} onChange={(e) => setForm({ ...form, manufacturer: e.target.value })} />
           <Input label="Model" value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} />
           <Input label="Sériové číslo" value={form.serialNumber} onChange={(e) => setForm({ ...form, serialNumber: e.target.value })} />
@@ -249,8 +310,17 @@ export default function ZarizeniDetail() {
             <Input label="Rok instalace" type="number" value={form.yearOfInstallation} onChange={(e) => setForm({ ...form, yearOfInstallation: e.target.value })} />
           </div>
           <Input label="Výkon" value={form.power} onChange={(e) => setForm({ ...form, power: e.target.value })} />
+          <div className="grid grid-cols-3 gap-4">
+            <Input label="Objem" placeholder="např. 300 L" value={form.volume} onChange={(e) => setForm({ ...form, volume: e.target.value })} />
+            <Input label="Max. tlak" placeholder="např. 10 bar" value={form.maxPressure} onChange={(e) => setForm({ ...form, maxPressure: e.target.value })} />
+            <Input label="Max. teplota" placeholder="např. 100 °C" value={form.maxTemperature} onChange={(e) => setForm({ ...form, maxTemperature: e.target.value })} />
+          </div>
           <Input label="Umístění" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
           <Input label="Technické parametry" value={form.technicalParams} onChange={(e) => setForm({ ...form, technicalParams: e.target.value })} />
+          <div className="grid grid-cols-2 gap-4">
+            <Input label="Perioda revize (měsíce)" type="number" value={form.revisionPeriodMonths} onChange={(e) => setForm({ ...form, revisionPeriodMonths: e.target.value })} />
+            <Input label="Upozornit předem (měsíce)" type="number" value={form.alertBeforeMonths} onChange={(e) => setForm({ ...form, alertBeforeMonths: e.target.value })} />
+          </div>
           <Select
             label="Zákazník *"
             options={(customers ?? []).map((c) => ({ value: c.id, label: c.name }))}
