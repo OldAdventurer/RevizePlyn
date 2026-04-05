@@ -43,30 +43,30 @@ export default function Table<T>({
       })
     : data
 
-  const rowClasses = onRowClick ? 'cursor-pointer hover:bg-blue-50/50' : ''
+  const rowClasses = onRowClick ? 'cursor-pointer hover:bg-neutral-50' : ''
 
   return (
     <div>
       {/* Desktop table */}
       <div className="hidden md:block">
-        <div className="bg-white rounded-xl shadow-[var(--shadow-md)] border border-[var(--color-border)]/60 overflow-hidden">
+        <div className="bg-white rounded-lg border border-[var(--color-border)] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="bg-gray-50/80 border-b border-[var(--color-border)]/60">
+                <tr className="border-b border-[var(--color-border)]">
                   {columns.map((col) => (
                     <th
                       key={col.key}
-                      className={`text-left py-2 px-3 text-sm font-semibold text-[var(--color-text-secondary)] uppercase tracking-wide ${
-                        col.sortable ? 'cursor-pointer hover:bg-gray-100/80 select-none transition-colors' : ''
+                      className={`text-left py-2.5 px-4 text-xs font-medium text-[var(--color-text-secondary)] ${
+                        col.sortable ? 'cursor-pointer hover:text-[var(--color-text)] select-none transition-colors' : ''
                       }`}
                       onClick={col.sortable ? () => handleSort(col.key) : undefined}
                     >
-                      <span className="inline-flex items-center gap-1.5">
+                      <span className="inline-flex items-center gap-1">
                         {col.header}
                         {col.sortable && sortKey === col.key && (
                           <span className="text-[var(--color-primary)]">
-                            {sortDir === 'asc' ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                            {sortDir === 'asc' ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                           </span>
                         )}
                       </span>
@@ -75,16 +75,14 @@ export default function Table<T>({
                 </tr>
               </thead>
               <tbody>
-                {sortedData.map((row, idx) => (
+                {sortedData.map((row) => (
                   <tr
                     key={keyExtractor(row)}
-                    className={`border-b border-[var(--color-border)]/40 transition-colors ${
-                      idx % 2 === 1 ? 'bg-gray-50/50' : ''
-                    } ${rowClasses}`}
+                    className={`border-b border-[var(--color-border-light)] last:border-b-0 transition-colors ${rowClasses}`}
                     onClick={onRowClick ? () => onRowClick(row) : undefined}
                   >
                     {columns.map((col) => (
-                      <td key={col.key} className="py-2 px-3 text-base">
+                      <td key={col.key} className="py-2.5 px-4 text-sm">
                         {col.render
                           ? col.render(row)
                           : String((row as Record<string, unknown>)[col.key] ?? '')}
@@ -99,19 +97,19 @@ export default function Table<T>({
       </div>
 
       {/* Mobile card layout */}
-      <div className="md:hidden flex flex-col gap-3">
+      <div className="md:hidden flex flex-col gap-2">
         {sortedData.map((row) => (
           <div
             key={keyExtractor(row)}
-            className={`bg-white rounded-xl border border-[var(--color-border)]/60 p-3 shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] transition-all duration-200 ${
-              onRowClick ? 'cursor-pointer active:bg-gray-50' : ''
+            className={`bg-white rounded-lg border border-[var(--color-border)] p-3 ${
+              onRowClick ? 'cursor-pointer active:bg-neutral-50' : ''
             }`}
             onClick={onRowClick ? () => onRowClick(row) : undefined}
           >
             {columns.map((col) => (
-              <div key={col.key} className="flex justify-between items-baseline py-1">
-                <span className="font-medium text-[var(--color-text-secondary)] text-sm">{col.header}</span>
-                <span className="text-base text-[var(--color-text)] text-right ml-2">
+              <div key={col.key} className="flex justify-between items-baseline py-0.5">
+                <span className="text-xs text-[var(--color-text-secondary)]">{col.header}</span>
+                <span className="text-sm text-[var(--color-text)] text-right ml-2">
                   {col.render
                     ? col.render(row)
                     : String((row as Record<string, unknown>)[col.key] ?? '')}

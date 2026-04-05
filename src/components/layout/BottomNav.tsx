@@ -11,7 +11,7 @@ const tabs = [
 
 export default function BottomNav() {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 backdrop-blur-xl bg-white/90 shadow-[0_-2px_10px_rgba(0,0,0,0.06)] z-30 md:hidden pb-[env(safe-area-inset-bottom)]">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-[var(--color-border)] z-30 md:hidden pb-[env(safe-area-inset-bottom)]">
       <div className="flex items-stretch">
         {tabs.map((tab) => (
           <NavLink
@@ -19,19 +19,17 @@ export default function BottomNav() {
             to={tab.to}
             end={tab.to === '/'}
             className={({ isActive }) =>
-              `flex-1 flex flex-col items-center justify-center min-h-[56px] gap-0.5 text-[10px] font-medium transition-all duration-200 ${
+              `flex-1 flex flex-col items-center justify-center h-14 gap-0.5 text-[10px] font-medium transition-colors ${
                 isActive
                   ? 'text-[var(--color-primary)]'
-                  : 'text-gray-400 hover:text-[var(--color-text)]'
+                  : 'text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)]'
               }`
             }
           >
             {({ isActive }) => (
               <>
-                <span className={`transition-all duration-200 ${isActive ? 'bg-[var(--color-primary)] text-white rounded-full p-1' : 'p-1'}`}>
-                  <tab.icon size={18} />
-                </span>
-                <span className="truncate max-w-full">{tab.label}</span>
+                <tab.icon size={18} strokeWidth={isActive ? 2.5 : 1.5} />
+                <span>{tab.label}</span>
               </>
             )}
           </NavLink>

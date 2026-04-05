@@ -25,20 +25,20 @@ export default function SearchBar({
 
   return (
     <div className={`relative w-full ${className}`}>
-      <Search size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+      <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-tertiary)] pointer-events-none" />
       <input
         type="search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={placeholder}
-        className="w-full min-h-[38px] text-base py-2 pl-10 pr-10 border border-[var(--color-border)] rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30 focus:border-[var(--color-primary)] transition-all duration-200 placeholder:text-gray-400"
+        className="w-full h-9 text-sm pl-9 pr-9 border border-[var(--color-border)] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/10 focus:border-[var(--color-primary)] transition-colors duration-150 placeholder:text-[var(--color-text-tertiary)]"
       />
       {query && (
         <button
           onClick={() => setQuery('')}
-          className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-neutral-100 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)] transition-colors cursor-pointer"
         >
-          <X size={16} />
+          <X size={14} />
         </button>
       )}
     </div>

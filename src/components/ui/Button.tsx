@@ -8,17 +8,17 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantClasses: Record<string, string> = {
-  primary: 'bg-gradient-to-b from-[var(--color-primary-light)] to-[var(--color-primary)] text-white shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/30 hover:brightness-110 active:brightness-95',
-  secondary: 'bg-white border border-[var(--color-border)] text-[var(--color-text)] shadow-sm hover:bg-gray-50 hover:border-gray-300 active:bg-gray-100',
-  danger: 'bg-gradient-to-b from-red-500 to-[var(--color-error)] text-white shadow-md shadow-red-500/20 hover:shadow-lg hover:shadow-red-500/30 hover:brightness-110',
-  ghost: 'bg-transparent text-[var(--color-text-secondary)] hover:bg-gray-100 hover:text-[var(--color-text)]',
-  success: 'bg-gradient-to-b from-emerald-400 to-[var(--color-success)] text-white shadow-md shadow-emerald-500/20 hover:shadow-lg hover:shadow-emerald-500/30 hover:brightness-110',
+  primary: 'bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] active:bg-[var(--color-primary-hover)]',
+  secondary: 'bg-white border border-[var(--color-border)] text-[var(--color-text)] hover:bg-neutral-50 active:bg-neutral-100',
+  danger: 'bg-red-600 text-white hover:bg-red-700 active:bg-red-800',
+  ghost: 'bg-transparent text-[var(--color-text-secondary)] hover:bg-neutral-100 hover:text-[var(--color-text)]',
+  success: 'bg-emerald-600 text-white hover:bg-emerald-700 active:bg-emerald-800',
 }
 
 const sizeClasses: Record<string, string> = {
-  sm: 'min-h-[32px] px-3 py-1 text-sm rounded-lg',
-  md: 'min-h-[38px] px-4 py-2 text-base rounded-xl',
-  lg: 'min-h-[44px] px-5 py-2.5 text-lg rounded-xl',
+  sm: 'h-8 px-3 text-sm rounded-md gap-1.5',
+  md: 'h-9 px-4 text-sm rounded-lg gap-2',
+  lg: 'h-10 px-5 text-base rounded-lg gap-2',
 }
 
 export default function Button({
@@ -31,7 +31,7 @@ export default function Button({
 }: ButtonProps) {
   return (
     <button
-      className={`inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+      className={`inline-flex items-center justify-center font-medium transition-colors duration-150 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
       {...props}
     >
       {icon && <span className="shrink-0">{icon}</span>}

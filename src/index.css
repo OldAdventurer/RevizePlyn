@@ -1,94 +1,80 @@
 @import "tailwindcss";
 
 :root {
-  /* Primary palette — rich blue with depth */
+  /* Primary — muted blue, not vibrant */
   --color-primary: #2563EB;
-  --color-primary-dark: #1D4ED8;
-  --color-primary-light: #3B82F6;
-  --color-primary-50: #EFF6FF;
-  --color-primary-100: #DBEAFE;
-  
-  /* Accent — warm amber for CTAs and highlights */
-  --color-accent: #F59E0B;
-  --color-accent-dark: #D97706;
-  
-  /* Status colors — vibrant but balanced */
-  --color-success: #10B981;
-  --color-success-light: #D1FAE5;
-  --color-warning: #F97316;
-  --color-warning-light: #FFF7ED;
-  --color-error: #EF4444;
-  --color-error-light: #FEF2F2;
-  
-  /* Neutrals — warm gray tones, not cold */
-  --color-text: #111827;
-  --color-text-secondary: #6B7280;
-  --color-bg: #FFFFFF;
-  --color-border: #E5E7EB;
-  --color-surface: #F8FAFC;
-  --color-surface-elevated: #FFFFFF;
-  
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.04);
+  --color-primary-hover: #1D4ED8;
+  --color-primary-light: #EFF6FF;
+
+  /* Status — used sparingly, for meaning only */
+  --color-success: #16a34a;
+  --color-warning: #ea580c;
+  --color-error: #dc2626;
+
+  /* Neutrals — true neutral gray */
+  --color-text: #1a1a1a;
+  --color-text-secondary: #737373;
+  --color-text-tertiary: #a3a3a3;
+  --color-bg: #ffffff;
+  --color-surface: #fafafa;
+  --color-border: #e5e5e5;
+  --color-border-light: #f0f0f0;
 }
 
 html {
-  font-size: 18px;
+  font-size: 16px;
   scroll-behavior: smooth;
 }
 
 body {
   color: var(--color-text);
   background: var(--color-surface);
-  line-height: 1.6;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   min-height: 100dvh;
 }
 
-/* Large touch targets for older users */
+/* Touch targets */
 button, a, input, select, textarea {
   min-height: 2.25rem;
 }
 
 input, select, textarea {
-  font-size: 1rem;
-  padding: 0.75rem;
+  font-size: 0.9375rem;
+  padding: 0.5rem 0.75rem;
   border: 1px solid var(--color-border);
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   background: var(--color-bg);
-  transition: all 0.2s ease;
+  transition: border-color 0.15s ease;
 }
 
 input:focus, select:focus, textarea:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-50);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
 }
 
-/* Modern scrollbar */
+/* Minimal scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+::-webkit-scrollbar-thumb { background: #d4d4d4; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #a3a3a3; }
 
-/* Status colors */
-.status-nova { @apply bg-blue-100 text-blue-800; }
-.status-naplanovana { @apply bg-indigo-100 text-indigo-800; }
-.status-probiha { @apply bg-yellow-100 text-yellow-800; }
-.status-dokoncena { @apply bg-green-100 text-green-800; }
-.status-fakturovano { @apply bg-emerald-100 text-emerald-800; }
-.status-odlozena { @apply bg-gray-100 text-gray-600; }
-.status-zrusena { @apply bg-red-100 text-red-800; }
+/* Status utility classes */
+.status-nova { @apply bg-blue-50 text-blue-700; }
+.status-naplanovana { @apply bg-violet-50 text-violet-700; }
+.status-probiha { @apply bg-amber-50 text-amber-700; }
+.status-dokoncena { @apply bg-emerald-50 text-emerald-700; }
+.status-fakturovano { @apply bg-teal-50 text-teal-700; }
+.status-odlozena { @apply bg-neutral-100 text-neutral-500; }
+.status-zrusena { @apply bg-red-50 text-red-700; }
 
-/* Severity badges */
-.severity-a { @apply bg-red-600 text-white font-bold; }
-.severity-b { @apply bg-orange-500 text-white font-bold; }
-.severity-c { @apply bg-blue-500 text-white; }
+/* Severity */
+.severity-a { @apply bg-red-600 text-white font-medium; }
+.severity-b { @apply bg-orange-500 text-white font-medium; }
+.severity-c { @apply bg-blue-500 text-white font-medium; }
 
 /* Print */
 @media print {
@@ -96,14 +82,14 @@ input:focus, select:focus, textarea:focus {
   body { font-size: 12pt; background: white; }
 }
 
-/* Smooth page transitions */
+/* Subtle page entrance */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .page-enter {
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeIn 0.2s ease-out;
 }
 
 @keyframes slideIn {

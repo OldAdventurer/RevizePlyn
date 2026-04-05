@@ -25,25 +25,25 @@ export default function Modal({ isOpen, onClose, title, children, footer }: Moda
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end md:items-center md:justify-center animate-[fadeIn_0.2s_ease-out]">
-      <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+    <div className="fixed inset-0 z-50 flex items-end md:items-center md:justify-center animate-[fadeIn_0.15s_ease-out]">
+      <div className="fixed inset-0 bg-black/30" onClick={onClose} />
       <div
         ref={dialogRef}
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="relative bg-white w-full md:max-w-lg rounded-t-xl md:rounded-xl shadow-2xl flex flex-col z-10 max-h-[90vh] md:max-h-[80vh] focus:outline-none animate-[fadeIn_0.2s_ease-out]"
+        className="relative bg-white w-full md:max-w-lg rounded-t-lg md:rounded-lg border border-[var(--color-border)] flex flex-col z-10 max-h-[90vh] md:max-h-[80vh] focus:outline-none shadow-xl"
       >
-        <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-border)]/60 shrink-0">
-          <h2 className="text-lg font-bold text-[var(--color-text)]">{title}</h2>
-          <button onClick={onClose} className="p-2 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer" aria-label="Zavřít">
-            <X size={22} />
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-[var(--color-border)] shrink-0">
+          <h2 className="text-base font-semibold text-[var(--color-text)]">{title}</h2>
+          <button onClick={onClose} className="p-1.5 rounded-md hover:bg-neutral-100 transition-colors cursor-pointer text-[var(--color-text-secondary)]" aria-label="Zavřít">
+            <X size={18} />
           </button>
         </div>
-        <div className="p-4 overflow-y-auto flex-1">{children}</div>
+        <div className="p-5 overflow-y-auto flex-1">{children}</div>
         {footer && (
-          <div className="px-4 py-3 border-t border-[var(--color-border)]/60 flex justify-end gap-3 shrink-0 bg-gray-50/50 rounded-b-xl">
+          <div className="px-5 py-3 border-t border-[var(--color-border)] flex justify-end gap-2 shrink-0">
             {footer}
           </div>
         )}
