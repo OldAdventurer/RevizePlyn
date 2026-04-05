@@ -45,6 +45,7 @@ export default function RevizeForm() {
   const technicianSetting = useLiveQuery(() => db.settings.get('technician'))
   const [selectedOrderId, setSelectedOrderId] = useState(orderId ?? '')
   const [selectedCustomerId, setSelectedCustomerId] = useState('')
+  const [customerQuery, setCustomerQuery] = useState('')
   const currentOrderId = orderId ?? selectedOrderId
   const selectableOrders = useMemo(
     () =>
@@ -62,6 +63,17 @@ export default function RevizeForm() {
     () => customers?.find((c) => c.id === effectiveCustomerId),
     [customers, effectiveCustomerId]
   )
+  const filteredCustomers = useMemo(() => {
+    const list = customers ?? []
+    const q = customerQuery.trim().toLowerCase()
+    if (!q) return list
+    return list.filter(
+      (c) =>
+        c.name.toLowerCase().includes(q) ||
+        c.address.toLowerCase().includes(q) ||
+        (c.ico ?? '').toLowerCase().includes(q)
+    )
+  }, [customers, customerQuery])
 
   const [reportNumber, setReportNumber] = useState('')
   const [revisionType, setRevisionType] = useState<RevisionType>('provozni')
@@ -248,16 +260,34 @@ export default function RevizeForm() {
         <h1 className="text-xl font-semibold text-foreground">Nová revizní zpráva</h1>
         <Card title="Výběr zákazníka">
           <p className="text-sm text-muted-foreground mb-4">Revizi můžete vytvořit i bez zakázky.</p>
-          <Select
-            value={selectedCustomerId}
-            onChange={(e) => {
-              setSelectedCustomerId(e.target.value)
-              setSelectedOrderId('')
-            }}
-            options={customers.map((c) => ({ value: c.id, label: c.name }))}
-            placeholder={customers.length ? 'Vyberte zákazníka' : 'Žádní zákazníci'}
-            disabled={customers.length === 0}
+          <Input
+            label="Hledat zákazníka"
+            value={customerQuery}
+            onChange={(e) => setCustomerQuery(e.target.value)}
+            placeholder="Název, adresa nebo IČO"
           />
+          <div className="mt-3 max-h-56 overflow-auto rounded-lg border border-border divide-y divide-border">
+            {filteredCustomers.length === 0 ? (
+              <p className="text-sm text-muted-foreground p-3">Žádný zákazník neodpovídá hledání</p>
+            ) : (
+              filteredCustomers.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => {
+                    setSelectedCustomerId(c.id)
+                    setSelectedOrderId('')
+                  }}
+                  className={`w-full text-left px-3 py-2.5 cursor-pointer transition-colors ${
+                    selectedCustomerId === c.id ? 'bg-primary/10 text-foreground' : 'hover:bg-muted/50'
+                  }`}
+                >
+                  <div className="text-sm font-medium">{c.name}</div>
+                  <div className="text-xs text-muted-foreground">{c.address}</div>
+                </button>
+              ))
+            )}
+          </div>
         </Card>
         <Card title="Volitelně zakázka">
           <Select
@@ -313,14 +343,34 @@ export default function RevizeForm() {
       {!orderId && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Card title="Zákazník">
-            <Select
-              value={selectedCustomerId}
-              onChange={(e) => {
-                setSelectedCustomerId(e.target.value)
-                setSelectedOrderId('')
-              }}
-              options={customers.map((c) => ({ value: c.id, label: c.name }))}
+            <Input
+              label="Hledat zákazníka"
+              value={customerQuery}
+              onChange={(e) => setCustomerQuery(e.target.value)}
+              placeholder="Název, adresa nebo IČO"
             />
+            <div className="mt-3 max-h-56 overflow-auto rounded-lg border border-border divide-y divide-border">
+              {filteredCustomers.length === 0 ? (
+                <p className="text-sm text-muted-foreground p-3">Žádný zákazník neodpovídá hledání</p>
+              ) : (
+                filteredCustomers.map((c) => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => {
+                      setSelectedCustomerId(c.id)
+                      setSelectedOrderId('')
+                    }}
+                    className={`w-full text-left px-3 py-2.5 cursor-pointer transition-colors ${
+                      selectedCustomerId === c.id ? 'bg-primary/10 text-foreground' : 'hover:bg-muted/50'
+                    }`}
+                  >
+                    <div className="text-sm font-medium">{c.name}</div>
+                    <div className="text-xs text-muted-foreground">{c.address}</div>
+                  </button>
+                ))
+              )}
+            </div>
           </Card>
           <Card title="Zakázka (volitelné)">
             <Select
