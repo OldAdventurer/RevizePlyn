@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '@/db/schema'
 import {
+  Command,
   CommandDialog,
   CommandEmpty,
   CommandGroup,
@@ -82,6 +83,7 @@ export default function CommandPalette({ open, onOpenChange }: CommandPalettePro
 
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
+      <Command shouldFilter={false}>
       <CommandInput
         placeholder="Hledat stránky, zákazníky, zakázky..."
         value={search}
@@ -124,6 +126,7 @@ export default function CommandPalette({ open, onOpenChange }: CommandPalettePro
           </>
         )}
       </CommandList>
+      </Command>
     </CommandDialog>
   )
 }

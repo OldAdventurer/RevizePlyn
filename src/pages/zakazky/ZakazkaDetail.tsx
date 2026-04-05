@@ -4,7 +4,6 @@ import { usePageTitle } from '../../hooks/usePageTitle'
 import { db } from '../../db/schema'
 import { formatDate, getOrderStatusLabel, getOrderStatusColor, getOrderTypeLabel } from '../../utils/format'
 import type { OrderStatus } from '../../types'
-import Card from '@/components/ui/card'
 import Badge from '@/components/ui/badge'
 import Button from '@/components/ui/button'
 import { ArrowLeft, Edit, Trash2, FileText, ChevronRight, Receipt } from 'lucide-react'
@@ -81,142 +80,119 @@ export default function ZakazkaDetail() {
   const canCreateReport = order.status === 'probiha' || order.status === 'dokoncena'
 
   return (
-    <div className="page-enter p-4 md:p-6 space-y-3">
+    <div className="page-enter space-y-6">
       {/* Back */}
-      <button onClick={() => navigate('/zakazky')} className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground font-medium mb-4 transition-colors cursor-pointer">
-        <ArrowLeft size={20} />
-        <span>Zpět na zakázky</span>
-      </button>
+      <Link to="/zakazky" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <ArrowLeft size={16} />
+        Zpět na zakázky
+      </Link>
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">{getOrderTypeLabel(order.type)}</h1>
-          <p className="text-muted-foreground mt-1">{order.address}</p>
+          <div className="flex items-center gap-3 mb-1">
+            <h1 className="text-xl font-semibold text-foreground">{getOrderTypeLabel(order.type)}</h1>
+            <Badge variant={getOrderStatusColor(order.status) as any}>
+              {getOrderStatusLabel(order.status)}
+            </Badge>
+            {order.priority === 'specha' && <Badge variant="red">Spěchá</Badge>}
+          </div>
+          <p className="text-sm text-muted-foreground">{order.address}</p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Badge variant={getOrderStatusColor(order.status) as 'blue' | 'green' | 'yellow' | 'red' | 'gray' | 'indigo' | 'emerald' | 'orange'}>
-            {getOrderStatusLabel(order.status)}
-          </Badge>
-          {order.priority === 'specha' && <Badge variant="red">Spěchá</Badge>}
+        <div className="flex gap-2">
+          <Link to={`/zakazky/${id}/upravit`}>
+            <Button variant="outline" size="sm" icon={<Edit size={14} />}>Upravit</Button>
+          </Link>
+          <Button variant="ghost" size="sm" icon={<Trash2 size={14} />} onClick={handleDelete} className="text-destructive hover:text-destructive" />
         </div>
       </div>
 
-      {/* Info card */}
-      <Card title="Informace o zakázce" accent="blue">
-        <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
-          <div>
-            <dt className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-1">Zákazník</dt>
-            <dd className="mt-0.5 font-medium">
-              {customer ? (
-                <Link
-                  to={`/zakaznici/${customer.id}`}
-                  className="text-primary hover:underline font-medium"
-                >
-                  {customer.name}
-                </Link>
-              ) : (
-                '—'
-              )}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-1">Adresa</dt>
-            <dd className="mt-0.5 font-medium">{order.address}</dd>
-          </div>
-          <div>
-            <dt className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-1">Plánované datum</dt>
-            <dd className="mt-0.5 font-medium">
-              {order.plannedDate ? formatDate(order.plannedDate) : '—'}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-1">Datum dokončení</dt>
-            <dd className="mt-0.5 font-medium">
-              {order.completedDate ? formatDate(order.completedDate) : '—'}
-            </dd>
-          </div>
-          {order.description && (
-            <div className="sm:col-span-2">
-              <dt className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-1">Popis</dt>
-              <dd className="mt-0.5 font-medium whitespace-pre-wrap">{order.description}</dd>
-            </div>
-          )}
-          {order.note && (
-            <div className="sm:col-span-2">
-              <dt className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-1">Poznámka</dt>
-              <dd className="mt-0.5 font-medium whitespace-pre-wrap">{order.note}</dd>
-            </div>
-          )}
-        </dl>
-      </Card>
+      {/* Info grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 rounded-lg border border-border p-5">
+        <InfoRow label="Zákazník">
+          {customer ? (
+            <Link to={`/zakaznici/${customer.id}`} className="text-foreground hover:underline">
+              {customer.name}
+            </Link>
+          ) : '—'}
+        </InfoRow>
+        <InfoRow label="Adresa">{order.address}</InfoRow>
+        <InfoRow label="Plánované datum">
+          {order.plannedDate ? formatDate(order.plannedDate) : '—'}
+        </InfoRow>
+        <InfoRow label="Datum dokončení">
+          {order.completedDate ? formatDate(order.completedDate) : '—'}
+        </InfoRow>
+        {order.description && (
+          <InfoRow label="Popis" span>{order.description}</InfoRow>
+        )}
+        {order.note && (
+          <InfoRow label="Poznámka" span>{order.note}</InfoRow>
+        )}
+      </div>
 
       {/* Status workflow */}
       {transitions.length > 0 && (
-        <Card title="Změna stavu" accent="yellow">
-          <div className="flex flex-wrap gap-3">
-            {transitions.map((t) => (
-              <Button
-                key={t.next}
-                variant={t.variant}
-                onClick={() => updateStatus(t.next)}
-              >
-                {t.label}
-              </Button>
-            ))}
-          </div>
-        </Card>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground mr-1">Akce:</span>
+          {transitions.map((t) => (
+            <Button
+              key={t.next}
+              variant={t.variant === 'primary' ? 'default' : t.variant === 'danger' ? 'destructive' : 'outline'}
+              size="sm"
+              onClick={() => updateStatus(t.next)}
+            >
+              {t.label}
+            </Button>
+          ))}
+        </div>
       )}
 
       {/* Linked revision reports */}
       {reports && reports.length > 0 && (
-        <Card title="Revizní zprávy" accent="green">
-          <div className="flex flex-col gap-2">
+        <div className="space-y-2">
+          <h2 className="text-sm font-medium text-muted-foreground">Revizní zprávy</h2>
+          <div className="space-y-1">
             {reports.map((r) => (
               <Link
                 key={r.id}
                 to={`/revizni-zpravy/${r.id}`}
-                className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-blue-50/50 hover:border-blue-200 transition-all"
+                className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <FileText size={20} className="text-muted-foreground shrink-0" />
-                  <div>
-                    <span className="font-medium">{r.reportNumber}</span>
-                    <span className="text-muted-foreground ml-2">
-                      {formatDate(r.date)}
-                    </span>
-                  </div>
+                  <FileText size={16} className="text-muted-foreground" />
+                  <span className="text-sm font-medium">{r.reportNumber}</span>
+                  <span className="text-sm text-muted-foreground">{formatDate(r.date)}</span>
                 </div>
-                <ChevronRight size={18} className="text-muted-foreground" />
+                <ChevronRight size={16} className="text-muted-foreground" />
               </Link>
             ))}
           </div>
-        </Card>
+        </div>
       )}
 
-      {/* Actions */}
-      <div className="flex flex-wrap gap-3">
+      {/* Bottom actions */}
+      <div className="flex flex-wrap gap-2 pt-2">
         {canCreateReport && (
           <Link to={`/zakazky/${id}/revize`}>
-            <Button icon={<FileText size={18} />}>Vytvořit revizní zprávu</Button>
+            <Button size="sm" icon={<FileText size={14} />}>Vytvořit revizní zprávu</Button>
           </Link>
         )}
         {order.status === 'dokoncena' && (
           <Link to={`/finance/faktury/nova?orderId=${order.id}`}>
-            <Button variant="secondary" icon={<Receipt size={18} />}>
-              Vystavit fakturu
-            </Button>
+            <Button variant="outline" size="sm" icon={<Receipt size={14} />}>Vystavit fakturu</Button>
           </Link>
         )}
-        <Link to={`/zakazky/${id}/upravit`}>
-          <Button variant="secondary" icon={<Edit size={18} />}>
-            Upravit zakázku
-          </Button>
-        </Link>
-        <Button variant="danger" icon={<Trash2 size={18} />} onClick={handleDelete}>
-          Smazat zakázku
-        </Button>
       </div>
+    </div>
+  )
+}
+
+function InfoRow({ label, children, span }: { label: string; children: React.ReactNode; span?: boolean }) {
+  return (
+    <div className={span ? 'md:col-span-2' : ''}>
+      <div className="text-xs text-muted-foreground mb-0.5">{label}</div>
+      <div className="text-sm text-foreground">{children}</div>
     </div>
   )
 }
