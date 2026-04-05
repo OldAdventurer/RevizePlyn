@@ -6,8 +6,9 @@ import {
   Plus, Trash2, Pencil,
 } from 'lucide-react'
 import { getOrderTypeLabel } from '../../utils/format'
-import { Gantt } from '@svar-ui/react-gantt'
-import '@svar-ui/react-gantt/style.css'
+import { Gantt, Willow } from '@svar-ui/react-gantt'
+import '@svar-ui/react-gantt/all.css'
+import './gantt-custom.css'
 import type { ITask } from '@svar-ui/react-gantt'
 import { useState, useMemo } from 'react'
 import type { ScheduleItem, ScheduleItemStatus, OrderType } from '../../types'
@@ -65,19 +66,18 @@ export default function HarmonogramDetail() {
 
       for (const item of items) {
         const device = deviceMap.get(item.deviceId)
-        const statusColor = item.status === 'dokonceno' ? '#22c55e'
-          : item.status === 'zruseno' ? '#9ca3af'
-          : '#3b82f6'
+        const statusCss = item.status === 'dokonceno' ? 'gantt-done'
+          : item.status === 'zruseno' ? 'gantt-cancelled'
+          : 'gantt-planned'
         tasks.push({
           id: item.id,
           text: `${device?.name ?? item.deviceId} — ${getOrderTypeLabel(item.type)}`,
           start: new Date(item.plannedStart),
           end: new Date(item.plannedEnd),
           parent: summaryId,
-          progress: item.status === 'dokonceno' ? 100 : item.status === 'zruseno' ? 0 : 0,
+          progress: item.status === 'dokonceno' ? 100 : 0,
           type: 'task',
-          css: statusColor,
-          $custom: { status: item.status, note: item.note },
+          css: statusCss,
         } as ITask)
       }
     }
@@ -218,21 +218,29 @@ export default function HarmonogramDetail() {
       {/* Gantt Chart */}
       {ganttTasks.length > 0 && (
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm mb-6 overflow-hidden">
-          <div className="px-5 py-3 border-b border-gray-100">
+          <div className="px-5 py-3 border-b border-gray-100 flex items-center justify-between">
             <h2 className="font-semibold text-gray-800">Ganttův diagram</h2>
+            <div className="flex items-center gap-4 text-xs text-gray-500">
+              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-green-500 inline-block" /> Dokončeno</span>
+              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-blue-500 inline-block" /> Plánováno</span>
+              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-gray-400 inline-block" /> Zrušeno</span>
+            </div>
           </div>
-          <div style={{ height: Math.max(300, ganttTasks.length * 42 + 80) }}>
-            <Gantt
-              tasks={ganttTasks}
-              scales={scales}
-              lengthUnit="month"
-              cellWidth={90}
-              cellHeight={36}
-              scaleHeight={36}
-              start={new Date(schedule.year, 0, 1)}
-              end={new Date(schedule.year, 11, 31)}
-              readonly
-            />
+          <div style={{ height: Math.max(350, ganttTasks.length * 44 + 100) }}>
+            <Willow>
+              <Gantt
+                tasks={ganttTasks}
+                scales={scales}
+                lengthUnit="month"
+                cellWidth={100}
+                cellHeight={40}
+                scaleHeight={40}
+                start={new Date(schedule.year, 0, 1)}
+                end={new Date(schedule.year, 11, 31)}
+                markers={[{ start: new Date(), text: 'Dnes' }]}
+                readonly
+              />
+            </Willow>
           </div>
         </div>
       )}

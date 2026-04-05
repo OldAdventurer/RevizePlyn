@@ -1,0 +1,40 @@
+/* Custom SVAR Gantt overrides for RevizePlyn */
+
+/* Task status colors */
+.gantt-done .wx-task-bar-wrapper .wx-content {
+  background: #22c55e !important;
+  border-color: #16a34a !important;
+}
+
+.gantt-planned .wx-task-bar-wrapper .wx-content {
+  background: #3b82f6 !important;
+  border-color: #2563eb !important;
+}
+
+.gantt-cancelled .wx-task-bar-wrapper .wx-content {
+  background: #9ca3af !important;
+  border-color: #6b7280 !important;
+  opacity: 0.6;
+}
+
+/* Progress bar inside done tasks */
+.gantt-done .wx-task-bar-wrapper .wx-progress {
+  background: #16a34a !important;
+}
+
+/* Summary/project bars */
+.wx-project .wx-content {
+  background: #475569 !important;
+  border-color: #334155 !important;
+}
+
+/* Marker line (today) */
+.wx-marker-line {
+  border-color: #ef4444 !important;
+  opacity: 0.8;
+}
+
+.wx-marker-label {
+  background: #ef4444 !important;
+  font-size: 11px !important;
+}
