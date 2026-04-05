@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { db } from '../../db/schema'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { usePageTitle } from '../../hooks/usePageTitle'
 import { DetailSkeleton } from '@/components/ui/skeleton'
 import Card from '@/components/ui/card'
@@ -38,13 +38,27 @@ export default function RevizeForm() {
   const { id: orderId } = useParams()
   const navigate = useNavigate()
 
-  const order = useLiveQuery(() => (orderId ? db.orders.get(orderId) : undefined), [orderId])
-  const customer = useLiveQuery(
-    () => (order ? db.customers.get(order.customerId) : undefined),
-    [order]
-  )
+  const orders = useLiveQuery(() => db.orders.toArray())
+  const customers = useLiveQuery(() => db.customers.toArray())
   const allDevices = useLiveQuery(() => db.devices.toArray())
   const technicianSetting = useLiveQuery(() => db.settings.get('technician'))
+  const [selectedOrderId, setSelectedOrderId] = useState(orderId ?? '')
+  const currentOrderId = orderId ?? selectedOrderId
+  const selectableOrders = useMemo(
+    () =>
+      (orders ?? [])
+        .filter((o) => o.status !== 'zrusena')
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
+    [orders]
+  )
+  const order = useMemo(
+    () => selectableOrders.find((o) => o.id === currentOrderId),
+    [selectableOrders, currentOrderId]
+  )
+  const customer = useMemo(
+    () => customers?.find((c) => c.id === order?.customerId),
+    [customers, order]
+  )
 
   const [reportNumber, setReportNumber] = useState('')
   const [revisionType, setRevisionType] = useState<RevisionType>('provozni')
@@ -71,6 +85,16 @@ export default function RevizeForm() {
   const [conclusionNote, setConclusionNote] = useState('')
 
   const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    setSelectedOrderId(orderId ?? '')
+  }, [orderId])
+
+  useEffect(() => {
+    if (!orderId && !selectedOrderId && selectableOrders.length > 0) {
+      setSelectedOrderId(selectableOrders[0].id)
+    }
+  }, [orderId, selectableOrders, selectedOrderId])
 
   // Auto-generate report number
   useEffect(() => {
@@ -199,8 +223,46 @@ export default function RevizeForm() {
     }
   }
 
-  if (!order || !customer || !allDevices) {
+  if (!orders || !customers || !allDevices) {
     return <DetailSkeleton />
+  }
+
+  if (orderId && !order) {
+    return (
+      <div className="page-enter space-y-6">
+        <div className="py-12 text-center text-muted-foreground">Zakázka pro novou revizi nebyla nalezena</div>
+        <div className="text-center">
+          <Link to="/revizni-zpravy/nova" className="text-sm text-primary hover:underline">
+            Vybrat jinou zakázku
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  if (!order || !customer) {
+    return (
+      <div className="page-enter space-y-6 max-w-4xl mx-auto p-4 md:p-6">
+        <h1 className="text-xl font-semibold text-foreground">Nová revizní zpráva</h1>
+        <Card title="Výběr zakázky">
+          <p className="text-sm text-muted-foreground mb-4">Nejprve vyberte zakázku, ke které chcete vytvořit revizi.</p>
+          <Select
+            value={selectedOrderId}
+            onChange={(e) => setSelectedOrderId(e.target.value)}
+            options={selectableOrders.map((o) => ({ value: o.id, label: `${o.orderNumber} — ${o.title}` }))}
+            placeholder={selectableOrders.length ? 'Vyberte zakázku' : 'Žádné aktivní zakázky'}
+            disabled={selectableOrders.length === 0}
+          />
+          {selectableOrders.length === 0 && (
+            <div className="mt-4">
+              <Link to="/zakazky/nova" className="text-sm text-primary hover:underline">
+                Vytvořit novou zakázku
+              </Link>
+            </div>
+          )}
+        </Card>
+      </div>
+    )
   }
 
   const testOptions = [
@@ -215,7 +277,7 @@ export default function RevizeForm() {
   return (
     <div className="page-enter p-4 md:p-6 flex flex-col gap-3 max-w-4xl mx-auto">
       {/* Back */}
-      <button onClick={() => navigate(`/zakazky/${order.id}`)} className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground font-medium mb-4 transition-colors cursor-pointer">
+      <button onClick={() => navigate(orderId ? `/zakazky/${order.id}` : '/revizni-zpravy')} className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground font-medium mb-4 transition-colors cursor-pointer">
         <ArrowLeft size={20} />
         <span>Zpět na zakázku</span>
       </button>
@@ -226,6 +288,17 @@ export default function RevizeForm() {
           Zákazník: <strong>{customer.name}</strong> — {order.address}
         </p>
       </div>
+
+      {!orderId && (
+        <Card title="Zakázka">
+          <Select
+            value={selectedOrderId}
+            onChange={(e) => setSelectedOrderId(e.target.value)}
+            options={selectableOrders.map((o) => ({ value: o.id, label: `${o.orderNumber} — ${o.title}` }))}
+            placeholder="Vyberte zakázku"
+          />
+        </Card>
+      )}
 
       {/* Basic info */}
       <Card title="Základní údaje">
@@ -441,7 +514,7 @@ export default function RevizeForm() {
         <Button size="lg" onClick={handleSave} disabled={saving}>
           {saving ? 'Ukládám…' : 'Uložit revizní zprávu'}
         </Button>
-        <Button variant="secondary" size="lg" onClick={() => navigate(`/zakazky/${order.id}`)}>
+        <Button variant="secondary" size="lg" onClick={() => navigate(orderId ? `/zakazky/${order.id}` : '/revizni-zpravy')}>
           Zrušit
         </Button>
       </div>
