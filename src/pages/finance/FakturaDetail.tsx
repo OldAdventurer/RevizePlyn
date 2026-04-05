@@ -99,7 +99,7 @@ export default function FakturaDetail() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">
+          <h1 className="text-xl font-semibold text-foreground">
             Faktura č. {invoice.invoiceNumber}
           </h1>
           <div className="mt-2">
@@ -154,7 +154,7 @@ export default function FakturaDetail() {
       {/* Info Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Card 1 — Základní údaje */}
-        <Card title="Základní údaje" accent="blue">
+        <Card title="Základní údaje">
           <dl className="space-y-3">
             <InfoRow label="Číslo faktury" value={invoice.invoiceNumber} />
             <InfoRow label="Variabilní symbol" value={invoice.variableSymbol} />
@@ -176,7 +176,7 @@ export default function FakturaDetail() {
         </Card>
 
         {/* Card 2 — Odběratel */}
-        <Card title="Odběratel" accent="green">
+        <Card title="Odběratel">
           {customer ? (
             <dl className="space-y-3">
               <InfoRow label="Jméno / Firma" value={customer.name} />
@@ -212,7 +212,7 @@ export default function FakturaDetail() {
                 <th className="pb-2 font-semibold text-right w-28">Celkem</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-border">
               {invoice.items.map((item, i) => (
                 <tr key={i}>
                   <td className="py-2.5 text-foreground">{item.description}</td>
@@ -253,7 +253,7 @@ export default function FakturaDetail() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Card 4 — Platební údaje */}
-        <Card title="Platební údaje" accent="yellow">
+        <Card title="Platební údaje">
           <dl className="space-y-3">
             <InfoRow label="Bankovní účet" value={formatIBAN(invoice.bankAccount)} />
             <InfoRow label="Variabilní symbol" value={invoice.variableSymbol} />
@@ -269,7 +269,7 @@ export default function FakturaDetail() {
 
         {/* Linked Order */}
         {order && (
-          <Card title="Zakázka" accent="blue">
+          <Card title="Zakázka">
             <p className="text-foreground font-medium mb-2">
               {order.type ? order.type : 'Zakázka'} — {customer?.name}
             </p>

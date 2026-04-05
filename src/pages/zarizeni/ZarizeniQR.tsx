@@ -58,11 +58,11 @@ export default function ZarizeniQR() {
           return (
             <div
               key={device.id}
-              className="flex flex-col items-center border border-border shadow-[var(--)] rounded-lg p-4 print:border-gray-400 print:rounded-none print:p-3 break-inside-avoid"
+              className="flex flex-col items-center border border-border rounded-lg p-4 print:border-border print:rounded-none print:p-3 break-inside-avoid"
             >
               <QRCodeSVG value={qrUrl} size={200} />
               <h2 className="text-lg font-bold mt-4 text-center">{device.name}</h2>
-              <p className="text-base text-muted-foreground text-center">
+              <p className="text-sm text-muted-foreground text-center">
                 {[device.manufacturer, device.model].filter(Boolean).join(' — ')}
               </p>
               {customerMap.get(device.customerId) && (

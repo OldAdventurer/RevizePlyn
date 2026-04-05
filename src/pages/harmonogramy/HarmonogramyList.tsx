@@ -53,7 +53,7 @@ export default function HarmonogramyList() {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+          <h1 className="text-xl font-semibold text-foreground flex items-center gap-2">
             <CalendarRange className="text-primary" size={28} />
             Harmonogramy revizí
           </h1>
@@ -71,17 +71,17 @@ export default function HarmonogramyList() {
       {/* Stats strip */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         <div className="bg-card rounded-lg p-4 border border-border ">
-          <div className="text-2xl font-bold text-foreground">{schedules.length}</div>
+          <div className="text-xl font-semibold text-foreground">{schedules.length}</div>
           <div className="text-sm text-muted-foreground">Celkem harmonogramů</div>
         </div>
         <div className="bg-card rounded-lg p-4 border border-border ">
-          <div className="text-2xl font-bold text-green-600">
+          <div className="text-xl font-semibold text-green-600">
             {schedules.reduce((sum, s) => sum + s.items.filter(i => i.status === 'dokonceno').length, 0)}
           </div>
           <div className="text-sm text-muted-foreground">Dokončených úkolů</div>
         </div>
         <div className="bg-card rounded-lg p-4 border border-border ">
-          <div className="text-2xl font-bold text-blue-600">
+          <div className="text-xl font-semibold text-blue-600">
             {schedules.reduce((sum, s) => sum + s.items.filter(i => i.status === 'planovano').length, 0)}
           </div>
           <div className="text-sm text-muted-foreground">Plánovaných úkolů</div>

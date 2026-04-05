@@ -221,14 +221,14 @@ export default function RevizeForm() {
       </button>
 
       <div className="mb-4">
-        <h1 className="text-2xl font-bold text-foreground">Nová revizní zpráva</h1>
+        <h1 className="text-xl font-semibold text-foreground">Nová revizní zpráva</h1>
         <p className="text-muted-foreground mt-1">
           Zákazník: <strong>{customer.name}</strong> — {order.address}
         </p>
       </div>
 
       {/* Basic info */}
-      <Card title="Základní údaje" accent="blue">
+      <Card title="Základní údaje">
         <div className="flex flex-col gap-4">
           <Input label="Číslo zprávy" value={reportNumber} readOnly />
           <Select
@@ -246,7 +246,7 @@ export default function RevizeForm() {
       </Card>
 
       {/* Devices */}
-      <Card title="Revidovaná zařízení" accent="blue">
+      <Card title="Revidovaná zařízení">
         {availableDevices.length === 0 ? (
           <p className="text-muted-foreground">Žádná zařízení zákazníka</p>
         ) : (
@@ -273,7 +273,7 @@ export default function RevizeForm() {
       </Card>
 
       {/* Technician */}
-      <Card title="Revizní technik" accent="blue">
+      <Card title="Revizní technik">
         <div className="flex flex-col gap-4">
           <Input label="Jméno technika" value={techName} onChange={(e) => setTechName(e.target.value)} />
           <Input
@@ -285,7 +285,7 @@ export default function RevizeForm() {
       </Card>
 
       {/* Tests */}
-      <Card title="Provedené zkoušky" accent="green">
+      <Card title="Provedené zkoušky">
         <div className="flex flex-col gap-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Select
@@ -346,7 +346,7 @@ export default function RevizeForm() {
       </Card>
 
       {/* Defects */}
-      <Card title="Zjištěné závady" accent="red">
+      <Card title="Zjištěné závady">
         <div className="flex flex-col gap-4">
           {defectDrafts.map((draft) => (
             <div
@@ -355,19 +355,19 @@ export default function RevizeForm() {
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1">
-                  <label className="block text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                  <label className="block text-sm text-xs font-medium text-muted-foreground mb-2">
                     Popis závady
                   </label>
                   <textarea
                     value={draft.description}
                     onChange={(e) => updateDefect(draft.tempId, 'description', e.target.value)}
                     rows={2}
-                    className="w-full min-h-[44px] text-base p-3 border border-border rounded-lg  focus:outline-none focus:ring-2 focus:ring-ring"
+                    className="w-full text-sm p-3 border border-border rounded-lg  focus:outline-none focus:ring-2 focus:ring-ring"
                   />
                 </div>
                 <button
                   onClick={() => removeDefect(draft.tempId)}
-                  className="p-2 text-red-500 hover:bg-red-50 rounded-lg cursor-pointer shrink-0 mt-6"
+                  className="p-2 text-red-500 hover:bg-muted/50 rounded-lg cursor-pointer shrink-0 mt-6"
                   aria-label="Odebrat závadu"
                 >
                   <XCircle size={22} />
@@ -409,7 +409,7 @@ export default function RevizeForm() {
       </Card>
 
       {/* Conclusion */}
-      <Card title="Závěr" accent="yellow">
+      <Card title="Závěr">
         <div className="flex flex-col gap-4">
           <Select
             label="Závěr revize"
@@ -422,14 +422,14 @@ export default function RevizeForm() {
             ]}
           />
           <div className="w-full">
-            <label className="block text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+            <label className="block text-sm text-xs font-medium text-muted-foreground mb-2">
               Poznámka k závěru
             </label>
             <textarea
               value={conclusionNote}
               onChange={(e) => setConclusionNote(e.target.value)}
               rows={3}
-              className="w-full min-h-[44px] text-base p-3 border border-border rounded-lg  focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full text-sm p-3 border border-border rounded-lg  focus:outline-none focus:ring-2 focus:ring-ring"
               placeholder="Volitelná poznámka…"
             />
           </div>

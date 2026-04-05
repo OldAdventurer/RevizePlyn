@@ -13,7 +13,7 @@ export default function NotFound() {
         <div className="mb-6 flex justify-center">
           <Logo size={48} />
         </div>
-        <p className="text-[120px] font-bold leading-none text-gray-200 select-none">404</p>
+        <p className="text-[120px] font-bold leading-none text-muted select-none">404</p>
         <h1 className="mt-4 text-2xl font-semibold text-foreground">Stránka nenalezena</h1>
         <p className="mt-2 text-muted-foreground">
           Omlouváme se, ale stránka, kterou hledáte, neexistuje.

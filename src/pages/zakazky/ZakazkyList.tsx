@@ -137,7 +137,7 @@ export default function ZakazkyList() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Zakázky</h1>
+          <h1 className="text-xl font-semibold text-foreground">Zakázky</h1>
           <p className="text-muted-foreground mt-1">Přehled všech zakázek</p>
         </div>
         <Link to="/zakazky/nova">
@@ -197,7 +197,7 @@ export default function ZakazkyList() {
         <Card>
           {filteredOrders.length === 0 ? (
             <div className="text-center py-12">
-              <FileText className="mx-auto text-gray-300 mb-3" size={48} />
+              <FileText className="mx-auto text-muted-foreground mb-3" size={48} />
               <p className="text-lg text-muted-foreground">Žádné zakázky odpovídající vašim filtrům</p>
             </div>
           ) : (

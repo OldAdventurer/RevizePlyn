@@ -245,7 +245,7 @@ export default function FakturaForm() {
         <ArrowLeft className="w-4 h-4" /> {isEdit ? 'Zpět na detail' : 'Zpět na faktury'}
       </Link>
 
-      <h1 className="text-2xl font-bold text-foreground">
+      <h1 className="text-xl font-semibold text-foreground">
         {isEdit ? 'Upravit fakturu' : 'Nová faktura'}
       </h1>
 
@@ -298,7 +298,7 @@ export default function FakturaForm() {
         <Card title="Položky faktury">
           <div className="space-y-3">
             {/* Header (desktop) */}
-            <div className="hidden md:grid grid-cols-[1fr_80px_120px_120px_40px] gap-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground px-1">
+            <div className="hidden md:grid grid-cols-[1fr_80px_120px_120px_40px] gap-3 text-xs text-xs font-medium text-muted-foreground px-1">
               <span>Popis</span>
               <span className="text-right">Množství</span>
               <span className="text-right">Cena/ks</span>

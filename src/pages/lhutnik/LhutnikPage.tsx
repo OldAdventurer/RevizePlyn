@@ -361,7 +361,7 @@ function StatCard({
     >
       <div className="flex items-center gap-2">
         <span className="text-xl">{icon}</span>
-        <span className="text-2xl font-bold text-foreground">{value}</span>
+        <span className="text-xl font-semibold text-foreground">{value}</span>
       </div>
       <div className="text-xs text-muted-foreground mt-0.5">{label}</div>
     </button>

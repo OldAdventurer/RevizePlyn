@@ -12,7 +12,6 @@ import {
   getDefectStatusLabel,
   getDeviceCategoryIcon,
 } from '../../utils/format'
-import Card from '@/components/ui/card'
 import Badge from '@/components/ui/badge'
 import Button from '@/components/ui/button'
 import Modal from '@/components/ui/modal'
@@ -30,6 +29,23 @@ import { generateRevisionPDF } from '../../utils/pdf'
 import type { Defect, Technician } from '../../types'
 import { toast } from '../../stores/toastStore'
 
+function InfoRow({
+  label,
+  children,
+  span,
+}: {
+  label: string
+  children: React.ReactNode
+  span?: boolean
+}) {
+  return (
+    <div className={span ? 'md:col-span-2' : ''}>
+      <div className="text-xs text-muted-foreground mb-0.5">{label}</div>
+      <div className="text-sm text-foreground">{children}</div>
+    </div>
+  )
+}
+
 function conclusionVariant(c: string): 'green' | 'yellow' | 'red' {
   if (c === 'schopne') return 'green'
   if (c === 's-vyhradami') return 'yellow'
@@ -40,6 +56,33 @@ function typeVariant(t: string): 'blue' | 'indigo' | 'orange' {
   if (t === 'vychozi') return 'blue'
   if (t === 'provozni') return 'indigo'
   return 'orange'
+}
+
+const conclusionStyles: Record<string, { wrapper: string; icon: string; title: string; note: string }> = {
+  schopne: {
+    wrapper: 'bg-emerald-50 border-emerald-200 text-emerald-700',
+    icon: 'text-emerald-600',
+    title: 'text-sm font-semibold text-emerald-800',
+    note: 'text-sm text-emerald-700',
+  },
+  's-vyhradami': {
+    wrapper: 'bg-amber-50 border-amber-200 text-amber-700',
+    icon: 'text-amber-600',
+    title: 'text-sm font-semibold text-amber-800',
+    note: 'text-sm text-amber-700',
+  },
+  neschopne: {
+    wrapper: 'bg-red-50 border-red-200 text-red-700',
+    icon: 'text-red-600',
+    title: 'text-sm font-semibold text-red-800',
+    note: 'text-sm text-red-700',
+  },
+}
+
+const conclusionIcons: Record<string, typeof CheckCircle> = {
+  schopne: CheckCircle,
+  's-vyhradami': AlertTriangle,
+  neschopne: XCircle,
 }
 
 export default function RevizeDetail() {
@@ -109,25 +152,47 @@ export default function RevizeDetail() {
     navigate('/revizni-zpravy')
   }
 
-  const testRow = (label: string, value?: string, instrument?: string) => {
-    if (!value) return null
-    const isPass = value === 'Vyhovuje' || value.startsWith('Vyhovuje') || value.startsWith('V normě') || value.startsWith('V norm')
-    const isFail = value === 'Nevyhovuje' || value.startsWith('Nevyhovuje')
-    return (
-      <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
-        <span className="text-base text-muted-foreground">{label}</span>
-        <span className="flex items-center gap-2 text-base font-medium">
-          {isPass ? (
-            <span>✅</span>
-          ) : isFail ? (
-            <span>❌</span>
-          ) : null}
-          {value}
-          {instrument && <span className="text-sm text-muted-foreground">({instrument})</span>}
-        </span>
-      </div>
-    )
-  }
+  const testColumns: Column<{ label: string; value: string; instrument?: string }>[] = [
+    { key: 'label', header: 'Zkouška' },
+    {
+      key: 'value',
+      header: 'Výsledek',
+      render: (row) => {
+        const isPass =
+          row.value === 'Vyhovuje' ||
+          row.value.startsWith('Vyhovuje') ||
+          row.value.startsWith('V normě') ||
+          row.value.startsWith('V norm')
+        const isFail = row.value === 'Nevyhovuje' || row.value.startsWith('Nevyhovuje')
+        return (
+          <span className="flex items-center gap-1.5">
+            {isPass && <CheckCircle size={14} className="text-emerald-600" />}
+            {isFail && <XCircle size={14} className="text-red-600" />}
+            {row.value}
+          </span>
+        )
+      },
+    },
+    {
+      key: 'instrument',
+      header: 'Měřidlo',
+      render: (row) => (
+        <span className="text-muted-foreground">{row.instrument || '—'}</span>
+      ),
+    },
+  ]
+
+  const testRows = [
+    report.leakTestResult && { label: 'Zkouška těsnosti', value: report.leakTestResult, instrument: report.leakTestInstrument },
+    report.functionalityTest && { label: 'Zkouška funkčnosti', value: report.functionalityTest },
+    report.fluegasTest && { label: 'Kontrola odvodu spalin', value: report.fluegasTest },
+    report.coMeasurement && {
+      label: 'Měření CO',
+      value: `${report.coMeasurement} — ${report.coMeasurementValue ?? ''}`,
+      instrument: report.coMeasurementInstrument,
+    },
+    report.ventilationCheck && { label: 'Kontrola větrání', value: report.ventilationCheck },
+  ].filter(Boolean) as { label: string; value: string; instrument?: string }[]
 
   const defectColumns: Column<Defect>[] = [
     { key: 'description', header: 'Popis' },
@@ -156,19 +221,25 @@ export default function RevizeDetail() {
     },
   ]
 
+  const style = conclusionStyles[report.conclusion]
+  const ConclusionIcon = conclusionIcons[report.conclusion]
+
   return (
-    <div className="page-enter p-4 md:p-6 flex flex-col gap-3 max-w-4xl mx-auto">
+    <div className="page-enter max-w-4xl mx-auto p-4 md:p-6 space-y-6">
       {/* Back */}
-      <button onClick={() => navigate('/revizni-zpravy')} className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground font-medium mb-4 transition-colors cursor-pointer">
-        <ArrowLeft size={20} />
-        <span>Zpět na revizní zprávy</span>
-      </button>
+      <Link
+        to="/revizni-zpravy"
+        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+      >
+        <ArrowLeft size={16} />
+        Zpět na revizní zprávy
+      </Link>
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">{report.reportNumber}</h1>
-          <p className="text-muted-foreground mt-1">{formatDate(report.date)}</p>
+          <h1 className="text-xl font-semibold text-foreground">{report.reportNumber}</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">{formatDate(report.date)}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Badge variant={typeVariant(report.type)}>{getRevisionTypeLabel(report.type)}</Badge>
@@ -188,107 +259,91 @@ export default function RevizeDetail() {
         />
       </div>
 
-      {/* Info */}
-      <Card title="Informace" accent="blue">
-        <div className="flex flex-col gap-3">
-          <div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
-            <span className="text-sm font-semibold uppercase tracking-wider text-muted-foreground w-48 shrink-0">Zákazník:</span>
-            <span>
-              <Link
-                to={`/zakaznici/${customer.id}`}
-                className="text-primary hover:underline font-medium"
-              >
-                {customer.name}
-              </Link>
-              <span className="text-muted-foreground ml-2">{customer.address}</span>
-            </span>
-          </div>
+      {/* Info grid */}
+      <section>
+        <h2 className="text-sm font-semibold text-foreground mb-2">Informace</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 rounded-lg border border-border p-5">
+          <InfoRow label="Zákazník">
+            <Link to={`/zakaznici/${customer.id}`} className="text-sm text-primary hover:underline">
+              {customer.name}
+            </Link>
+            <span className="text-sm text-muted-foreground ml-1.5">{customer.address}</span>
+          </InfoRow>
 
           {order && (
-            <div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
-              <span className="text-sm font-semibold uppercase tracking-wider text-muted-foreground w-48 shrink-0">Zakázka:</span>
-              <Link
-                to={`/zakazky/${order.id}`}
-                className="text-primary hover:underline font-medium"
-              >
+            <InfoRow label="Zakázka">
+              <Link to={`/zakazky/${order.id}`} className="text-sm text-primary hover:underline">
                 {order.description || order.address}
               </Link>
-            </div>
+            </InfoRow>
           )}
 
-          <div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
-            <span className="text-sm font-semibold uppercase tracking-wider text-muted-foreground w-48 shrink-0">Revidovaná zařízení:</span>
-            <div className="flex flex-col gap-1">
-              {devices.length > 0 ? (
-                devices.map((d) => (
+          <InfoRow label="Revizní technik">
+            {report.technicianName}, oprávnění č. {report.technicianLicense}
+          </InfoRow>
+
+          <InfoRow label="Revidovaná zařízení" span>
+            {devices.length > 0 ? (
+              <div className="flex flex-col gap-0.5">
+                {devices.map((d) => (
                   <Link
                     key={d.id}
                     to={`/zarizeni/${d.id}`}
-                    className="text-primary hover:underline"
+                    className="text-sm text-primary hover:underline"
                   >
                     {getDeviceCategoryIcon(d.category)} {d.name} — {d.manufacturer} {d.model}
                   </Link>
-                ))
-              ) : (
-                <span className="text-muted-foreground">—</span>
-              )}
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
-            <span className="text-sm font-semibold uppercase tracking-wider text-muted-foreground w-48 shrink-0">Revizní technik:</span>
-            <span>
-              {report.technicianName}, oprávnění č. {report.technicianLicense}
-            </span>
-          </div>
+                ))}
+              </div>
+            ) : (
+              <span className="text-sm text-muted-foreground">—</span>
+            )}
+          </InfoRow>
         </div>
-      </Card>
+      </section>
 
       {/* Tests */}
-      <Card title="Provedené zkoušky" accent="green">
-        <div className="flex flex-col">
-          {testRow('Zkouška těsnosti', report.leakTestResult, report.leakTestInstrument)}
-          {testRow('Zkouška funkčnosti', report.functionalityTest)}
-          {testRow('Kontrola odvodu spalin', report.fluegasTest)}
-          {report.coMeasurement &&
-            testRow(
-              'Měření CO',
-              `${report.coMeasurement} — ${report.coMeasurementValue ?? ''}`,
-              report.coMeasurementInstrument
-            )}
-          {testRow('Kontrola větrání', report.ventilationCheck)}
-          {!report.leakTestResult &&
-            !report.functionalityTest &&
-            !report.fluegasTest &&
-            !report.coMeasurement &&
-            !report.ventilationCheck && (
-              <p className="text-muted-foreground py-2">Žádné zkoušky nebyly zaznamenány</p>
-            )}
-        </div>
-      </Card>
+      <section>
+        <h2 className="text-sm font-semibold text-foreground mb-2">Provedené zkoušky</h2>
+        {testRows.length > 0 ? (
+          <div className="rounded-lg border border-border">
+            <Table
+              columns={testColumns}
+              data={testRows}
+              keyExtractor={(r) => r.label}
+            />
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">Žádné zkoušky nebyly zaznamenány</p>
+        )}
+      </section>
 
       {/* Defects */}
-      <Card title="Zjištěné závady" accent="red">
+      <section>
+        <h2 className="text-sm font-semibold text-foreground mb-2">Zjištěné závady</h2>
         {defects.length > 0 ? (
-          <Table<Defect>
-            columns={defectColumns}
-            data={defects}
-            keyExtractor={(d) => d.id}
-          />
+          <div className="rounded-lg border border-border">
+            <Table<Defect>
+              columns={defectColumns}
+              data={defects}
+              keyExtractor={(d) => d.id}
+            />
+          </div>
         ) : (
-          <p className="text-green-600 font-medium flex items-center gap-2 py-2">
-            <CheckCircle size={20} />
-            Nebyly zjištěny žádné závady ✅
+          <p className="text-sm text-emerald-600 flex items-center gap-1.5">
+            <CheckCircle size={16} />
+            Nebyly zjištěny žádné závady
           </p>
         )}
-      </Card>
+      </section>
 
-      {/* Fotodokumentace */}
+      {/* Photos */}
       {report.photos && report.photos.length > 0 && (
-        <Card title="📸 Fotodokumentace">
+        <section>
+          <h2 className="text-sm font-semibold text-foreground mb-2">Fotodokumentace</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {report.photos.map((photo) => (
-              <div key={photo.id} className="group relative">
+              <div key={photo.id}>
                 <img
                   src={photo.url}
                   alt={photo.caption}
@@ -299,62 +354,32 @@ export default function RevizeDetail() {
               </div>
             ))}
           </div>
-        </Card>
+        </section>
       )}
 
       {/* Conclusion */}
-      {report.conclusion === 'schopne' && (
-        <div className="rounded-lg bg-gradient-to-r from-emerald-50 to-emerald-100 border border-emerald-200 p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center">
-              <CheckCircle className="text-white" size={24} />
-            </div>
-            <div>
-              <p className="text-lg font-bold text-emerald-800">{getConclusionLabel(report.conclusion)}</p>
-              {report.conclusionNote && <p className="text-emerald-600">{report.conclusionNote}</p>}
-            </div>
-          </div>
-        </div>
-      )}
-      {report.conclusion === 's-vyhradami' && (
-        <div className="rounded-lg bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-200 p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center">
-              <AlertTriangle className="text-white" size={24} />
-            </div>
-            <div>
-              <p className="text-lg font-bold text-amber-800">{getConclusionLabel(report.conclusion)}</p>
-              {report.conclusionNote && <p className="text-amber-600">{report.conclusionNote}</p>}
-            </div>
-          </div>
-        </div>
-      )}
-      {report.conclusion === 'neschopne' && (
-        <div className="rounded-lg bg-gradient-to-r from-red-50 to-red-100 border border-red-200 p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center">
-              <XCircle className="text-white" size={24} />
-            </div>
-            <div>
-              <p className="text-lg font-bold text-red-800">{getConclusionLabel(report.conclusion)}</p>
-              {report.conclusionNote && <p className="text-red-600">{report.conclusionNote}</p>}
-            </div>
+      {style && ConclusionIcon && (
+        <div className={`rounded-lg border p-4 flex items-center gap-3 ${style.wrapper}`}>
+          <ConclusionIcon size={20} className={style.icon} />
+          <div>
+            <p className={style.title}>{getConclusionLabel(report.conclusion)}</p>
+            {report.conclusionNote && <p className={style.note}>{report.conclusionNote}</p>}
           </div>
         </div>
       )}
 
       {/* Actions */}
-      <div className="flex flex-wrap gap-3 pt-2 pb-4">
-        <Button icon={<Download size={18} />} onClick={handleDownloadPDF}>
+      <div className="flex flex-wrap gap-2">
+        <Button size="sm" icon={<Download size={16} />} onClick={handleDownloadPDF}>
           Stáhnout PDF
         </Button>
-        <Button variant="secondary" icon={<Share2 size={18} />} onClick={handleShare}>
+        <Button size="sm" variant="secondary" icon={<Share2 size={16} />} onClick={handleShare}>
           Sdílet
         </Button>
-        <Button variant="secondary" onClick={() => navigate(`/revizni-zpravy/${report.id}/upravit`)}>
+        <Button size="sm" variant="secondary" onClick={() => navigate(`/revizni-zpravy/${report.id}/upravit`)}>
           Upravit
         </Button>
-        <Button variant="danger" onClick={() => setShowDeleteModal(true)}>
+        <Button size="sm" variant="danger" onClick={() => setShowDeleteModal(true)}>
           Smazat
         </Button>
       </div>
@@ -375,7 +400,7 @@ export default function RevizeDetail() {
           </>
         }
       >
-        <p className="text-base">
+        <p className="text-sm">
           Opravdu chcete smazat zprávu <strong>{report.reportNumber}</strong>? Tato akce je nevratná
           a smaže i všechny přiřazené závady.
         </p>

@@ -177,7 +177,7 @@ export default function HarmonogramDetail() {
           <ArrowLeft size={20} />
         </Link>
         <div className="flex-1 min-w-0">
-          <h1 className="text-2xl font-bold text-foreground truncate">{schedule.name}</h1>
+          <h1 className="text-xl font-semibold text-foreground truncate">{schedule.name}</h1>
           <div className="flex items-center gap-3 text-sm text-muted-foreground mt-0.5">
             <span className="flex items-center gap-1"><Building2 size={14} /> {customer?.name ?? '—'}</span>
             <span className="flex items-center gap-1"><Calendar size={14} /> {schedule.year}</span>
@@ -185,7 +185,7 @@ export default function HarmonogramDetail() {
         </div>
         <button
           onClick={handleDeleteSchedule}
-          className="p-2 rounded-lg text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer"
+          className="p-2 rounded-lg text-red-400 hover:bg-muted/50 hover:text-red-600 transition-colors cursor-pointer"
           title="Smazat harmonogram"
         >
           <Trash2 size={20} />
@@ -223,7 +223,7 @@ export default function HarmonogramDetail() {
             <div className="flex items-center gap-4 text-xs text-muted-foreground">
               <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-green-500 inline-block" /> Dokončeno</span>
               <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-blue-500 inline-block" /> Plánováno</span>
-              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-gray-400 inline-block" /> Zrušeno</span>
+              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-muted-foreground inline-block" /> Zrušeno</span>
             </div>
           </div>
           <div style={{ height: Math.max(350, ganttTasks.length * 44 + 100) }}>
@@ -281,7 +281,7 @@ export default function HarmonogramDetail() {
                   const device = deviceMap.get(item.deviceId)
                   const obj = objectMap.get(item.objectId)
                   return (
-                    <tr key={item.id} className="border-b border-gray-50 hover:bg-muted/50">
+                    <tr key={item.id} className="border-b border-border hover:bg-muted/50">
                       <td className="px-4 py-2.5 font-medium text-foreground">{device?.name ?? item.deviceId}</td>
                       <td className="px-4 py-2.5 text-muted-foreground">{obj?.name ?? item.objectId}</td>
                       <td className="px-4 py-2.5 text-muted-foreground">{getOrderTypeLabel(item.type)}</td>
@@ -306,7 +306,7 @@ export default function HarmonogramDetail() {
                       <td className="px-4 py-2.5">
                         <button
                           onClick={() => handleDeleteItem(item.id)}
-                          className="p-1 rounded text-muted-foreground hover:text-red-500 hover:bg-red-50 cursor-pointer"
+                          className="p-1 rounded text-muted-foreground hover:text-red-500 hover:bg-muted/50 cursor-pointer"
                           title="Smazat položku"
                         >
                           <Trash2 size={14} />
@@ -429,7 +429,7 @@ function StatCard({ label, value, color, icon }: { label: string; value: number;
   }
   return (
     <div className="bg-card rounded-lg p-4 border border-border ">
-      <div className={`text-2xl font-bold ${colorMap[color] ?? 'text-foreground'} flex items-center gap-2`}>
+      <div className={`text-xl font-semibold ${colorMap[color] ?? 'text-foreground'} flex items-center gap-2`}>
         {icon}
         {value}
       </div>

@@ -149,7 +149,7 @@ export default function FinanceDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Finance</h1>
+          <h1 className="text-xl font-semibold text-foreground">Finance</h1>
           <p className="text-muted-foreground mt-1">Přehled příjmů a faktur</p>
         </div>
         <Button
@@ -216,7 +216,7 @@ export default function FinanceDashboard() {
 
       {/* Recent Invoices */}
       <Card title="Poslední faktury">
-        <div className="divide-y divide-gray-100">
+        <div className="divide-y divide-border">
           {recentInvoices.map((inv) => (
             <RecentInvoiceRow
               key={inv.id}
@@ -226,7 +226,7 @@ export default function FinanceDashboard() {
             />
           ))}
         </div>
-        <div className="mt-4 pt-4 border-t border-gray-100">
+        <div className="mt-4 pt-4 border-t border-border">
           <button
             onClick={() => navigate('/finance/faktury')}
             className="text-primary hover:underline text-sm font-medium inline-flex items-center gap-1"
@@ -261,7 +261,7 @@ function StatCard({
       <div className="flex items-start gap-3">
         <div className={`p-2.5 rounded-lg ${iconBg}`}>{icon}</div>
         <div className="min-w-0">
-          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</p>
+          <p className="text-xs text-xs font-medium text-muted-foreground">{label}</p>
           <p className={`text-xl font-bold mt-0.5 ${highlight ? 'text-red-600' : 'text-foreground'}`}>
             {value}
           </p>

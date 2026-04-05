@@ -119,7 +119,7 @@ export default function ZakazkaForm() {
       </button>
 
       <div className="mb-4">
-        <h1 className="text-2xl font-bold text-foreground">{isEdit ? 'Upravit zakázku' : 'Nová zakázka'}</h1>
+        <h1 className="text-xl font-semibold text-foreground">{isEdit ? 'Upravit zakázku' : 'Nová zakázka'}</h1>
         <p className="text-muted-foreground mt-1">{isEdit ? 'Úprava existující zakázky' : 'Vyplňte údaje o nové zakázce'}</p>
       </div>
 
@@ -163,26 +163,26 @@ export default function ZakazkaForm() {
           />
 
           <div className="w-full">
-            <label className="block text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+            <label className="block text-sm text-xs font-medium text-muted-foreground mb-2">
               Popis
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="w-full min-h-[44px] text-base p-3 border border-border rounded-lg  focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary"
+              className="w-full text-sm p-3 border border-border rounded-lg  focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary"
             />
           </div>
 
           <div className="w-full">
-            <label className="block text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+            <label className="block text-sm text-xs font-medium text-muted-foreground mb-2">
               Poznámka
             </label>
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
               rows={3}
-              className="w-full min-h-[44px] text-base p-3 border border-border rounded-lg  focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary"
+              className="w-full text-sm p-3 border border-border rounded-lg  focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary"
             />
           </div>
 

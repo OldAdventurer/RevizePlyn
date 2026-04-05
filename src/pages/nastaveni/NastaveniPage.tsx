@@ -134,14 +134,14 @@ export default function NastaveniPage() {
 
   // ── Render ──
   return (
-    <div className="page-enter p-4 md:p-6 max-w-3xl mx-auto space-y-4">
+    <div className="page-enter p-4 md:p-6 space-y-4">
       <div className="mb-4">
-        <h1 className="text-2xl font-bold text-foreground">Nastavení</h1>
+        <h1 className="text-xl font-semibold text-foreground">Nastavení</h1>
         <p className="text-muted-foreground mt-1">Konfigurace aplikace a údajů technika</p>
       </div>
 
       {/* ── Section 1: Technician ─────────────────────────────── */}
-      <Card title="Údaje revizního technika" accent="blue">
+      <Card title="Údaje revizního technika">
         <div className="flex items-center gap-2 mb-4 text-muted-foreground">
           <User size={20} />
           <span className="text-sm">Tyto údaje se přenášejí do revizních zpráv</span>
@@ -221,7 +221,7 @@ export default function NastaveniPage() {
       </Card>
 
       {/* ── Section 2: Instruments ────────────────────────────── */}
-      <Card title="Měřicí přístroje" accent="green">
+      <Card title="Měřicí přístroje">
         <div className="flex items-center gap-2 mb-4 text-muted-foreground">
           <Wrench size={20} />
           <span className="text-sm">Přístroje používané při revizích</span>
@@ -284,7 +284,7 @@ export default function NastaveniPage() {
       </Card>
 
       {/* ── Section 3: Data management ────────────────────────── */}
-      <Card title="Správa dat" accent="yellow">
+      <Card title="Správa dat">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
           {[
             { label: 'Zákazníků', value: customerCount },
@@ -296,7 +296,7 @@ export default function NastaveniPage() {
               key={s.label}
               className="text-center p-3 rounded-lg bg-background border border-border"
             >
-              <p className="text-2xl font-bold text-primary">{s.value}</p>
+              <p className="text-xl font-semibold text-primary">{s.value}</p>
               <p className="text-sm text-muted-foreground">{s.label}</p>
             </div>
           ))}

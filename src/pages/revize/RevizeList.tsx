@@ -134,12 +134,12 @@ export default function RevizeList() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Revizní zprávy</h1>
+          <h1 className="text-xl font-semibold text-foreground">Revizní zprávy</h1>
           <p className="text-muted-foreground mt-1">Přehled revizních zpráv a protokolů</p>
         </div>
         <Link
           to="/zakazky"
-          className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2 text-base rounded-lg font-medium bg-gradient-to-r from-primary to-primary/80 text-white hover: transition-all"
+          className="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-lg font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-all"
         >
           <Plus size={20} />
           Nová revize
@@ -156,7 +156,7 @@ export default function RevizeList() {
       <div>
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className="inline-flex items-center gap-2 text-base text-primary font-medium cursor-pointer hover:underline"
+          className="inline-flex items-center gap-2 text-sm text-primary font-medium cursor-pointer hover:underline"
         >
           <Filter size={18} />
           {showFilters ? 'Skrýt filtry' : 'Zobrazit filtry'}
@@ -188,25 +188,25 @@ export default function RevizeList() {
             ]}
           />
           <div className="w-full">
-            <label className="block text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+            <label className="block text-sm text-xs font-medium text-muted-foreground mb-2">
               Datum od
             </label>
             <input
               type="date"
               value={dateFrom}
               onChange={(e) => setDateFrom(e.target.value)}
-              className="w-full min-h-[44px] text-base p-3 border border-border rounded-lg  focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full text-sm p-3 border border-border rounded-lg  focus:outline-none focus:ring-2 focus:ring-ring"
             />
           </div>
           <div className="w-full">
-            <label className="block text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+            <label className="block text-sm text-xs font-medium text-muted-foreground mb-2">
               Datum do
             </label>
             <input
               type="date"
               value={dateTo}
               onChange={(e) => setDateTo(e.target.value)}
-              className="w-full min-h-[44px] text-base p-3 border border-border rounded-lg  focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full text-sm p-3 border border-border rounded-lg  focus:outline-none focus:ring-2 focus:ring-ring"
             />
           </div>
         </div>
@@ -214,7 +214,7 @@ export default function RevizeList() {
 
       {/* View toggle + count */}
       <div className="flex items-center justify-between">
-        <p className="text-base text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           {filtered.length}{' '}
           {filtered.length === 1 ? 'zpráva' : filtered.length < 5 ? 'zprávy' : 'zpráv'}
         </p>
@@ -256,7 +256,7 @@ export default function RevizeList() {
         />
       ) : filtered.length === 0 ? (
         <div className="text-center py-12">
-          <FileText size={48} className="mx-auto text-gray-300 mb-3" />
+          <FileText size={48} className="mx-auto text-muted-foreground mb-3" />
           <p className="text-lg text-muted-foreground">Žádné revizní zprávy odpovídající vašim filtrům</p>
         </div>
       ) : viewMode === 'table' ? (
@@ -286,7 +286,7 @@ export default function RevizeList() {
                     </span>
                     <span className="text-sm text-muted-foreground">{formatDate(report.date)}</span>
                   </div>
-                  <p className="text-base text-muted-foreground">{customer?.name ?? '—'}</p>
+                  <p className="text-sm text-muted-foreground">{customer?.name ?? '—'}</p>
                   <div className="flex flex-wrap gap-2 items-center">
                     <Badge variant={typeVariant(report.type)}>
                       {getRevisionTypeLabel(report.type)}
