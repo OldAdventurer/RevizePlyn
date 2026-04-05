@@ -274,7 +274,7 @@ export default function Dashboard() {
               variant="outline"
               size="sm"
               icon={<FileText size={15} />}
-              onClick={() => navigate('/revizni-zpravy/nova')}
+              onClick={() => navigate('/zakazky')}
             >
               Nová revize
             </Button>

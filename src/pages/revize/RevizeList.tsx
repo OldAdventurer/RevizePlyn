@@ -141,7 +141,7 @@ export default function RevizeList() {
           to="/zakazky"
           className="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-lg font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-all"
         >
-          <Plus size={20} />
+          <Plus size={16} />
           Nová revize
         </Link>
       </div>
