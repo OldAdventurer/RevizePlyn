@@ -138,7 +138,7 @@ export default function RevizeList() {
           <p className="text-muted-foreground mt-1">Přehled revizních zpráv a protokolů</p>
         </div>
         <Link
-          to="/zakazky"
+          to="/revizni-zpravy/nova"
           className="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-lg font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-all"
         >
           <Plus size={16} />

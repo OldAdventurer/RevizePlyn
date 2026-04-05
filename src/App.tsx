@@ -13,6 +13,7 @@ import ZarizeniQR from './pages/zarizeni/ZarizeniQR'
 import RevizeList from './pages/revize/RevizeList'
 import RevizeDetail from './pages/revize/RevizeDetail'
 import RevizeForm from './pages/revize/RevizeForm'
+import NovaRevize from './pages/revize/NovaRevize'
 import SdileniPage from './pages/sdileni/SdileniPage'
 import FinanceDashboard from './pages/finance/FinanceDashboard'
 import FakturyList from './pages/finance/FakturyList'
@@ -58,6 +59,7 @@ export default function App() {
             <Route path="/zakaznici" element={<ZakazniciList />} />
             <Route path="/zakaznici/:id" element={<ZakaznikDetail />} />
             <Route path="/revizni-zpravy" element={<RevizeList />} />
+            <Route path="/revizni-zpravy/nova" element={<NovaRevize />} />
             <Route path="/revizni-zpravy/:id" element={<RevizeDetail />} />
             <Route path="/lhutnik" element={<LhutnikPage />} />
             <Route path="/harmonogramy" element={<HarmonogramyList />} />
