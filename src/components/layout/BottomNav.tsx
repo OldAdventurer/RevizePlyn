@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { Home, ClipboardList, Wrench, FileText, Banknote } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 const tabs = [
   { to: '/', icon: Home, label: 'Domů' },
@@ -11,7 +12,7 @@ const tabs = [
 
 export default function BottomNav() {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-[var(--color-border)] z-30 md:hidden pb-[env(safe-area-inset-bottom)]">
+    <nav className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-30 md:hidden pb-[env(safe-area-inset-bottom)]">
       <div className="flex items-stretch">
         {tabs.map((tab) => (
           <NavLink
@@ -19,11 +20,10 @@ export default function BottomNav() {
             to={tab.to}
             end={tab.to === '/'}
             className={({ isActive }) =>
-              `flex-1 flex flex-col items-center justify-center h-14 gap-0.5 text-[10px] font-medium transition-colors ${
-                isActive
-                  ? 'text-[var(--color-primary)]'
-                  : 'text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)]'
-              }`
+              cn(
+                'flex-1 flex flex-col items-center justify-center h-14 gap-0.5 text-[10px] font-medium transition-colors',
+                isActive ? 'text-foreground' : 'text-muted-foreground',
+              )
             }
           >
             {({ isActive }) => (

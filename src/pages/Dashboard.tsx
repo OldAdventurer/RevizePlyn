@@ -8,9 +8,9 @@ import {
   getOrderStatusColor,
   getOrderTypeLabel,
 } from '../utils/format'
-import { DashboardSkeleton } from '../components/ui/Skeleton'
-import Badge from '../components/ui/Badge'
-import EmptyState from '../components/ui/EmptyState'
+import { DashboardSkeleton } from '@/components/ui/skeleton'
+import Badge from '@/components/ui/badge'
+import EmptyState from '@/components/ui/emptystate'
 import { useNavigate } from 'react-router-dom'
 import { ClipboardList, ChevronRight } from 'lucide-react'
 import type { Order, Customer, Invoice } from '../types'

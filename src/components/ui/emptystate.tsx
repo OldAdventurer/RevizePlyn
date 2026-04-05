@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import Button from './Button'
+import Button from './button'
 import { useNavigate } from 'react-router-dom'
 import { RefreshCw } from 'lucide-react'
 

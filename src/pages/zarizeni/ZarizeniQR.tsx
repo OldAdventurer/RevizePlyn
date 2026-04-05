@@ -4,9 +4,9 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { usePageTitle } from '../../hooks/usePageTitle'
 import { QRCodeSVG } from 'qrcode.react'
-import Button from '../../components/ui/Button'
+import Button from '@/components/ui/button'
 import { ArrowLeft, Printer } from 'lucide-react'
-import { ListSkeleton } from '../../components/ui/Skeleton'
+import { ListSkeleton } from '@/components/ui/skeleton'
 import type { Device } from '../../types'
 
 export default function ZarizeniQR() {

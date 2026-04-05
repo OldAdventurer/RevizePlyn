@@ -3,7 +3,7 @@ import { db } from '../../db/schema'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { usePageTitle } from '../../hooks/usePageTitle'
-import { DetailSkeleton } from '../../components/ui/Skeleton'
+import { DetailSkeleton } from '@/components/ui/skeleton'
 import {
   formatDate,
   getRevisionTypeLabel,
@@ -12,12 +12,12 @@ import {
   getDefectStatusLabel,
   getDeviceCategoryIcon,
 } from '../../utils/format'
-import Card from '../../components/ui/Card'
-import Badge from '../../components/ui/Badge'
-import Button from '../../components/ui/Button'
-import Modal from '../../components/ui/Modal'
-import Table, { type Column } from '../../components/ui/Table'
-import RevisionStamp from '../../components/ui/RevisionStamp'
+import Card from '@/components/ui/card'
+import Badge from '@/components/ui/badge'
+import Button from '@/components/ui/button'
+import Modal from '@/components/ui/modal'
+import Table, { type Column } from '@/components/ui/table'
+import RevisionStamp from '@/components/ui/revisionstamp'
 import {
   ArrowLeft,
   Download,

@@ -11,10 +11,10 @@ import {
 import { db } from '../../db/schema'
 import { usePageTitle } from '../../hooks/usePageTitle'
 import { toast } from '../../stores/toastStore'
-import Card from '../../components/ui/Card'
-import Button from '../../components/ui/Button'
-import Badge from '../../components/ui/Badge'
-import { DetailSkeleton } from '../../components/ui/Skeleton'
+import Card from '@/components/ui/card'
+import Button from '@/components/ui/button'
+import Badge from '@/components/ui/badge'
+import { DetailSkeleton } from '@/components/ui/skeleton'
 import {
   formatCurrency,
   formatDate,

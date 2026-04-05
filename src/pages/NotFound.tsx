@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
-import Logo from '../components/ui/Logo'
-import Button from '../components/ui/Button'
+import Logo from '@/components/ui/logo'
+import Button from '@/components/ui/button'
 import { usePageTitle } from '../hooks/usePageTitle'
 
 export default function NotFound() {

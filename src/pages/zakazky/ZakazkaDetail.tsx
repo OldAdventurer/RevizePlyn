@@ -4,12 +4,12 @@ import { usePageTitle } from '../../hooks/usePageTitle'
 import { db } from '../../db/schema'
 import { formatDate, getOrderStatusLabel, getOrderStatusColor, getOrderTypeLabel } from '../../utils/format'
 import type { OrderStatus } from '../../types'
-import Card from '../../components/ui/Card'
-import Badge from '../../components/ui/Badge'
-import Button from '../../components/ui/Button'
+import Card from '@/components/ui/card'
+import Badge from '@/components/ui/badge'
+import Button from '@/components/ui/button'
 import { ArrowLeft, Edit, Trash2, FileText, ChevronRight, Receipt } from 'lucide-react'
 import { toast } from '../../stores/toastStore'
-import { DetailSkeleton } from '../../components/ui/Skeleton'
+import { DetailSkeleton } from '@/components/ui/skeleton'
 
 const statusTransitions: Record<OrderStatus, { label: string; next: OrderStatus; variant: 'primary' | 'secondary' | 'danger' }[]> = {
   nova: [

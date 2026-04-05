@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom'
 import { Plus, Receipt } from 'lucide-react'
 import { db } from '../../db/schema'
 import { usePageTitle } from '../../hooks/usePageTitle'
-import Button from '../../components/ui/Button'
-import Badge from '../../components/ui/Badge'
-import SearchBar from '../../components/ui/SearchBar'
-import Table, { type Column } from '../../components/ui/Table'
-import { ListSkeleton } from '../../components/ui/Skeleton'
-import EmptyState from '../../components/ui/EmptyState'
+import Button from '@/components/ui/button'
+import Badge from '@/components/ui/badge'
+import SearchBar from '@/components/ui/searchbar'
+import Table, { type Column } from '@/components/ui/table'
+import { ListSkeleton } from '@/components/ui/skeleton'
+import EmptyState from '@/components/ui/emptystate'
 import {
   formatCurrency,
   formatDate,

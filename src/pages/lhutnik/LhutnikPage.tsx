@@ -7,13 +7,13 @@ import {
   getDeviceCategoryIcon,
   formatDate,
 } from '../../utils/format'
-import Card from '../../components/ui/Card'
-import Badge from '../../components/ui/Badge'
-import SearchBar from '../../components/ui/SearchBar'
-import Select from '../../components/ui/Select'
-import Table, { type Column } from '../../components/ui/Table'
-import { ListSkeleton } from '../../components/ui/Skeleton'
-import EmptyState from '../../components/ui/EmptyState'
+import Card from '@/components/ui/card'
+import Badge from '@/components/ui/badge'
+import SearchBar from '@/components/ui/searchbar'
+import Select from '@/components/ui/select'
+import Table, { type Column } from '@/components/ui/table'
+import { ListSkeleton } from '@/components/ui/skeleton'
+import EmptyState from '@/components/ui/emptystate'
 import { Clock } from 'lucide-react'
 import type { Device, Customer, ObjectRecord } from '../../types'
 

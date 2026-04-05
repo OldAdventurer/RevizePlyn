@@ -22,18 +22,19 @@ import NastaveniPage from './pages/nastaveni/NastaveniPage'
 import LhutnikPage from './pages/lhutnik/LhutnikPage'
 import HarmonogramyList from './pages/harmonogramy/HarmonogramyList'
 import HarmonogramDetail from './pages/harmonogramy/HarmonogramDetail'
-import ToastContainer from './components/ui/Toast'
+import ToastContainer from '@/components/ui/toast'
 import NotFound from './pages/NotFound'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function App() {
   const dbReady = useDbInit()
 
   if (!dbReady) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--color-surface)]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--color-primary)] mx-auto mb-4" />
-          <p className="text-lg text-gray-600">Načítám aplikaci...</p>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center space-y-4">
+          <Skeleton className="h-10 w-10 rounded-full mx-auto" />
+          <Skeleton className="h-4 w-32 mx-auto" />
         </div>
       </div>
     )
@@ -41,38 +42,38 @@ export default function App() {
 
   return (
     <>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/sdileni/:token" element={<SdileniPage />} />
-        <Route element={<AppLayout />}>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/zakazky" element={<ZakazkyList />} />
-          <Route path="/zakazky/nova" element={<ZakazkaForm />} />
-          <Route path="/zakazky/:id" element={<ZakazkaDetail />} />
-          <Route path="/zakazky/:id/upravit" element={<ZakazkaForm />} />
-          <Route path="/zakazky/:id/revize" element={<RevizeForm />} />
-          <Route path="/zarizeni" element={<ZarizeniList />} />
-          <Route path="/zarizeni/:id" element={<ZarizeniDetail />} />
-          <Route path="/zarizeni/:id/qr" element={<ZarizeniQR />} />
-          <Route path="/zakaznici" element={<ZakazniciList />} />
-          <Route path="/zakaznici/:id" element={<ZakaznikDetail />} />
-          <Route path="/revizni-zpravy" element={<RevizeList />} />
-          <Route path="/revizni-zpravy/:id" element={<RevizeDetail />} />
-          <Route path="/lhutnik" element={<LhutnikPage />} />
-          <Route path="/harmonogramy" element={<HarmonogramyList />} />
-          <Route path="/harmonogramy/:id" element={<HarmonogramDetail />} />
-          <Route path="/finance" element={<FinanceDashboard />} />
-          <Route path="/finance/faktury" element={<FakturyList />} />
-          <Route path="/finance/faktury/nova" element={<FakturaForm />} />
-          <Route path="/finance/faktury/:id" element={<FakturaDetail />} />
-          <Route path="/finance/faktury/:id/upravit" element={<FakturaForm />} />
-          <Route path="/nastaveni" element={<NastaveniPage />} />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/sdileni/:token" element={<SdileniPage />} />
+          <Route element={<AppLayout />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/zakazky" element={<ZakazkyList />} />
+            <Route path="/zakazky/nova" element={<ZakazkaForm />} />
+            <Route path="/zakazky/:id" element={<ZakazkaDetail />} />
+            <Route path="/zakazky/:id/upravit" element={<ZakazkaForm />} />
+            <Route path="/zakazky/:id/revize" element={<RevizeForm />} />
+            <Route path="/zarizeni" element={<ZarizeniList />} />
+            <Route path="/zarizeni/:id" element={<ZarizeniDetail />} />
+            <Route path="/zarizeni/:id/qr" element={<ZarizeniQR />} />
+            <Route path="/zakaznici" element={<ZakazniciList />} />
+            <Route path="/zakaznici/:id" element={<ZakaznikDetail />} />
+            <Route path="/revizni-zpravy" element={<RevizeList />} />
+            <Route path="/revizni-zpravy/:id" element={<RevizeDetail />} />
+            <Route path="/lhutnik" element={<LhutnikPage />} />
+            <Route path="/harmonogramy" element={<HarmonogramyList />} />
+            <Route path="/harmonogramy/:id" element={<HarmonogramDetail />} />
+            <Route path="/finance" element={<FinanceDashboard />} />
+            <Route path="/finance/faktury" element={<FakturyList />} />
+            <Route path="/finance/faktury/nova" element={<FakturaForm />} />
+            <Route path="/finance/faktury/:id" element={<FakturaDetail />} />
+            <Route path="/finance/faktury/:id/upravit" element={<FakturaForm />} />
+            <Route path="/nastaveni" element={<NastaveniPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
           <Route path="*" element={<NotFound />} />
-        </Route>
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
-    <ToastContainer />
+        </Routes>
+      </BrowserRouter>
+      <ToastContainer />
     </>
   )
 }

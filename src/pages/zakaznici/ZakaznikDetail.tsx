@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { db } from '../../db/schema'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useNavigate, useParams, Link } from 'react-router-dom'
-import { DetailSkeleton } from '../../components/ui/Skeleton'
+import { DetailSkeleton } from '@/components/ui/skeleton'
 import { usePageTitle } from '../../hooks/usePageTitle'
 import {
   formatDate,
@@ -13,12 +13,12 @@ import {
   getDeviceCategoryLabel,
   getObjectTypeLabel,
 } from '../../utils/format'
-import Card from '../../components/ui/Card'
-import Badge from '../../components/ui/Badge'
-import Button from '../../components/ui/Button'
-import Input from '../../components/ui/Input'
-import Select from '../../components/ui/Select'
-import Modal from '../../components/ui/Modal'
+import Card from '@/components/ui/card'
+import Badge from '@/components/ui/badge'
+import Button from '@/components/ui/button'
+import Input from '@/components/ui/input'
+import Select from '@/components/ui/select'
+import Modal from '@/components/ui/modal'
 import {
   ArrowLeft,
   User,

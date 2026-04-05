@@ -11,11 +11,11 @@ import {
 } from 'lucide-react'
 import { db } from '../../db/schema'
 import { usePageTitle } from '../../hooks/usePageTitle'
-import Card from '../../components/ui/Card'
-import Button from '../../components/ui/Button'
-import Badge from '../../components/ui/Badge'
-import { DashboardSkeleton } from '../../components/ui/Skeleton'
-import EmptyState from '../../components/ui/EmptyState'
+import Card from '@/components/ui/card'
+import Button from '@/components/ui/button'
+import Badge from '@/components/ui/badge'
+import { DashboardSkeleton } from '@/components/ui/skeleton'
+import EmptyState from '@/components/ui/emptystate'
 import {
   formatCurrency,
   formatDate,
