@@ -97,7 +97,7 @@ export default function RevizeDetail() {
     [report]
   )
   const order = useLiveQuery(
-    () => (report ? db.orders.get(report.orderId) : undefined),
+    () => (report?.orderId ? db.orders.get(report.orderId) : undefined),
     [report]
   )
   const defects = useLiveQuery(

@@ -142,7 +142,7 @@ export default function RevizeList() {
           className="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-lg font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-all"
         >
           <Plus size={16} />
-          Nová revize (výběr zakázky)
+          Nová revize
         </Link>
       </div>
 
@@ -250,9 +250,9 @@ export default function RevizeList() {
         <EmptyState
           icon={<FileText size={32} />}
           title="Žádné revizní zprávy"
-          description="Revizní zprávy se vytváří z dokončených zakázek. Vytvořte zakázku a proveďte revizi."
-          actionLabel="Zobrazit zakázky"
-          actionHref="/zakazky"
+          description="Vytvořte první revizní zprávu."
+          actionLabel="Nová revize"
+          actionHref="/revizni-zpravy/nova"
         />
       ) : filtered.length === 0 ? (
         <div className="text-center py-12">

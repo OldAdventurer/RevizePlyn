@@ -10,6 +10,7 @@ import Input from '@/components/ui/input'
 import Select from '@/components/ui/select'
 import { ArrowLeft, Plus, XCircle } from 'lucide-react'
 import { toast } from '../../stores/toastStore'
+import { getOrderTypeLabel } from '../../utils/format'
 import type {
   RevisionType,
   RevisionConclusion,
@@ -43,6 +44,7 @@ export default function RevizeForm() {
   const allDevices = useLiveQuery(() => db.devices.toArray())
   const technicianSetting = useLiveQuery(() => db.settings.get('technician'))
   const [selectedOrderId, setSelectedOrderId] = useState(orderId ?? '')
+  const [selectedCustomerId, setSelectedCustomerId] = useState('')
   const currentOrderId = orderId ?? selectedOrderId
   const selectableOrders = useMemo(
     () =>
@@ -55,9 +57,10 @@ export default function RevizeForm() {
     () => selectableOrders.find((o) => o.id === currentOrderId),
     [selectableOrders, currentOrderId]
   )
+  const effectiveCustomerId = order?.customerId ?? selectedCustomerId
   const customer = useMemo(
-    () => customers?.find((c) => c.id === order?.customerId),
-    [customers, order]
+    () => customers?.find((c) => c.id === effectiveCustomerId),
+    [customers, effectiveCustomerId]
   )
 
   const [reportNumber, setReportNumber] = useState('')
@@ -91,10 +94,8 @@ export default function RevizeForm() {
   }, [orderId])
 
   useEffect(() => {
-    if (!orderId && !selectedOrderId && selectableOrders.length > 0) {
-      setSelectedOrderId(selectableOrders[0].id)
-    }
-  }, [orderId, selectableOrders, selectedOrderId])
+    if (order) setSelectedCustomerId(order.customerId)
+  }, [order])
 
   // Auto-generate report number
   useEffect(() => {
@@ -129,16 +130,17 @@ export default function RevizeForm() {
 
   // Pre-select devices from order's customer/object
   useEffect(() => {
-    if (order && allDevices) {
-      const objectDevices = allDevices.filter(
-        (d) => d.customerId === order.customerId && (!order.objectId || d.objectId === order.objectId)
+    if (allDevices && (order || selectedCustomerId)) {
+      const customerId = order?.customerId ?? selectedCustomerId
+      const customerDevices = allDevices.filter(
+        (d) => d.customerId === customerId && (!order?.objectId || d.objectId === order.objectId)
       )
-      setSelectedDeviceIds(objectDevices.map((d) => d.id))
+      setSelectedDeviceIds(customerDevices.map((d) => d.id))
     }
-  }, [order, allDevices])
+  }, [order, selectedCustomerId, allDevices])
 
   const availableDevices = allDevices?.filter(
-    (d) => order && d.customerId === order.customerId
+    (d) => d.customerId === (order?.customerId ?? selectedCustomerId)
   ) ?? []
 
   const toggleDevice = (deviceId: string) => {
@@ -171,7 +173,7 @@ export default function RevizeForm() {
   }
 
   const handleSave = async () => {
-    if (!order || !customer || saving) return
+    if (!customer || saving) return
     setSaving(true)
 
     try {
@@ -180,7 +182,7 @@ export default function RevizeForm() {
       await db.revisionReports.add({
         id: reportId,
         reportNumber,
-        orderId: order.id,
+        orderId: order?.id,
         customerId: customer.id,
         deviceIds: selectedDeviceIds,
         type: revisionType,
@@ -212,7 +214,7 @@ export default function RevizeForm() {
         })
       }
 
-      if (order.status !== 'dokoncena' && order.status !== 'fakturovano') {
+      if (order && order.status !== 'dokoncena' && order.status !== 'fakturovano') {
         await db.orders.update(order.id, { status: 'dokoncena', updatedAt: new Date().toISOString() })
       }
 
@@ -240,18 +242,37 @@ export default function RevizeForm() {
     )
   }
 
-  if (!order || !customer) {
+  if (!customer) {
     return (
       <div className="page-enter space-y-6 max-w-4xl mx-auto p-4 md:p-6">
         <h1 className="text-xl font-semibold text-foreground">Nová revizní zpráva</h1>
-        <Card title="Výběr zakázky">
-          <p className="text-sm text-muted-foreground mb-4">Nejprve vyberte zakázku, ke které chcete vytvořit revizi.</p>
+        <Card title="Výběr zákazníka">
+          <p className="text-sm text-muted-foreground mb-4">Revizi můžete vytvořit i bez zakázky.</p>
+          <Select
+            value={selectedCustomerId}
+            onChange={(e) => {
+              setSelectedCustomerId(e.target.value)
+              setSelectedOrderId('')
+            }}
+            options={customers.map((c) => ({ value: c.id, label: c.name }))}
+            placeholder={customers.length ? 'Vyberte zákazníka' : 'Žádní zákazníci'}
+            disabled={customers.length === 0}
+          />
+        </Card>
+        <Card title="Volitelně zakázka">
           <Select
             value={selectedOrderId}
             onChange={(e) => setSelectedOrderId(e.target.value)}
-            options={selectableOrders.map((o) => ({ value: o.id, label: `${o.orderNumber} — ${o.title}` }))}
-            placeholder={selectableOrders.length ? 'Vyberte zakázku' : 'Žádné aktivní zakázky'}
-            disabled={selectableOrders.length === 0}
+            options={[
+              { value: '', label: 'Bez zakázky' },
+              ...selectableOrders
+                .filter((o) => !selectedCustomerId || o.customerId === selectedCustomerId)
+                .map((o) => ({
+                  value: o.id,
+                  label: `${getOrderTypeLabel(o.type)} — ${o.address}`,
+                })),
+            ]}
+            disabled={selectableOrders.length === 0 || !selectedCustomerId}
           />
           {selectableOrders.length === 0 && (
             <div className="mt-4">
@@ -285,19 +306,39 @@ export default function RevizeForm() {
       <div className="mb-4">
         <h1 className="text-xl font-semibold text-foreground">Nová revizní zpráva</h1>
         <p className="text-muted-foreground mt-1">
-          Zákazník: <strong>{customer.name}</strong> — {order.address}
+          Zákazník: <strong>{customer.name}</strong>{order ? ` — ${order.address}` : ''}
         </p>
       </div>
 
       {!orderId && (
-        <Card title="Zakázka">
-          <Select
-            value={selectedOrderId}
-            onChange={(e) => setSelectedOrderId(e.target.value)}
-            options={selectableOrders.map((o) => ({ value: o.id, label: `${o.orderNumber} — ${o.title}` }))}
-            placeholder="Vyberte zakázku"
-          />
-        </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card title="Zákazník">
+            <Select
+              value={selectedCustomerId}
+              onChange={(e) => {
+                setSelectedCustomerId(e.target.value)
+                setSelectedOrderId('')
+              }}
+              options={customers.map((c) => ({ value: c.id, label: c.name }))}
+            />
+          </Card>
+          <Card title="Zakázka (volitelné)">
+            <Select
+              value={selectedOrderId}
+              onChange={(e) => setSelectedOrderId(e.target.value)}
+              options={[
+                { value: '', label: 'Bez zakázky' },
+                ...selectableOrders
+                  .filter((o) => !selectedCustomerId || o.customerId === selectedCustomerId)
+                  .map((o) => ({
+                    value: o.id,
+                    label: `${getOrderTypeLabel(o.type)} — ${o.address}`,
+                  })),
+              ]}
+              disabled={!selectedCustomerId}
+            />
+          </Card>
+        </div>
       )}
 
       {/* Basic info */}

@@ -103,7 +103,7 @@ export interface RevisionPhoto {
 export interface RevisionReport {
   id: string
   reportNumber: string
-  orderId: string
+  orderId?: string
   customerId: string
   deviceIds: string[]
   type: RevisionType
